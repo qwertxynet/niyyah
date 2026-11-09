@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <mask id="crescent">
+      <circle cx="256" cy="268" r="86" fill="#fff"/>
+      <circle cx="298" cy="242" r="76" fill="#000"/>
+    </mask>
+  </defs>
+  <path d="M128 420V252a128 128 0 0 1 256 0v168" fill="none" stroke="#E7D2A8" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <path d="M96 420h320" stroke="#E7D2A8" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="256" cy="268" r="86" fill="#E7D2A8" mask="url(#crescent)"/>
+</svg>

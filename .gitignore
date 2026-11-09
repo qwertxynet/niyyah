@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-app/
+android/app/build/
+android/build/
+android/.gradle/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+
+# Local tooling / verification artifacts
+.cache/
+.freebuff/
+*.log
+toast-*.png
+screenshot-*.png
+
+# Signing secrets (never commit)
+android/keystore.properties
+android/niyyah-release.keystore
+*.jks
+*.keystore
+
+# OS noise
+.DS_Store
+Thumbs.db

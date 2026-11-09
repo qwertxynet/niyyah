@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Niyyah</string>
+    <string name="title_activity_main">Niyyah</string>
+    <string name="package_name">app.niyyah.prayer</string>
+    <string name="custom_url_scheme">app.niyyah.prayer</string>
+</resources>
