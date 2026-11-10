@@ -250,6 +250,21 @@ export function cycleAt(now: Date, settings: Settings): Cycle {
   return { active, today, current, next, degraded: today.degraded || yesterday.degraded };
 }
 
+/**
+ * Time left for display. `coarse` (minutes-only countdown) never shows
+ * seconds: "1 h 05 min", "12 min", "under a minute".
+ */
+export function fmtLeft(ms: number, coarse: boolean): string {
+  if (!coarse) return formatOffset(ms);
+  if (!Number.isFinite(ms)) return '—';
+  if (ms < 60_000) return 'under a minute';
+  const minutes = Math.ceil(ms / 60_000);
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h > 0) return m > 0 ? `${h} h ${`${m}`.padStart(2, '0')} min` : `${h} h`;
+  return `${m} min`;
+}
+
 export function formatOffset(ms: number): string {
   if (!Number.isFinite(ms)) return '—';
   const total = Math.max(0, Math.round(ms / 1000));

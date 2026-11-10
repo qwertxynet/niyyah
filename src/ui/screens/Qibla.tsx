@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { compassPoint, compassPointLong, distanceToKaaba, qiblaBearing, turnBetween } from '../../domain/qibla';
 import { useStore } from '../../domain/store';
+import { buzz } from '../useCountUp';
 import { useHeading } from '../useHeading';
 
 const C = 160;
@@ -115,13 +116,7 @@ export function Qibla() {
 
   const wasAligned = useRef(false);
   useEffect(() => {
-    if (aligned && !wasAligned.current && 'vibrate' in navigator) {
-      try {
-        navigator.vibrate(35);
-      } catch {
-        /* ignore */
-      }
-    }
+    if (aligned && !wasAligned.current) buzz(35);
     wasAligned.current = aligned;
   }, [aligned]);
 

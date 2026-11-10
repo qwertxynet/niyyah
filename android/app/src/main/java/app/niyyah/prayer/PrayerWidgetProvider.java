@@ -123,6 +123,7 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
 
         long now = System.currentTimeMillis();
         String place = "";
+        boolean coarse = false;
         Slot current = null;
         Slot next = null;
         Slot[] row = null;
@@ -132,6 +133,7 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
             if (json != null) {
                 JSONObject root = new JSONObject(json);
                 place = root.optString("place", "");
+                coarse = root.optBoolean("coarse", false);
                 JSONArray days = root.getJSONArray("days");
                 for (int d = 0; d < days.length() && next == null; d++) {
                     JSONArray slots = days.getJSONObject(d).getJSONArray("slots");
@@ -192,10 +194,21 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         }
         boundary = Math.min(boundary, current.end);
 
-        long base = SystemClock.elapsedRealtime() + (target - now);
-        views.setChronometer(R.id.w_timer, base, format, true);
-        views.setChronometerCountDown(R.id.w_timer, true);
-        views.setTextColor(R.id.w_timer, amber ? amberColor : ink);
+        if (coarse) {
+            // Minutes-only: static text, redrawn once a minute. No ticking seconds.
+            views.setViewVisibility(R.id.w_timer, View.GONE);
+            views.setViewVisibility(R.id.w_timer_text, View.VISIBLE);
+            views.setTextViewText(R.id.w_timer_text, String.format(format, coarseLeft(target - now)));
+            views.setTextColor(R.id.w_timer_text, amber ? amberColor : ink);
+            boundary = Math.min(boundary, now + 60_000L - (now % 60_000L));
+        } else {
+            views.setViewVisibility(R.id.w_timer_text, View.GONE);
+            views.setViewVisibility(R.id.w_timer, View.VISIBLE);
+            long base = SystemClock.elapsedRealtime() + (target - now);
+            views.setChronometer(R.id.w_timer, base, format, true);
+            views.setChronometerCountDown(R.id.w_timer, true);
+            views.setTextColor(R.id.w_timer, amber ? amberColor : ink);
+        }
 
         // Progress through the window.
         long span = Math.max(1, current.end - current.start);
@@ -226,6 +239,16 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
 
         manager.updateAppWidget(widgetId, views);
         return Math.max(now + 1000, boundary);
+    }
+
+    /** "1 h 05 min", "12 min", "under a minute" — matches fmtLeft() in the app. */
+    private static String coarseLeft(long ms) {
+        if (ms < 60_000L) return "under a minute";
+        long minutes = (ms + 59_999L) / 60_000L;
+        long h = minutes / 60;
+        long m = minutes % 60;
+        if (h > 0) return m > 0 ? String.format(java.util.Locale.US, "%d h %02d min", h, m) : h + " h";
+        return m + " min";
     }
 
     private static void showEmpty(RemoteViews views, Context context) {

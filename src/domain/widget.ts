@@ -36,6 +36,8 @@ export interface WidgetPayload {
   v: 1;
   place: string;
   generatedAt: number;
+  /** Minutes-only countdown: no ticking seconds. */
+  coarse: boolean;
   days: WidgetDay[];
 }
 
@@ -70,7 +72,7 @@ export function buildWidgetPayload(state: Persisted, now = new Date(), days = WI
     });
   }
 
-  return { v: 1, place: settings.place.label, generatedAt: now.getTime(), days: out };
+  return { v: 1, place: settings.place.label, generatedAt: now.getTime(), coarse: settings.coarseTime, days: out };
 }
 
 let lastJson = '';

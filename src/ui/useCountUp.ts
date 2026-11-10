@@ -1,12 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
-function reducedMotion(): boolean {
-  try {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch {
-    return false;
-  }
-}
+import { lowStimulation as reducedMotion } from './useTheme';
 
 /**
  * Animates a number toward `target`. Returns the displayed value and whether it
