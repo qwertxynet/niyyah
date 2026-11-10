@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors the app's light tokens in src/styles.css. -->
+<resources>
+    <color name="widget_bg">#FBF7F0</color>
+    <color name="widget_line">#1A15251F</color>
+    <color name="widget_ink">#15251F</color>
+    <color name="widget_ink_2">#4F5F58</color>
+    <color name="widget_gold_ink">#8A6B2E</color>
+    <color name="widget_accent">#14503E</color>
+    <color name="widget_amber">#B4651B</color>
+    <color name="widget_ok">#1B6650</color>
+    <color name="widget_track">#F1E8D8</color>
+</resources>

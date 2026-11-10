@@ -4,4 +4,6 @@
     <string name="title_activity_main">Niyyah</string>
     <string name="package_name">app.niyyah.prayer</string>
     <string name="custom_url_scheme">app.niyyah.prayer</string>
+    <string name="widget_description">Current prayer window with a live countdown</string>
+    <string name="widget_empty">Open Niyyah to load prayer times</string>
 </resources>
