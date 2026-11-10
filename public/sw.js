@@ -1,4 +1,4 @@
-const CACHE = 'niyyah-shell-v4';
+const CACHE = 'niyyah-shell-v5';
 
 // Everything the app needs to open with no network at all.
 const CORE = [
@@ -12,6 +12,8 @@ const CORE = [
   './quran-meta.json',
   './fonts/amiri-arabic-400.woff2',
   './fonts/amiri-arabic-700.woff2',
+  './fonts/fraunces-latin-var.woff2',
+  './fonts/figtree-latin-var.woff2',
 ];
 
 // Data files that may be republished between releases: try the network first so a
