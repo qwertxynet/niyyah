@@ -9,11 +9,13 @@ import {
   type DeedDef,
   type Tier,
 } from '../../domain/hasanat';
+import { say } from '../../domain/copy';
 import { placeCivilDate, prayerDay } from '../../domain/prayer-times';
 import { useQuran } from '../../domain/quran';
 import { actions, useStore } from '../../domain/store';
 import { EstimateSheet } from '../components/EstimateSheet';
 import { Icon } from '../components/Icons';
+import { Term } from '../components/Term';
 import { ReadingSheet } from '../components/ReadingSheet';
 import { TapCounter } from '../components/TapCounter';
 import { buzz, useCountUp } from '../useCountUp';
@@ -45,14 +47,17 @@ export function Hasanat() {
   const [explain, setExplain] = useState(false);
 
   const totals = hasanatTotals(state, now, meta);
-  const today = useCountUp(totals.today);
+  // "Minimal" tone skips celebrations: no count-up, shimmer or buzz.
+  const quiet = settings.tone === 'minimal';
+  const counted = useCountUp(totals.today);
+  const today = quiet ? { value: totals.today, rising: false } : counted;
 
   // A small tick in the hand whenever today's figure grows.
   const lastToday = useRef(totals.today);
   useEffect(() => {
-    if (totals.today > lastToday.current) buzz(18);
+    if (totals.today > lastToday.current && !quiet) buzz(18);
     lastToday.current = totals.today;
-  }, [totals.today]);
+  }, [totals.today, quiet]);
 
   if (!settings.place) {
     return (
@@ -96,8 +101,10 @@ export function Hasanat() {
   return (
     <div className="hasanat fade-in">
       <header className="screen-head">
-        <h1>Hasanat</h1>
-        <p>Small deeds, done sincerely, add up.</p>
+        <h1>
+          <Term id="hasanat" />
+        </h1>
+        <p>{say('hasanatSub', settings)}</p>
       </header>
 
       <div className="card-soft notice" role="note">

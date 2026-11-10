@@ -5,12 +5,15 @@ import { Icon } from './Icons';
 
 export function CatchupCard({
   slot,
+  text,
   timeFormat,
   onYes,
   onNo,
   onSkip,
 }: {
   slot: Slot;
+  /** Body text in the user's chosen voice; falls back to the gentle default. */
+  text?: string;
   timeFormat: TimeFormat;
   onYes: () => void;
   onNo: () => void;
@@ -24,8 +27,8 @@ export function CatchupCard({
       <div className="catchup-body">
         <p className="catchup-title">Did you pray {slot.name}?</p>
         <p className="catchup-text">
-          Its window closed at {fmtTime(slot.end, timeFormat)}. Either answer is fine — this just keeps
-          your record honest.
+          {text ??
+            `Its window closed at ${fmtTime(slot.end, timeFormat)}. Either answer is fine — this just keeps your record honest.`}
         </p>
         <div className="catchup-actions">
           <button type="button" className="btn btn-solid" onClick={onYes}>
