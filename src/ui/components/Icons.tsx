@@ -24,7 +24,8 @@ export type IconName =
   | 'location'
   | 'arrowRight'
   | 'compass'
-  | 'star';
+  | 'star'
+  | 'book';
 
 const paths: Record<IconName, ReactElement> = {
   check: <path d="m5 13 4 4L19 7" />,
@@ -110,6 +111,12 @@ const paths: Record<IconName, ReactElement> = {
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" />
+    </>
+  ),
+  book: (
+    <>
+      <path d="M5 4.5h9.5A3.5 3.5 0 0 1 18 8v11.5H8.5A3.5 3.5 0 0 1 5 16V4.5Z" />
+      <path d="M5 16a3 3 0 0 1 3-3h10M9 8.5h5" />
     </>
   ),
   // Eight-point star (two overlapping squares), the khatam of the background pattern.

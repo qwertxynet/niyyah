@@ -5,21 +5,57 @@ import { QadaCard } from '../components/QadaCard';
 import { Term } from '../components/Term';
 import { deviceTimeZone, fmtLongDate, fmtTime, hijriDate } from '../../domain/format';
 import { say } from '../../domain/copy';
+import { kindMeta, promptFor, type JournalKind } from '../../domain/journal';
 import { RAKAHS } from '../../domain/hasanat';
 import {
   addDays,
   cycleAt,
+  dateKey,
   fmtLeft,
   placeCivilDate,
   prayerDay,
   type Slot,
 } from '../../domain/prayer-times';
 import { actions, useStore } from '../../domain/store';
-import type { Logs, Persisted, Settings } from '../../domain/types';
+import type { Logs, Persisted, PrayerKey, Settings } from '../../domain/types';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
 
 const URGENT_MS = 20 * 60 * 1000;
+/** An after-prayer reflection is offered for this long after logging. */
+const REFLECT_WINDOW_MS = 3 * 60 * 60 * 1000;
+
+/**
+ * Which journal prompt to offer on Today, if any: a reflection for a prayer
+ * just logged, otherwise the day's check-in, then gratitude after Maghrib and
+ * an intention after Isha. One card at most, and only until it is written.
+ */
+function pickReflect(
+  now: Date,
+  state: Persisted,
+): { kind: JournalKind; prayer?: PrayerKey; prayerName?: string; dayKey: string } | null {
+  const { settings, logs, journal } = state;
+  const dayKeyValue = dateKey(placeCivilDate(now, settings));
+  const written = journal[dayKeyValue] ?? [];
+  const has = (kind: JournalKind, prayer?: PrayerKey) =>
+    written.some((entry) => entry.kind === kind && (!prayer || entry.prayer === prayer));
+
+  const day = prayerDay(placeCivilDate(now, settings), settings);
+  const recent = day.slots
+    .map((slot) => ({ slot, entry: logs[day.key]?.[slot.key] }))
+    .filter(({ entry }) => entry && entry.s !== 'missed' && now.getTime() - entry.at < REFLECT_WINDOW_MS)
+    .sort((a, b) => (b.entry?.at ?? 0) - (a.entry?.at ?? 0))[0];
+  if (recent && !has('reflection', recent.slot.key)) {
+    return { kind: 'reflection', prayer: recent.slot.key, prayerName: recent.slot.name, dayKey: dayKeyValue };
+  }
+
+  if (!has('checkin')) return { kind: 'checkin', dayKey: dayKeyValue };
+  const maghrib = day.slots.find((slot) => slot.key === 'maghrib');
+  const isha = day.slots.find((slot) => slot.key === 'isha');
+  if (maghrib && now >= maghrib.start && !has('gratitude')) return { kind: 'gratitude', dayKey: dayKeyValue };
+  if (isha && now >= isha.start && !has('intention')) return { kind: 'intention', dayKey: dayKeyValue };
+  return null;
+}
 const CATCHUP_WINDOW_MS = 18 * 60 * 60 * 1000;
 
 function findCatchup(
@@ -82,6 +118,8 @@ export function Today() {
   const voice = { tone: settings.tone, literal: settings.literal };
   const askAbout = !settings.profile && !settings.profileAsked;
   const guidePrayer = (current && !currentStatus ? current : next?.slot) ?? null;
+  const reflect = pickReflect(now, state);
+  const name = settings.name?.trim();
 
   function logCurrent(status: 'ontime' | 'late' | 'missed') {
     if (!current) return;
@@ -100,6 +138,7 @@ export function Today() {
   return (
     <div className="fade-in">
       <header style={{ marginBottom: 16 }}>
+        {name ? <p className="greet">Assalamu ‘alaykum, {name}</p> : null}
         <p className="hijri">{hijriDate(now)}</p>
         <h1 className="dateline">{fmtLongDate(now)}</h1>
         {settings.place.timezone !== deviceTimeZone() ? (
@@ -251,6 +290,23 @@ export function Today() {
           <p className="hero-sub">No prayer times available for this location and date.</p>
         )}
       </section>
+
+      {reflect ? (
+        <section className="reflect-card" aria-label="Journal prompt">
+          <p className="reflect-label">
+            <Icon name="book" size={15} />{' '}
+            {reflect.kind === 'reflection' ? `You prayed ${reflect.prayerName}` : kindMeta(reflect.kind).label}
+          </p>
+          <p className="reflect-prompt">{promptFor(reflect.kind, reflect.dayKey, 0, reflect.prayerName)}</p>
+          <button
+            type="button"
+            className="btn btn-quiet"
+            onClick={() => ui.openJournal({ kind: reflect.kind, prayer: reflect.prayer })}
+          >
+            {reflect.kind === 'checkin' ? 'Check in' : 'Write'} <Icon name="arrowRight" size={15} />
+          </button>
+        </section>
+      ) : null}
 
       {settings.learn && guidePrayer ? (
         <section className="learn-card" aria-label="Step-by-step guides">

@@ -1,3 +1,5 @@
+import type { JournalEntry } from './journal';
+
 export const PRAYER_KEYS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const;
 
 export type PrayerKey = (typeof PRAYER_KEYS)[number];
@@ -90,6 +92,9 @@ export interface Settings {
   /** Show the make-up (qada) panel and add missed prayers to it. */
   qadaEnabled: boolean;
 
+  /** What to call the user. Optional; empty means no name is used. */
+  name: string;
+
   // ---- Comfort & support (set by onboarding, always reversible) ----
   /** Answers to the "about you" questions; null until answered. */
   profile: Profile | null;
@@ -160,4 +165,6 @@ export interface Persisted {
   dismissed: Record<string, number>;
   /** Good deeds by prayer-day key. */
   deeds: Record<string, DeedEntry[]>;
+  /** Journal entries by prayer-day key. Never leaves the device except in a backup you export. */
+  journal: Record<string, JournalEntry[]>;
 }

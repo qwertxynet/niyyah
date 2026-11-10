@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { deviceTimeZone } from './format';
+import type { JournalEntry } from './journal';
 import { dateKey } from './prayer-times';
 import type {
   AdaptKey,
@@ -28,6 +29,7 @@ export const DEFAULT_SETTINGS: Settings = {
   preAlert: 10,
   sound: true,
   qadaEnabled: true,
+  name: '',
   profile: null,
   profileAsked: false,
   calm: false,
@@ -48,6 +50,7 @@ export function defaultState(): Persisted {
     qada: 0,
     dismissed: {},
     deeds: {},
+    journal: {},
   };
 }
 
@@ -67,6 +70,7 @@ function normalize(input: unknown): Persisted {
     qada: typeof raw.qada === 'number' && Number.isFinite(raw.qada) ? Math.max(0, Math.round(raw.qada)) : 0,
     dismissed: raw.dismissed && typeof raw.dismissed === 'object' ? (raw.dismissed as Record<string, number>) : {},
     deeds: raw.deeds && typeof raw.deeds === 'object' ? (raw.deeds as Record<string, DeedEntry[]>) : {},
+    journal: raw.journal && typeof raw.journal === 'object' ? (raw.journal as Record<string, JournalEntry[]>) : {},
   };
 }
 
@@ -212,6 +216,36 @@ export const actions = {
   /** Forget the answers and reasons; keep every current setting as it is. */
   clearProfile() {
     persist({ ...state, settings: { ...state.settings, profile: null, profileAsked: true } });
+  },
+
+  addJournal(dayKeyValue: string, entry: Omit<JournalEntry, 'id' | 'at'>): string {
+    const id = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    const list = [...(state.journal[dayKeyValue] ?? []), { ...entry, id, at: Date.now() }];
+    persist({ ...state, journal: { ...state.journal, [dayKeyValue]: list } });
+    return id;
+  },
+
+  updateJournal(dayKeyValue: string, id: string, patch: Partial<JournalEntry>) {
+    const list = (state.journal[dayKeyValue] ?? []).map((entry) => (entry.id === id ? { ...entry, ...patch } : entry));
+    persist({ ...state, journal: { ...state.journal, [dayKeyValue]: list } });
+  },
+
+  /** Removes an entry and returns it, so the caller can offer Undo. */
+  removeJournal(dayKeyValue: string, id: string): JournalEntry | undefined {
+    const current = state.journal[dayKeyValue] ?? [];
+    const removed = current.find((entry) => entry.id === id);
+    const list = current.filter((entry) => entry.id !== id);
+    const journal = { ...state.journal };
+    if (list.length) journal[dayKeyValue] = list;
+    else delete journal[dayKeyValue];
+    persist({ ...state, journal });
+    return removed;
+  },
+
+  /** Put a removed entry back exactly as it was (Undo). */
+  restoreJournal(dayKeyValue: string, entry: JournalEntry) {
+    const list = [...(state.journal[dayKeyValue] ?? []), entry].sort((a, b) => a.at - b.at);
+    persist({ ...state, journal: { ...state.journal, [dayKeyValue]: list } });
   },
 
   setQada(value: number) {

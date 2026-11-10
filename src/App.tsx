@@ -12,12 +12,12 @@ import { RecitationSheet } from './ui/components/RecitationSheet';
 import { AboutYouOverlay } from './ui/screens/AboutYou';
 import { Guide } from './ui/screens/Guide';
 import { Hasanat } from './ui/screens/Hasanat';
+import { Journal } from './ui/screens/Journal';
 import { Qibla } from './ui/screens/Qibla';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { Setup } from './ui/screens/Setup';
 import { Today } from './ui/screens/Today';
-import { Week } from './ui/screens/Week';
-import { UiContext, type GuideTarget, type UiApi } from './ui/ui-context';
+import { UiContext, type GuideTarget, type JournalIntent, type UiApi } from './ui/ui-context';
 import { useTheme } from './ui/useTheme';
 
 interface ToastState {
@@ -42,6 +42,8 @@ export function App() {
   const [recitation, setRecitation] = useState<{ dayKey: string; prayer: PrayerKey } | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [guide, setGuide] = useState<GuideTarget | null>(null);
+  const [journalIntent, setJournalIntent] = useState<JournalIntent | null>(null);
+  const clearJournalIntent = useCallback(() => setJournalIntent(null), []);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
@@ -99,6 +101,10 @@ export function App() {
       openRecitation: (dayKey, prayer) => setRecitation({ dayKey, prayer }),
       openAboutYou: () => setAboutOpen(true),
       openGuide: (target) => setGuide(target),
+      openJournal: (intent) => {
+        setJournalIntent(intent);
+        setTab('week');
+      },
       toast: (message, undo) => setToast({ id: Date.now(), message, undo }),
     }),
     [],
@@ -127,7 +133,7 @@ export function App() {
         {tab === 'today' ? <Today /> : null}
         {tab === 'qibla' ? <Qibla /> : null}
         {tab === 'hasanat' && settings.hasanatTab ? <Hasanat /> : null}
-        {tab === 'week' ? <Week /> : null}
+        {tab === 'week' ? <Journal intent={journalIntent} onIntentUsed={clearJournalIntent} /> : null}
         {tab === 'settings' ? <SettingsScreen health={health} onResync={() => void resync()} /> : null}
       </div>
 

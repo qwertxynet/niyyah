@@ -6,7 +6,7 @@ const TABS: { id: Tab; label: string; icon: IconName }[] = [
   { id: 'today', label: 'Today', icon: 'sun' },
   { id: 'qibla', label: 'Qibla', icon: 'compass' },
   { id: 'hasanat', label: 'Hasanat', icon: 'star' },
-  { id: 'week', label: 'Week', icon: 'calendar' },
+  { id: 'week', label: 'Journal', icon: 'book' },
   { id: 'settings', label: 'Settings', icon: 'sliders' },
 ];
 

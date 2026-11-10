@@ -15,7 +15,8 @@ function cellClass(status: LogStatus | undefined, future: boolean): string {
   return 'cell is-empty';
 }
 
-export function Week() {
+/** The prayer grid. `embedded` hides its own heading when shown inside Journal. */
+export function Week({ embedded = false }: { embedded?: boolean }) {
   const { settings, logs } = useStore();
   const now = useNow(30_000);
   const ui = useUi();
@@ -51,10 +52,14 @@ export function Week() {
 
   return (
     <div className="fade-in">
-      <header className="screen-head">
-        <h1>Your week</h1>
-        <p>A record, not a scoreboard. Tap any cell to correct it.</p>
-      </header>
+      {embedded ? (
+        <p className="setting-hint week-note">A record, not a scoreboard. Tap any cell to correct it.</p>
+      ) : (
+        <header className="screen-head">
+          <h1>Your week</h1>
+          <p>A record, not a scoreboard. Tap any cell to correct it.</p>
+        </header>
+      )}
 
       <div className="week-summary">
         <strong className="tnum">{done}</strong>

@@ -9,7 +9,7 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
 
 ## What it does
 
-- **Adapts to you.** Three optional questions — your relationship with Islam, whether you
+- **Adapts to you.** An optional name, then three optional questions — your relationship with Islam, whether you
   are autistic, ADHD (both = AuDHD), neurotypical or unsure, and what gets in the way —
   suggest settings such as a low-stimulation mode, minutes-only countdowns, transition
   warnings (wrap up → wudu → adhan), plain wording, a gentle/encouraging/minimal tone and
@@ -34,6 +34,10 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
   offers good-deed cards from one minute to a full juz', with a tap counter for dhikr.
   It always says that only Allah knows the reward. The method and sources sit behind
   "How is this estimated?".
+- **A journal with prompts.** Check-ins (mood and energy in two taps), after-prayer
+  reflections, gratitude, duas you can later mark answered, and an intention for tomorrow.
+  Today offers one prompt at a time — right after you log a prayer, it asks about that
+  prayer. Private to the device and included in backups.
 - **Hijri date** (Umm al-Qura) beside the Gregorian one.
 - **Week grid** of prayer history you can correct by tapping any cell — a record, not
   a scoreboard. No broken streaks, no red crosses, no scolding copy.
