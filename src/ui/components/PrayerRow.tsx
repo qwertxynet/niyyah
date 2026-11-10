@@ -23,6 +23,7 @@ export function PrayerRow({
 
   return (
     <li
+      data-prayer={slot.key}
       className={`row${isCurrent ? ' is-current' : ''}${status ? ' is-logged' : ''}${
         started ? ' is-past' : ''
       }`}

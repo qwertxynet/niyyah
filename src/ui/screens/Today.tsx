@@ -2,9 +2,12 @@ import { CatchupCard } from '../components/CatchupCard';
 import { Icon } from '../components/Icons';
 import { PrayerRow } from '../components/PrayerRow';
 import { QadaCard } from '../components/QadaCard';
+import { EmptyState } from '../components/EmptyState';
+import { SkyArc } from '../components/SkyArc';
 import { Term } from '../components/Term';
 import { deviceTimeZone, fmtLongDate, fmtTime, hijriDate } from '../../domain/format';
 import { say } from '../../domain/copy';
+import { dayArc } from '../../domain/sky';
 import { kindMeta, promptFor, type JournalKind } from '../../domain/journal';
 import { RAKAHS } from '../../domain/hasanat';
 import {
@@ -92,10 +95,7 @@ export function Today() {
 
   if (!settings.place) {
     return (
-      <div className="empty">
-        <h3>Add a location</h3>
-        <p>Niyyah needs your city to calculate prayer times on the device.</p>
-      </div>
+      <EmptyState title="Add a location">Niyyah needs your city to calculate prayer times on the device.</EmptyState>
     );
   }
 
@@ -119,6 +119,7 @@ export function Today() {
   const askAbout = !settings.profile && !settings.profileAsked;
   const guidePrayer = (current && !currentStatus ? current : next?.slot) ?? null;
   const reflect = pickReflect(now, state);
+  const arc = dayArc(now, settings, cycle.active);
   const name = settings.name?.trim();
 
   function logCurrent(status: 'ontime' | 'late' | 'missed') {
@@ -228,12 +229,17 @@ export function Today() {
                 <span>As of {fmtTime(now, settings.timeFormat)}</span>
                 <span className="tnum">{Math.round(pct)}% of the window gone</span>
               </div>
-              <div className="window-track">
-                <div
-                  className={`window-fill${urgent ? ' is-urgent' : ''}`}
-                  style={{ width: `${pct}%` }}
+              {arc ? (
+                <SkyArc
+                  arc={arc}
+                  current={current.key}
+                  label={`${current.name}: ${Math.round(pct)}% of the window has passed`}
                 />
-              </div>
+              ) : (
+                <div className="window-track">
+                  <div className={`window-fill${urgent ? ' is-urgent' : ''}`} style={{ width: `${pct}%` }} />
+                </div>
+              )}
               <p className="window-foot">
                 {current.name} began {fmtTime(current.start, settings.timeFormat)}
               </p>
@@ -268,22 +274,9 @@ export function Today() {
               {next.slot.name === 'Fajr' && !settings.literal ? ' · tomorrow begins with Fajr' : ''}
             </p>
             <div className="window">
-              <div className="window-track">
-                <div
-                  className="window-fill"
-                  style={{
-                    width: `${Math.min(
-                      100,
-                      Math.max(
-                        0,
-                        ((now.getTime() - (current?.start.getTime() ?? next.at.getTime() - 1)) /
-                          (next.at.getTime() - (current?.start.getTime() ?? next.at.getTime() - 1))) *
-                          100,
-                      ),
-                    )}%`,
-                  }}
-                />
-              </div>
+              {arc ? (
+                <SkyArc arc={arc} current={next.slot.key} label={`Next: ${next.slot.name}`} />
+              ) : null}
             </div>
           </>
         ) : (
@@ -291,40 +284,38 @@ export function Today() {
         )}
       </section>
 
-      {reflect ? (
-        <section className="reflect-card" aria-label="Journal prompt">
-          <p className="reflect-label">
-            <Icon name="book" size={15} />{' '}
-            {reflect.kind === 'reflection' ? `You prayed ${reflect.prayerName}` : kindMeta(reflect.kind).label}
-          </p>
-          <p className="reflect-prompt">{promptFor(reflect.kind, reflect.dayKey, 0, reflect.prayerName)}</p>
-          <button
-            type="button"
-            className="btn btn-quiet"
-            onClick={() => ui.openJournal({ kind: reflect.kind, prayer: reflect.prayer })}
-          >
-            {reflect.kind === 'checkin' ? 'Check in' : 'Write'} <Icon name="arrowRight" size={15} />
-          </button>
-        </section>
-      ) : null}
-
-      {settings.learn && guidePrayer ? (
-        <section className="learn-card" aria-label="Step-by-step guides">
-          <p className="learn-title">
-            <Icon name="star" size={16} /> Step by step
-          </p>
-          <div className="learn-actions">
-            <button type="button" className="btn btn-quiet" onClick={() => ui.openGuide({ kind: 'wudu' })}>
-              Wudu
-            </button>
+      {reflect || (settings.learn && guidePrayer) ? (
+        <section className="next-steps" aria-label="Next steps">
+          {reflect ? (
             <button
               type="button"
-              className="btn btn-quiet"
-              onClick={() => ui.openGuide({ kind: 'prayer', prayer: guidePrayer.key })}
+              className="next-step"
+              onClick={() => ui.openJournal({ kind: reflect.kind, prayer: reflect.prayer })}
             >
-              How to pray {guidePrayer.name} · {RAKAHS[guidePrayer.key]} rak{'\u2018'}ah
+              <span className="next-icon" aria-hidden="true">
+                <Icon name="book" size={17} />
+              </span>
+              <span className="next-text">
+                <b>{reflect.kind === 'reflection' ? `You prayed ${reflect.prayerName}` : kindMeta(reflect.kind).label}</b>
+                <span>{promptFor(reflect.kind, reflect.dayKey, 0, reflect.prayerName)}</span>
+              </span>
+              <Icon name="chevron" size={18} />
             </button>
-          </div>
+          ) : null}
+          {settings.learn && guidePrayer ? (
+            <div className="next-guides" aria-label="Step-by-step guides">
+              <button type="button" className="chip-btn" onClick={() => ui.openGuide({ kind: 'wudu' })}>
+                <Icon name="star" size={14} /> Wudu
+              </button>
+              <button
+                type="button"
+                className="chip-btn"
+                onClick={() => ui.openGuide({ kind: 'prayer', prayer: guidePrayer.key })}
+              >
+                How to pray {guidePrayer.name} · {RAKAHS[guidePrayer.key]} rak{'\u2018'}ah
+              </button>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
