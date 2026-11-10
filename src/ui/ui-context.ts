@@ -3,11 +3,13 @@ import type { PrayerKey } from '../domain/types';
 
 export interface UiApi {
   openPrayer(dayKey: string, prayer: PrayerKey): void;
+  openRecitation(dayKey: string, prayer: PrayerKey): void;
   toast(message: string, undo?: () => void): void;
 }
 
 export const UiContext = createContext<UiApi>({
   openPrayer: () => undefined,
+  openRecitation: () => undefined,
   toast: () => undefined,
 });
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon } from './Icons';
 
 interface SheetProps {
@@ -35,7 +36,9 @@ export function Sheet({ open, onClose, title, children, labelledBy }: SheetProps
 
   if (!open) return null;
 
-  return (
+  // Portal to <body> so a sheet opened from inside an animated screen is not
+  // trapped by that screen's transform.
+  return createPortal(
     <div className="sheet-backdrop" onMouseDown={onClose}>
       <div
         className="sheet-panel"
@@ -52,6 +55,7 @@ export function Sheet({ open, onClose, title, children, labelledBy }: SheetProps
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

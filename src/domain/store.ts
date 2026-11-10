@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { deviceTimeZone } from './format';
 import { dateKey } from './prayer-times';
-import type { DayLog, LogStatus, Logs, Persisted, PrayerKey, Settings } from './types';
+import type { DayLog, DeedEntry, LogStatus, Logs, Persisted, PrayerKey, Recitation, Settings } from './types';
 
 const STORAGE_KEY = 'niyyah.state.v1';
 
@@ -25,6 +25,7 @@ export function defaultState(): Persisted {
     logs: {},
     qada: 0,
     dismissed: {},
+    deeds: {},
   };
 }
 
@@ -43,6 +44,7 @@ function normalize(input: unknown): Persisted {
     logs: raw.logs && typeof raw.logs === 'object' ? (raw.logs as Logs) : {},
     qada: typeof raw.qada === 'number' && Number.isFinite(raw.qada) ? Math.max(0, Math.round(raw.qada)) : 0,
     dismissed: raw.dismissed && typeof raw.dismissed === 'object' ? (raw.dismissed as Record<string, number>) : {},
+    deeds: raw.deeds && typeof raw.deeds === 'object' ? (raw.deeds as Record<string, DeedEntry[]>) : {},
   };
 }
 
@@ -118,7 +120,8 @@ export const actions = {
     } else {
       const counts = status === 'missed' && state.settings.qadaEnabled;
       if (counts && !previous?.q) qada += 1;
-      day[prayer] = { s: status, at: Date.now(), q: counts || undefined };
+      // Keep jama'ah and recitation details when only the status changes.
+      day[prayer] = { ...previous, s: status, at: Date.now(), q: counts || undefined };
     }
 
     const logs = { ...state.logs };
@@ -126,6 +129,38 @@ export const actions = {
     else logs[dayKeyValue] = day;
 
     persist({ ...state, logs, qada });
+  },
+
+  /** Update the optional hasanat details (jama'ah, recitation) of a logged prayer. */
+  setPrayerDetails(
+    dayKeyValue: string,
+    prayer: PrayerKey,
+    patch: { j?: boolean; r?: Recitation[]; nf?: number[] },
+  ) {
+    const existing = state.logs[dayKeyValue]?.[prayer];
+    if (!existing) return;
+    const entry = { ...existing, ...patch };
+    if (!entry.j) delete entry.j;
+    if (!entry.r?.length) delete entry.r;
+    if (!entry.nf?.length) delete entry.nf;
+    const logs = { ...state.logs, [dayKeyValue]: { ...state.logs[dayKeyValue], [prayer]: entry } };
+    persist({ ...state, logs });
+  },
+
+  addDeed(dayKeyValue: string, deed: Omit<DeedEntry, 'id' | 'at'>): string {
+    const id = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    const entry: DeedEntry = { ...deed, id, at: Date.now() };
+    const list = [...(state.deeds[dayKeyValue] ?? []), entry];
+    persist({ ...state, deeds: { ...state.deeds, [dayKeyValue]: list } });
+    return id;
+  },
+
+  removeDeed(dayKeyValue: string, id: string) {
+    const list = (state.deeds[dayKeyValue] ?? []).filter((deed) => deed.id !== id);
+    const deeds = { ...state.deeds };
+    if (list.length) deeds[dayKeyValue] = list;
+    else delete deeds[dayKeyValue];
+    persist({ ...state, deeds });
   },
 
   setQada(value: number) {

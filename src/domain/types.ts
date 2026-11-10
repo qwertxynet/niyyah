@@ -59,6 +59,33 @@ export interface LogEntry {
   at: number;
   /** True when this entry was added to the make-up counter. */
   q?: boolean;
+  /** Prayed in congregation (jama'ah). */
+  j?: boolean;
+  /** Optional recitation beyond al-Fatihah, per rak'ah (k is 1-based). */
+  r?: Recitation[];
+  /** Rak'ahs where al-Fatihah should not be counted (it is by default). */
+  nf?: number[];
+}
+
+export interface Recitation {
+  /** Rak'ah, 1-based. */
+  k: number;
+  /** Surah number. */
+  s: number;
+  from: number;
+  to: number;
+}
+
+/** A good deed done outside the five prayers. */
+export interface DeedEntry {
+  id: string;
+  /** Which card it came from (see src/domain/hasanat.ts). */
+  rule: string;
+  /** Short description, e.g. "Juz' 30" or "Surah al-Mulk". */
+  label: string;
+  /** Estimated hasanat at the time it was recorded. */
+  h: number;
+  at: number;
 }
 
 export type DayLog = Partial<Record<PrayerKey, LogEntry>>;
@@ -71,4 +98,6 @@ export interface Persisted {
   qada: number;
   /** Catch-up cards the user asked to skip, keyed "dayKey:prayer". */
   dismissed: Record<string, number>;
+  /** Good deeds by prayer-day key. */
+  deeds: Record<string, DeedEntry[]>;
 }
