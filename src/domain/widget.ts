@@ -77,6 +77,17 @@ export function buildWidgetPayload(state: Persisted, now = new Date(), days = WI
 
 let lastJson = '';
 
+/** Empty the home-screen widget; it then shows "Open Niyyah to load prayer times". */
+export async function clearWidget(): Promise<void> {
+  lastJson = '';
+  if (platform !== 'android') return;
+  try {
+    await Bridge.update({ json: JSON.stringify({ v: 1, place: '', generatedAt: Date.now(), coarse: false, days: [] }) });
+  } catch {
+    // No widget bridge in this shell.
+  }
+}
+
 /** Push the schedule to the home-screen widget. A no-op off Android. */
 export async function syncWidget(state: Persisted): Promise<void> {
   if (platform !== 'android') return;

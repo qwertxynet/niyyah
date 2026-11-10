@@ -14,6 +14,7 @@ import { ComfortSection } from '../components/ComfortSection';
 import { Segmented, SettingRow, SettingStack, Toggle } from '../components/Controls';
 import { Icon } from '../components/Icons';
 import { LocationPicker } from '../components/LocationPicker';
+import { ResetSheet } from '../components/ResetSheet';
 import { Sheet } from '../components/Sheet';
 import { useUi } from '../ui-context';
 
@@ -28,6 +29,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
   const { settings, qada } = useStore();
   const ui = useUi();
   const [locationOpen, setLocationOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
   const [testMessage, setTestMessage] = useState<string | null>(null);
   const [autostart, setAutostart] = useState<boolean | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -365,16 +367,11 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
             </button>
             <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={onFile} />
           </SettingRow>
-          <SettingRow label="Reset" hint="Clears settings, history and the make-up count.">
-            <button
-              type="button"
-              className="btn btn-quiet btn-danger"
-              onClick={() => {
-                if (window.confirm('Clear all Niyyah data on this device? This cannot be undone.')) {
-                  actions.resetAll();
-                }
-              }}
-            >
+          <SettingRow
+            label="Reset all app data"
+            hint="Deletes prayer history, journal, hasanat, answers and settings, and cancels reminders."
+          >
+            <button type="button" className="btn btn-quiet btn-danger" onClick={() => setResetOpen(true)}>
               <Icon name="refresh" size={15} /> Reset
             </button>
           </SettingRow>
@@ -413,6 +410,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
           }}
         />
       </Sheet>
+      <ResetSheet open={resetOpen} onClose={() => setResetOpen(false)} onBackup={() => void exportData()} />
     </div>
   );
 }
