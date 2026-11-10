@@ -1,7 +1,18 @@
 import { useSyncExternalStore } from 'react';
 import { deviceTimeZone } from './format';
 import { dateKey } from './prayer-times';
-import type { DayLog, DeedEntry, LogStatus, Logs, Persisted, PrayerKey, Recitation, Settings } from './types';
+import type {
+  AdaptKey,
+  DayLog,
+  DeedEntry,
+  LogStatus,
+  Logs,
+  Persisted,
+  PrayerKey,
+  Profile,
+  Recitation,
+  Settings,
+} from './types';
 
 const STORAGE_KEY = 'niyyah.state.v1';
 
@@ -17,6 +28,17 @@ export const DEFAULT_SETTINGS: Settings = {
   preAlert: 10,
   sound: true,
   qadaEnabled: true,
+  profile: null,
+  profileAsked: false,
+  calm: false,
+  coarseTime: false,
+  literal: false,
+  tone: 'gentle',
+  ladder: false,
+  ladderSteps: [20, 10],
+  catchup: true,
+  learn: false,
+  hasanatTab: true,
 };
 
 export function defaultState(): Persisted {
@@ -161,6 +183,35 @@ export const actions = {
     if (list.length) deeds[dayKeyValue] = list;
     else delete deeds[dayKeyValue];
     persist({ ...state, deeds });
+  },
+
+  /**
+   * Change one Comfort & support setting by hand. If onboarding had suggested
+   * it, remember that the user chose otherwise so a retake leaves it alone.
+   */
+  setAdaptation<K extends AdaptKey>(key: K, value: Settings[K]) {
+    let profile = state.settings.profile;
+    if (profile?.applied.some((item) => item.key === key) && !profile.overridden.includes(key)) {
+      profile = { ...profile, overridden: [...profile.overridden, key] };
+    }
+    persist({ ...state, settings: { ...state.settings, [key]: value, profile } });
+  },
+
+  /** Save onboarding answers and apply their suggestions (outside first setup). */
+  applyProfile(profile: Profile, patch: Partial<Settings>) {
+    persist({ ...state, settings: { ...state.settings, ...patch, profile, profileAsked: true } });
+  },
+
+  /** Re-apply every onboarding suggestion, including ones changed by hand. */
+  resetToSuggestions(patch: Partial<Settings>) {
+    const profile = state.settings.profile;
+    if (!profile) return;
+    persist({ ...state, settings: { ...state.settings, ...patch, profile: { ...profile, overridden: [] } } });
+  },
+
+  /** Forget the answers and reasons; keep every current setting as it is. */
+  clearProfile() {
+    persist({ ...state, settings: { ...state.settings, profile: null, profileAsked: true } });
   },
 
   setQada(value: number) {

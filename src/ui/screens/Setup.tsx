@@ -6,6 +6,7 @@ import type { HighLatKey, MadhabKey, MethodKey, Settings } from '../../domain/ty
 import { Segmented, Toggle } from '../components/Controls';
 import { Icon } from '../components/Icons';
 import { LocationPicker } from '../components/LocationPicker';
+import { AboutYou } from './AboutYou';
 
 const HIGH_LATITUDES: { value: HighLatKey; label: string }[] = [
   { value: 'auto', label: 'Method default' },
@@ -19,6 +20,8 @@ export function Setup() {
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Settings>(() => ({ ...settings }));
   const [busy, setBusy] = useState(false);
+  // The "about you" questions come first, so later steps can reflect them.
+  const [aboutDone, setAboutDone] = useState(Boolean(settings.profile));
 
   const patch = (next: Partial<Settings>) => setDraft((current) => ({ ...current, ...next }));
   const canContinue = step === 0 ? Boolean(draft.place) : true;
@@ -33,6 +36,23 @@ export function Setup() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (!aboutDone) {
+    return (
+      <AboutYou
+        settings={draft}
+        skipLabel="Skip questions"
+        onSkip={() => {
+          patch({ profileAsked: true });
+          setAboutDone(true);
+        }}
+        onComplete={(profile, adapted) => {
+          patch({ ...adapted, profile, profileAsked: true });
+          setAboutDone(true);
+        }}
+      />
+    );
   }
 
   return (
@@ -206,7 +226,11 @@ export function Setup() {
           <button type="button" className="btn btn-quiet" onClick={() => setStep(step - 1)} disabled={busy}>
             Back
           </button>
-        ) : null}
+        ) : (
+          <button type="button" className="btn btn-quiet" onClick={() => setAboutDone(false)} disabled={busy}>
+            Back
+          </button>
+        )}
         {step > 0 && step < 3 ? (
           <button type="button" className="btn btn-quiet" onClick={() => setStep(3)} disabled={busy}>
             Skip
