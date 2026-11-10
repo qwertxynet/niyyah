@@ -18,6 +18,7 @@ import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { Setup } from './ui/screens/Setup';
 import { Today } from './ui/screens/Today';
 import { UiContext, type GuideTarget, type JournalIntent, type UiApi } from './ui/ui-context';
+import { useSky } from './ui/useSky';
 import { useTheme } from './ui/useTheme';
 
 interface ToastState {
@@ -29,7 +30,8 @@ interface ToastState {
 export function App() {
   const state = useStore();
   const { settings } = state;
-  useTheme(settings.theme, settings.calm);
+  const resolvedTheme = useTheme(settings.theme, settings.calm);
+  useSky(settings, resolvedTheme);
 
   // Times belong to the chosen place, so every formatter reads that clock.
   setDisplayTimeZone(settings.place?.timezone);
