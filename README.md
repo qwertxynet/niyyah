@@ -63,6 +63,7 @@ Verify it yourself: load the app once, then turn Wi-Fi off and reload. The only
 | Windows (portable) | `dist-app/Niyyah 1.0.0.exe` | Single file, no install. |
 | Android | `dist-app/Niyyah-1.0.0.apk` (Gradle's own copy: `android/app/build/outputs/apk/release/app-release.apk`) | Signed with `android/niyyah-release.keystore`. Sideload by tapping the file (allow "install unknown apps"). |
 | Browser | `npm run preview` after `npm run build` | Installable PWA; reminders only fire while the tab is open. |
+| iPhone & web | https://qwertxynet.github.io/niyyah/ | Deployed by `.github/workflows/pages.yml` on every push to `main`. In Safari: Share → **Add to Home Screen**. Works offline; reminders only fire while it is open. |
 
 ### Android first-run checklist
 
