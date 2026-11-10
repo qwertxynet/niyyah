@@ -12,7 +12,7 @@ import type { AdaptKey, FaithKey, NeedKey, NeuroKey, Profile, Settings, ToneKey 
 import { AdaptList, type AdaptValues } from '../components/AdaptList';
 import { Icon } from '../components/Icons';
 
-const STEPS = 4;
+const STEPS = 5;
 const EXCLUSIVE: NeuroKey[] = ['neurotypical', 'unsure', 'unsaid'];
 
 function valuesOf(settings: Settings): AdaptValues {
@@ -47,6 +47,7 @@ export function AboutYou({
 }) {
   const previous = settings.profile;
   const [step, setStep] = useState(0);
+  const [name, setName] = useState(settings.name ?? '');
   const [faith, setFaith] = useState<FaithKey | null>(previous?.faith ?? null);
   const [neuro, setNeuro] = useState<NeuroKey[]>(previous?.neuro ?? []);
   const [needs, setNeeds] = useState<NeedKey[]>(previous?.needs ?? []);
@@ -71,8 +72,8 @@ export function AboutYou({
   }
 
   function go(next: number) {
-    if (next === 2 && !needsTouched) setNeeds(suggestedNeeds(neuro));
-    if (next === 3) {
+    if (next === 3 && !needsTouched) setNeeds(suggestedNeeds(neuro));
+    if (next === 4) {
       // Fresh suggestions for everything the user has not changed by hand.
       setValues((current) => {
         const out = { ...current };
@@ -91,7 +92,7 @@ export function AboutYou({
 
   function finish() {
     const profile: Profile = { faith, neuro, needs, at: Date.now(), applied, overridden };
-    onComplete(profile, { ...values } as Partial<Settings>);
+    onComplete(profile, { ...values, name: name.trim().slice(0, 40) } as Partial<Settings>);
   }
 
   const turnedOn = applied.filter((item) => item.value === true && item.because.length > 0).length;
@@ -102,7 +103,7 @@ export function AboutYou({
         <span className="wordmark">
           <Icon name="moon" size={17} /> Niyyah
         </span>
-        <div className="dots" aria-label={`Question ${step + 1} of ${STEPS}`} role="status">
+        <div className="dots" aria-label={`Step ${step + 1} of ${STEPS}`} role="status">
           {Array.from({ length: STEPS }, (_, index) => (
             <i key={index} className={index === step ? 'is-active' : undefined} />
           ))}
@@ -111,6 +112,31 @@ export function AboutYou({
 
       <div className="setup-body fade-in" key={step}>
         {step === 0 ? (
+          <>
+            <p className="about-kicker">Welcome</p>
+            <h1>What should Niyyah call you?</h1>
+            <p className="lede">Optional. A first name or nickname is plenty — it&apos;s only used to greet you.</p>
+            <label className="field" htmlFor="about-name">
+              <span className="field-label">Your name</span>
+              <input
+                id="about-name"
+                className="input"
+                type="text"
+                autoComplete="given-name"
+                autoCapitalize="words"
+                maxLength={40}
+                placeholder="e.g. Aisha"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') go(1);
+                }}
+              />
+            </label>
+          </>
+        ) : null}
+
+        {step === 1 ? (
           <>
             <p className="about-kicker">About you · 1 of 3</p>
             <h1>Where are you with Islam right now?</h1>
@@ -139,7 +165,7 @@ export function AboutYou({
           </>
         ) : null}
 
-        {step === 1 ? (
+        {step === 2 ? (
           <>
             <p className="about-kicker">About you · 2 of 3</p>
             <h1>How does your mind work?</h1>
@@ -176,7 +202,7 @@ export function AboutYou({
           </>
         ) : null}
 
-        {step === 2 ? (
+        {step === 3 ? (
           <>
             <p className="about-kicker">About you · 3 of 3</p>
             <h1>What gets in the way of praying?</h1>
@@ -205,9 +231,9 @@ export function AboutYou({
           </>
         ) : null}
 
-        {step === 3 ? (
+        {step === 4 ? (
           <>
-            <h1>Here&apos;s how Niyyah adapted</h1>
+            <h1>Here&apos;s how Niyyah adapted{name.trim() ? `, ${name.trim()}` : ''}</h1>
             <p className="lede">
               {turnedOn > 0
                 ? 'Each change says why. Flip anything that doesn’t suit you — you can change all of it later in Settings → Comfort & support.'
@@ -243,7 +269,9 @@ export function AboutYou({
         )}
         {step < STEPS - 1 ? (
           <button type="button" className="btn btn-solid" style={{ flex: 1 }} onClick={() => go(step + 1)}>
-            {(step === 0 && !faith) || (step === 1 && neuro.length === 0) ? 'Skip this one' : 'Continue'}{' '}
+            {(step === 0 && !name.trim()) || (step === 1 && !faith) || (step === 2 && neuro.length === 0)
+              ? 'Skip this one'
+              : 'Continue'}{' '}
             <Icon name="arrowRight" size={17} />
           </button>
         ) : (

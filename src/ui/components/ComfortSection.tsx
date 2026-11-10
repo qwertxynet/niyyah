@@ -79,6 +79,21 @@ export function ComfortSection() {
           )}
         </div>
 
+        <label className="comfort-name" htmlFor="comfort-name">
+          <span className="setting-label">Your name</span>
+          <input
+            id="comfort-name"
+            className="input"
+            type="text"
+            autoComplete="given-name"
+            maxLength={40}
+            placeholder="Optional"
+            value={settings.name}
+            onChange={(event) => actions.updateSettings({ name: event.target.value })}
+            onBlur={(event) => actions.updateSettings({ name: event.target.value.trim() })}
+          />
+        </label>
+
         <AdaptList
           values={values}
           applied={profile?.applied ?? null}
