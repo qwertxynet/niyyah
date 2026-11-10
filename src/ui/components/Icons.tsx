@@ -22,7 +22,9 @@ export type IconName =
   | 'spark'
   | 'shield'
   | 'location'
-  | 'arrowRight';
+  | 'arrowRight'
+  | 'compass'
+  | 'star';
 
 const paths: Record<IconName, ReactElement> = {
   check: <path d="m5 13 4 4L19 7" />,
@@ -104,6 +106,19 @@ const paths: Record<IconName, ReactElement> = {
     </>
   ),
   arrowRight: <path d="M5 12h14m0 0-5-5m5 5-5 5" />,
+  compass: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" />
+    </>
+  ),
+  // Eight-point star (two overlapping squares), the khatam of the background pattern.
+  star: (
+    <>
+      <rect x="6" y="6" width="12" height="12" rx="0.6" />
+      <rect x="6" y="6" width="12" height="12" rx="0.6" transform="rotate(45 12 12)" />
+    </>
+  ),
 };
 
 export function Icon({
