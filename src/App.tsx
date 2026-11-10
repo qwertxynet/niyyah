@@ -2,20 +2,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { setDisplayTimeZone } from './domain/format';
 import { buildReminderEvents } from './domain/reminders';
 import { syncSchedule, type Health } from './domain/notify';
-import { useStore } from './domain/store';
+import { actions, useStore } from './domain/store';
 import { syncWidget } from './domain/widget';
 import type { PrayerKey } from './domain/types';
 import { BottomNav, type Tab } from './ui/components/BottomNav';
 import { Icon } from './ui/components/Icons';
 import { PrayerSheet } from './ui/components/PrayerSheet';
 import { RecitationSheet } from './ui/components/RecitationSheet';
+import { AboutYouOverlay } from './ui/screens/AboutYou';
+import { Guide } from './ui/screens/Guide';
 import { Hasanat } from './ui/screens/Hasanat';
 import { Qibla } from './ui/screens/Qibla';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { Setup } from './ui/screens/Setup';
 import { Today } from './ui/screens/Today';
 import { Week } from './ui/screens/Week';
-import { UiContext, type UiApi } from './ui/ui-context';
+import { UiContext, type GuideTarget, type UiApi } from './ui/ui-context';
 import { useTheme } from './ui/useTheme';
 
 interface ToastState {
@@ -27,14 +29,19 @@ interface ToastState {
 export function App() {
   const state = useStore();
   const { settings } = state;
-  useTheme(settings.theme);
+  useTheme(settings.theme, settings.calm);
 
   // Times belong to the chosen place, so every formatter reads that clock.
   setDisplayTimeZone(settings.place?.timezone);
 
   const [tab, setTab] = useState<Tab>('today');
+  useEffect(() => {
+    if (tab === 'hasanat' && !settings.hasanatTab) setTab('today');
+  }, [tab, settings.hasanatTab]);
   const [sheet, setSheet] = useState<{ dayKey: string; prayer: PrayerKey } | null>(null);
   const [recitation, setRecitation] = useState<{ dayKey: string; prayer: PrayerKey } | null>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [guide, setGuide] = useState<GuideTarget | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
@@ -90,6 +97,8 @@ export function App() {
     () => ({
       openPrayer: (dayKey, prayer) => setSheet({ dayKey, prayer }),
       openRecitation: (dayKey, prayer) => setRecitation({ dayKey, prayer }),
+      openAboutYou: () => setAboutOpen(true),
+      openGuide: (target) => setGuide(target),
       toast: (message, undo) => setToast({ id: Date.now(), message, undo }),
     }),
     [],
@@ -117,15 +126,34 @@ export function App() {
 
         {tab === 'today' ? <Today /> : null}
         {tab === 'qibla' ? <Qibla /> : null}
-        {tab === 'hasanat' ? <Hasanat /> : null}
+        {tab === 'hasanat' && settings.hasanatTab ? <Hasanat /> : null}
         {tab === 'week' ? <Week /> : null}
         {tab === 'settings' ? <SettingsScreen health={health} onResync={() => void resync()} /> : null}
       </div>
 
-      <BottomNav tab={tab} onChange={setTab} />
+      <BottomNav tab={tab} onChange={setTab} hidden={settings.hasanatTab ? [] : ['hasanat']} />
 
       <PrayerSheet target={sheet} onClose={() => setSheet(null)} />
       <RecitationSheet target={recitation} onClose={() => setRecitation(null)} />
+
+      {aboutOpen ? (
+        <AboutYouOverlay
+          settings={settings}
+          skipLabel="Not now"
+          onSkip={() => {
+            if (!settings.profile) actions.updateSettings({ profileAsked: true });
+            setAboutOpen(false);
+          }}
+          onComplete={(profile, patch) => {
+            actions.applyProfile(profile, patch);
+            setAboutOpen(false);
+            setTab('settings');
+            setToast({ id: Date.now(), message: 'Saved. Every change is listed under Comfort & support.' });
+          }}
+        />
+      ) : null}
+
+      {guide ? <Guide target={guide} onClose={() => setGuide(null)} /> : null}
 
       {toast ? (
         <div className="toast" role="status" key={toast.id}>

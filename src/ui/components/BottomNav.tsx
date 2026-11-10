@@ -10,10 +10,19 @@ const TABS: { id: Tab; label: string; icon: IconName }[] = [
   { id: 'settings', label: 'Settings', icon: 'sliders' },
 ];
 
-export function BottomNav({ tab, onChange }: { tab: Tab; onChange: (next: Tab) => void }) {
+export function BottomNav({
+  tab,
+  onChange,
+  hidden = [],
+}: {
+  tab: Tab;
+  onChange: (next: Tab) => void;
+  /** Tabs switched off in Settings → Comfort & support. */
+  hidden?: Tab[];
+}) {
   return (
     <nav className="nav" aria-label="Main">
-      {TABS.map((entry) => (
+      {TABS.filter((entry) => !hidden.includes(entry.id)).map((entry) => (
         <button
           key={entry.id}
           type="button"

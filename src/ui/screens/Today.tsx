@@ -2,11 +2,14 @@ import { CatchupCard } from '../components/CatchupCard';
 import { Icon } from '../components/Icons';
 import { PrayerRow } from '../components/PrayerRow';
 import { QadaCard } from '../components/QadaCard';
+import { Term } from '../components/Term';
 import { deviceTimeZone, fmtLongDate, fmtTime, hijriDate } from '../../domain/format';
+import { say } from '../../domain/copy';
+import { RAKAHS } from '../../domain/hasanat';
 import {
   addDays,
   cycleAt,
-  formatOffset,
+  fmtLeft,
   placeCivilDate,
   prayerDay,
   type Slot,
@@ -47,7 +50,8 @@ function findCatchup(
 export function Today() {
   const state = useStore();
   const { settings, logs, qada, dismissed } = state;
-  const now = useNow();
+  // Minutes-only countdowns don't need a once-a-second redraw.
+  const now = useNow(settings.coarseTime ? 30_000 : 1000);
   const ui = useUi();
 
   if (!settings.place) {
@@ -74,13 +78,18 @@ export function Today() {
   const urgent = msLeft > 0 && msLeft < URGENT_MS;
 
   const loggedCount = Object.values(dayLog).filter(Boolean).length;
-  const catchup = findCatchup(now, settings, logs, dismissed);
+  const catchup = settings.catchup ? findCatchup(now, settings, logs, dismissed) : null;
+  const voice = { tone: settings.tone, literal: settings.literal };
+  const askAbout = !settings.profile && !settings.profileAsked;
+  const guidePrayer = (current && !currentStatus ? current : next?.slot) ?? null;
 
   function logCurrent(status: 'ontime' | 'late' | 'missed') {
     if (!current) return;
     actions.setStatus(cycle.active.key, current.key, status);
     ui.toast(
-      `${current.name} · ${status === 'ontime' ? 'prayed' : status === 'late' ? 'prayed late' : 'not prayed'}`,
+      status === 'ontime'
+        ? say('toastPrayed', voice, { name: current.name })
+        : `${current.name} · ${status === 'late' ? 'prayed late' : 'not prayed'}`,
       () => actions.setStatus(cycle.active.key, current.key, null),
     );
   }
@@ -100,9 +109,40 @@ export function Today() {
         ) : null}
       </header>
 
+      {askAbout ? (
+        <section className="catchup ask-card" aria-label="Personalise Niyyah">
+          <div className="catchup-icon" aria-hidden="true">
+            <Icon name="spark" size={18} />
+          </div>
+          <div className="catchup-body">
+            <p className="catchup-title">Help Niyyah fit you</p>
+            <p className="catchup-text">
+              Three quick questions about you, ADHD and autism. You&apos;ll see exactly what changes, and can undo
+              any of it.
+            </p>
+            <div className="catchup-actions">
+              <button type="button" className="btn btn-solid" onClick={() => ui.openAboutYou()}>
+                Start
+              </button>
+              <button
+                type="button"
+                className="btn btn-quiet"
+                onClick={() => actions.updateSettings({ profileAsked: true })}
+              >
+                Not now
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {catchup ? (
         <CatchupCard
           slot={catchup.slot}
+          text={say('catchupText', voice, {
+            name: catchup.slot.name,
+            end: fmtTime(catchup.slot.end, settings.timeFormat),
+          })}
           timeFormat={settings.timeFormat}
           onYes={() => {
             actions.setStatus(catchup.dayKey, catchup.slot.key, 'late');
@@ -124,10 +164,10 @@ export function Today() {
         {showHeroWindow && current ? (
           <>
             <div className="hero-top">
-              <span className="eyebrow">Window closing</span>
+              <span className="eyebrow">{say('heroDueEyebrow', voice)}</span>
               <span className="hero-badge">
                 <span className="pulse" aria-hidden="true" />
-                {urgent ? 'Soon' : 'Open now'}
+                {say(urgent ? 'badgeSoon' : 'badgeOpen', voice)}
               </span>
             </div>
 
@@ -137,11 +177,11 @@ export function Today() {
                 <span className="arabic">{current.arabic}</span>
               </h2>
               <span className={`countdown tnum${urgent ? ' is-urgent' : ''}`} role="timer" aria-live="off">
-                {formatOffset(msLeft)}
+                {fmtLeft(msLeft, settings.coarseTime)}
               </span>
             </div>
             <p className="hero-sub">
-              left to pray · closes at <strong>{fmtTime(current.end, settings.timeFormat)}</strong>
+              {say('heroDueSub', voice, { name: current.name, end: fmtTime(current.end, settings.timeFormat) })}
             </p>
 
             <div className="window">
@@ -169,7 +209,7 @@ export function Today() {
         ) : showHeroNext && next ? (
           <>
             <div className="hero-top">
-              <span className="eyebrow">Next prayer</span>
+              <span className="eyebrow">{say('heroNextEyebrow', voice)}</span>
               <span className="hero-badge">
                 <span className="pulse" aria-hidden="true" />
                 {currentStatus ? `${current?.name} logged` : 'All clear'}
@@ -181,12 +221,12 @@ export function Today() {
                 <span className="arabic">{next.slot.arabic}</span>
               </h2>
               <span className="countdown tnum" role="timer" aria-live="off">
-                {formatOffset(next.at.getTime() - now.getTime())}
+                {fmtLeft(next.at.getTime() - now.getTime(), settings.coarseTime)}
               </span>
             </div>
             <p className="hero-sub">
-              adhan at <strong>{fmtTime(next.at, settings.timeFormat)}</strong>
-              {next.slot.name === 'Fajr' ? ' · tomorrow begins with Fajr' : ''}
+              {say('heroNextSub', voice, { name: next.slot.name, start: fmtTime(next.at, settings.timeFormat) })}
+              {next.slot.name === 'Fajr' && !settings.literal ? ' · tomorrow begins with Fajr' : ''}
             </p>
             <div className="window">
               <div className="window-track">
@@ -212,6 +252,26 @@ export function Today() {
         )}
       </section>
 
+      {settings.learn && guidePrayer ? (
+        <section className="learn-card" aria-label="Step-by-step guides">
+          <p className="learn-title">
+            <Icon name="star" size={16} /> Step by step
+          </p>
+          <div className="learn-actions">
+            <button type="button" className="btn btn-quiet" onClick={() => ui.openGuide({ kind: 'wudu' })}>
+              Wudu
+            </button>
+            <button
+              type="button"
+              className="btn btn-quiet"
+              onClick={() => ui.openGuide({ kind: 'prayer', prayer: guidePrayer.key })}
+            >
+              How to pray {guidePrayer.name} · {RAKAHS[guidePrayer.key]} rak{'\u2018'}ah
+            </button>
+          </div>
+        </section>
+      ) : null}
+
       {cycle.degraded ? (
         <div className="note warn" style={{ marginTop: 12 }}>
           <b>Unusual daylight at this latitude.</b> Times today are estimates. A different high-latitude
@@ -227,7 +287,9 @@ export function Today() {
 
       <section className="section">
         <div className="section-head">
-          <h2>Today&apos;s prayers</h2>
+          <h2>
+            Today&apos;s <Term id="salah">prayers</Term>
+          </h2>
           <span className="meta tnum">{loggedCount} of 5 logged</span>
         </div>
         <ul className="list">
@@ -246,7 +308,9 @@ export function Today() {
                   return;
                 }
                 actions.setStatus(cycle.active.key, slot.key, 'ontime');
-                ui.toast(`${slot.name} · prayed`, () => actions.setStatus(cycle.active.key, slot.key, null));
+                ui.toast(say('toastPrayed', voice, { name: slot.name }), () =>
+                  actions.setStatus(cycle.active.key, slot.key, null),
+                );
               }}
             />
           ))}
@@ -256,7 +320,9 @@ export function Today() {
       {settings.qadaEnabled ? (
         <section className="section">
           <div className="section-head">
-            <h2>Making up</h2>
+            <h2>
+              <Term id="qada">Making up</Term>
+            </h2>
           </div>
           <QadaCard count={qada} />
         </section>

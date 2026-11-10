@@ -9,6 +9,12 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
 
 ## What it does
 
+- **Adapts to you.** Three optional questions — your relationship with Islam, whether you
+  are autistic, ADHD (both = AuDHD), neurotypical or unsure, and what gets in the way —
+  suggest settings such as a low-stimulation mode, minutes-only countdowns, transition
+  warnings (wrap up → wudu → adhan), plain wording, a gentle/encouraging/minimal tone and
+  learning support (tap-to-explain terms, step-by-step wudu and prayer guides). Every
+  change says why, and each one can be reversed in Settings → Comfort & support.
 - **Prayer windows, not just clock times.** Every prayer shows the deadline you are
   racing: "Asr · 1h 02m left", with a bar that fills and turns amber under 20 minutes,
   and a live countdown to the next adhan.

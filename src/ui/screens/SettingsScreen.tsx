@@ -10,6 +10,7 @@ import {
 } from '../../domain/notify';
 import { actions, importSnapshot, snapshot, useStore } from '../../domain/store';
 import type { HighLatKey, MadhabKey, MethodKey, ThemeMode, TimeFormat } from '../../domain/types';
+import { ComfortSection } from '../components/ComfortSection';
 import { Segmented, SettingRow, SettingStack, Toggle } from '../components/Controls';
 import { Icon } from '../components/Icons';
 import { LocationPicker } from '../components/LocationPicker';
@@ -86,6 +87,8 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
         <h1>Settings</h1>
         <p>Everything here works offline and stays on this device.</p>
       </header>
+
+      <ComfortSection />
 
       <section className="group">
         <h2>Location</h2>
@@ -198,8 +201,12 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
             />
           </SettingRow>
 
-          <SettingStack label="Pre-alert">
+          <SettingStack
+            label="Pre-alert"
+            hint={settings.ladder ? 'Transition warnings are on, so they replace this. See Comfort & support.' : undefined}
+          >
             <select
+              disabled={settings.ladder}
               className="select"
               value={String(settings.preAlert)}
               onChange={(event) => actions.updateSettings({ preAlert: Number(event.target.value) })}
@@ -217,7 +224,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
           <SettingRow label="Sound" hint="Off keeps nudges silent.">
             <Toggle
               checked={settings.sound}
-              onChange={(sound) => actions.updateSettings({ sound })}
+              onChange={(sound) => actions.setAdaptation('sound', sound)}
               label="Notification sound"
             />
           </SettingRow>

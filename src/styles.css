@@ -2145,6 +2145,416 @@ ul {
   margin-top: 18px;
 }
 
+/* ---------- about you (onboarding) ---------- */
+
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  overflow-y: auto;
+  background: var(--sand);
+}
+
+.about-kicker {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gold-ink);
+  margin-bottom: 6px;
+}
+
+.about-options {
+  max-height: none;
+  overflow: visible;
+}
+
+.about-tag {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: var(--gold-ink);
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: left;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: color-mix(in srgb, var(--green-400) 60%, transparent);
+  background: color-mix(in srgb, var(--green-400) 12%, var(--surface));
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.chip svg {
+  color: var(--green-600);
+}
+
+[data-theme='dark'] .chip svg {
+  color: var(--green-400);
+}
+
+.about-group {
+  margin: 20px 4px 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.about .adapt-list {
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+
+.about-privacy {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 22px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+/* ---------- adaptation rows (onboarding summary + Settings) ---------- */
+
+.adapt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.adapt-row:last-child {
+  border-bottom: 0;
+}
+
+.adapt-stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.adapt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adapt-text b {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.adapt-text span {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.adapt-text em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--gold-ink);
+}
+
+.adapt-text em.is-mine {
+  color: var(--green-600);
+}
+
+[data-theme='dark'] .adapt-text em.is-mine {
+  color: var(--green-400);
+}
+
+.adapt-row .toggle {
+  flex: none;
+}
+
+.adapt-empty {
+  padding: 4px 4px 0;
+  font-size: 13px;
+}
+
+/* ---------- Settings → Comfort & support ---------- */
+
+.comfort-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--gold) 8%, var(--surface));
+}
+
+.comfort-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.comfort-sub,
+.comfort-needs {
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.comfort-needs {
+  color: var(--ink-2);
+}
+
+.comfort-ladder,
+.comfort-guides {
+  padding: 13px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.comfort-ladder-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.comfort-ladder-row .field {
+  margin-bottom: 0;
+}
+
+.comfort-guide-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.comfort-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 13px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.comfort-confirm {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* ---------- learning support ---------- */
+
+.term {
+  display: inline;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+.term-meaning {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.learn-card {
+  margin-top: 12px;
+  padding: 13px 14px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+
+.learn-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.learn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.guide {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: calc(14px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
+  background: var(--sand);
+}
+
+@media (min-width: 561px) {
+  .guide {
+    box-shadow: 0 0 0 100vmax var(--sand);
+  }
+}
+
+.guide-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.guide-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.guide-close {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.guide-progress {
+  height: 5px;
+  margin-top: 12px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.guide-progress i {
+  display: block;
+  height: 100%;
+  background: var(--green-600);
+  transition: width 0.25s ease;
+}
+
+.guide-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 22px;
+  animation: rise 0.25s ease both;
+}
+
+.guide-section {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.guide-step {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 7.5vw, 32px);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.guide-text {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.guide-phrase {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+
+.guide-arabic {
+  font-family: var(--font-arabic);
+  font-size: 26px;
+  line-height: 1.8;
+  color: var(--gold-ink);
+  direction: rtl;
+  text-align: right;
+}
+
+.guide-translit {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.guide-meaning {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.guide-times {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--green-600);
+  background: color-mix(in srgb, var(--green-400) 14%, transparent);
+}
+
+[data-theme='dark'] .guide-times {
+  color: var(--green-400);
+}
+
+.guide-note {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.guide-foot {
+  display: flex;
+  gap: 10px;
+  padding-top: 14px;
+}
+
+.guide-foot .btn {
+  min-height: 52px;
+}
+
 /* ---------- nav ---------- */
 
 .nav {
@@ -2662,4 +3072,55 @@ ul {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* ---------- low-stimulation mode (Settings → Comfort & support) ---------- */
+
+:root[data-calm] {
+  --gold: #a89270;
+  --gold-2: #d9ccb4;
+  --glow: transparent;
+}
+
+:root[data-calm][data-theme='dark'] {
+  --gold: #b7a587;
+  --gold-2: #d6cbb6;
+}
+
+:root[data-calm] body {
+  background: var(--sand);
+}
+
+:root[data-calm] body::before,
+:root[data-calm] .hero::before,
+:root[data-calm] .compass::before,
+:root[data-calm] .tally::before,
+:root[data-calm] .tapper::before,
+:root[data-calm] .qd-halo,
+:root[data-calm] .pulse {
+  display: none;
+}
+
+:root[data-calm] .hero,
+:root[data-calm] .compass,
+:root[data-calm] .tally,
+:root[data-calm] .tapper {
+  background: var(--green-900);
+}
+
+:root[data-calm] *,
+:root[data-calm] *::before,
+:root[data-calm] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+:root[data-calm] .tally-value.is-rising {
+  color: inherit;
+  text-shadow: none;
+}
+
+:root[data-calm] .qd-needle,
+:root[data-calm] .qd-kaaba {
+  filter: none;
 }
