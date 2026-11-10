@@ -40,10 +40,13 @@ export function PrayerSheet({
 
   function clear() {
     if (!target) return;
-    const previous = current?.s ?? null;
+    const previous = current;
     actions.setStatus(target.dayKey, target.prayer, null);
     ui.toast(`${meta?.name} cleared`, () => {
-      if (previous) actions.setStatus(target.dayKey, target.prayer, previous);
+      if (!previous) return;
+      actions.setStatus(target.dayKey, target.prayer, previous.s);
+      // Bring back jama'ah and recitation too.
+      actions.setPrayerDetails(target.dayKey, target.prayer, { j: previous.j, r: previous.r, nf: previous.nf });
     });
     onClose();
   }
@@ -82,6 +85,20 @@ export function PrayerSheet({
               </button>
             ))}
           </div>
+
+          {current && current.s !== 'missed' ? (
+            <button
+              type="button"
+              className="btn btn-quiet btn-block"
+              style={{ marginTop: 12 }}
+              onClick={() => {
+                ui.openRecitation(target!.dayKey, target!.prayer);
+                onClose();
+              }}
+            >
+              <Icon name="star" size={16} /> Recitation &amp; jama‘ah (optional)
+            </button>
+          ) : null}
 
           {current ? (
             <button

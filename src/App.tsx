@@ -3,10 +3,14 @@ import { setDisplayTimeZone } from './domain/format';
 import { buildReminderEvents } from './domain/reminders';
 import { syncSchedule, type Health } from './domain/notify';
 import { useStore } from './domain/store';
+import { syncWidget } from './domain/widget';
 import type { PrayerKey } from './domain/types';
 import { BottomNav, type Tab } from './ui/components/BottomNav';
 import { Icon } from './ui/components/Icons';
 import { PrayerSheet } from './ui/components/PrayerSheet';
+import { RecitationSheet } from './ui/components/RecitationSheet';
+import { Hasanat } from './ui/screens/Hasanat';
+import { Qibla } from './ui/screens/Qibla';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { Setup } from './ui/screens/Setup';
 import { Today } from './ui/screens/Today';
@@ -30,6 +34,7 @@ export function App() {
 
   const [tab, setTab] = useState<Tab>('today');
   const [sheet, setSheet] = useState<{ dayKey: string; prayer: PrayerKey } | null>(null);
+  const [recitation, setRecitation] = useState<{ dayKey: string; prayer: PrayerKey } | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
@@ -48,6 +53,25 @@ export function App() {
     return () => window.clearTimeout(timer);
   }, [resync, settings.setupComplete]);
 
+  // The home-screen widget mirrors times and logged status, so push on any change
+  // (and on resume, which rolls its window forward a day).
+  const [visibleTick, setVisibleTick] = useState(0);
+  useEffect(() => {
+    if (!state.settings.setupComplete) return;
+    const timer = window.setTimeout(() => {
+      void syncWidget(state);
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [state, visibleTick]);
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') setVisibleTick((tick) => tick + 1);
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
+
   useEffect(() => {
     const onVisible = () => {
       if (document.visibilityState === 'visible') void resync();
@@ -65,6 +89,7 @@ export function App() {
   const ui = useMemo<UiApi>(
     () => ({
       openPrayer: (dayKey, prayer) => setSheet({ dayKey, prayer }),
+      openRecitation: (dayKey, prayer) => setRecitation({ dayKey, prayer }),
       toast: (message, undo) => setToast({ id: Date.now(), message, undo }),
     }),
     [],
@@ -91,6 +116,8 @@ export function App() {
         </div>
 
         {tab === 'today' ? <Today /> : null}
+        {tab === 'qibla' ? <Qibla /> : null}
+        {tab === 'hasanat' ? <Hasanat /> : null}
         {tab === 'week' ? <Week /> : null}
         {tab === 'settings' ? <SettingsScreen health={health} onResync={() => void resync()} /> : null}
       </div>
@@ -98,6 +125,7 @@ export function App() {
       <BottomNav tab={tab} onChange={setTab} />
 
       <PrayerSheet target={sheet} onClose={() => setSheet(null)} />
+      <RecitationSheet target={recitation} onClose={() => setRecitation(null)} />
 
       {toast ? (
         <div className="toast" role="status" key={toast.id}>

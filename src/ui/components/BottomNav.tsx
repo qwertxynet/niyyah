@@ -1,9 +1,11 @@
 import { Icon, type IconName } from './Icons';
 
-export type Tab = 'today' | 'week' | 'settings';
+export type Tab = 'today' | 'qibla' | 'hasanat' | 'week' | 'settings';
 
 const TABS: { id: Tab; label: string; icon: IconName }[] = [
   { id: 'today', label: 'Today', icon: 'sun' },
+  { id: 'qibla', label: 'Qibla', icon: 'compass' },
+  { id: 'hasanat', label: 'Hasanat', icon: 'star' },
   { id: 'week', label: 'Week', icon: 'calendar' },
   { id: 'settings', label: 'Settings', icon: 'sliders' },
 ];

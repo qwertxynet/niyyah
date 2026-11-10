@@ -17,6 +17,17 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
   Maghrib?" — forgetting that you *did* pray is as real as forgetting to pray.
 - **Reminders that actually arrive.** Alarms are scheduled 30 days ahead; a pre-alert
   (5–30 min) warns you before the window; notifications survive reboots on Android.
+- **Home-screen widget (Android).** The current window with a live countdown to its
+  end — amber under 20 minutes — and today's five times. Once you log the prayer it
+  counts down to the next adhan instead. Runs off a 30-day schedule the app hands it,
+  so it stays right without opening Niyyah. Follows the system light/dark theme.
+- **Qibla compass.** A dial that turns with your phone, a Kaaba marker and a gold glow
+  (plus one buzz) when you are facing it. Without a compass it shows the bearing from north.
+- **Hasanat, as encouragement.** A page that estimates hasanat from your logged prayers
+  (al-Fatihah in every rak'ah, plus any verses you record per rak'ah, ×27 in jama'ah) and
+  offers good-deed cards from one minute to a full juz', with a tap counter for dhikr.
+  It always says that only Allah knows the reward. The method and sources sit behind
+  "How is this estimated?".
 - **Hijri date** (Umm al-Qura) beside the Gregorian one.
 - **Week grid** of prayer history you can correct by tapping any cell — a record, not
   a scoreboard. No broken streaks, no red crosses, no scolding copy.
@@ -28,6 +39,7 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
 | Need | How |
 | --- | --- |
 | Prayer times | Computed on device with [`adhan`](https://github.com/batoulapps/adhan-js). No API, no key. |
+| Qur'an letters | `public/quran-meta.json` — letter counts per ayah (no text) from the Tanzil text, 28 KB, loaded on demand. |
 | City search | `public/cities.json` — 3,429 cities with coordinates and IANA timezones (GeoNames), bundled. 292 KB raw / 110 KB gzipped, loaded on demand. |
 | Fonts & icons | Amiri Arabic subset bundled as `.woff2` (SIL OFL, `public/fonts/Amiri-OFL.txt`); all icons inline SVG. No CDN. |
 | History & settings | `localStorage`, on the device. Export/import a JSON file to move between phone and PC. |
@@ -79,6 +91,7 @@ Regenerate bundled assets (network needed once):
 ```bash
 npm run icons    # rasterises public/icon.svg + assets/mark.svg
 npm run cities   # rebuilds public/cities.json from a GeoNames dump
+npm run quran    # rebuilds public/quran-meta.json from the Tanzil text (URLs in the script)
 ```
 
 `scripts/get-android-sdk.mjs` installs a user-local Android SDK (platform 36,
@@ -121,11 +134,12 @@ share the same model.
 
 ## Not in 1.0
 
-Home-screen widget with a countdown, qibla compass, post-salah adhkar, encrypted sync
+Post-salah adhkar reminders, encrypted sync
 between devices, Play Store listing, iOS.
 
 ## Credits
 
 Prayer calculations by [adhan-js](https://github.com/batoulapps/adhan-js) (MIT).
 City data from [GeoNames](https://www.geonames.org/) (CC BY 4.0).
+Qur'an letter counts derived from the [Tanzil Project](https://tanzil.net) text (simple-clean), used unchanged for counting.
 Amiri typeface (SIL Open Font License).
