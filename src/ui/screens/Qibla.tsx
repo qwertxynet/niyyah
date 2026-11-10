@@ -3,6 +3,7 @@ import { compassPoint, compassPointLong, distanceToKaaba, qiblaBearing, turnBetw
 import { useStore } from '../../domain/store';
 import { buzz } from '../useCountUp';
 import { useHeading } from '../useHeading';
+import { EmptyState } from '../components/EmptyState';
 
 const C = 160;
 /** Within this many degrees the phone counts as facing the Qibla. */
@@ -122,10 +123,7 @@ export function Qibla() {
 
   if (!place) {
     return (
-      <div className="empty">
-        <h3>No location yet</h3>
-        <p>Add a city in Settings to find the Qibla.</p>
-      </div>
+      <EmptyState title="No location yet">Add a city in Settings to find the Qibla.</EmptyState>
     );
   }
 

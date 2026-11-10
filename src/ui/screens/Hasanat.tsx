@@ -15,6 +15,7 @@ import { useQuran } from '../../domain/quran';
 import { actions, useStore } from '../../domain/store';
 import { EstimateSheet } from '../components/EstimateSheet';
 import { Icon } from '../components/Icons';
+import { EmptyState } from '../components/EmptyState';
 import { Term } from '../components/Term';
 import { ReadingSheet } from '../components/ReadingSheet';
 import { TapCounter } from '../components/TapCounter';
@@ -61,10 +62,7 @@ export function Hasanat() {
 
   if (!settings.place) {
     return (
-      <div className="empty">
-        <h3>No location yet</h3>
-        <p>Add a city in Settings to start counting.</p>
-      </div>
+      <EmptyState title="No location yet">Add a city in Settings to start counting.</EmptyState>
     );
   }
 

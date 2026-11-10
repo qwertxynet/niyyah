@@ -16,6 +16,7 @@ import { parseDayKey, placeCivilDate, prayerDay, prayerMeta, dateKey } from '../
 import { actions, useStore } from '../../domain/store';
 import type { PrayerKey } from '../../domain/types';
 import { Segmented } from '../components/Controls';
+import { EmptyState } from '../components/EmptyState';
 import { Icon } from '../components/Icons';
 import { useUi, type JournalIntent } from '../ui-context';
 import { useNow } from '../useNow';
@@ -301,10 +302,7 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
           <h2>Your entries</h2>
         </div>
         {days.length === 0 ? (
-          <div className="empty journal-empty">
-            <h3>Nothing yet</h3>
-            <p>Start with a check-in. Two taps is a whole entry.</p>
-          </div>
+          <EmptyState title="Nothing yet">Start with a check-in above. Two taps is a whole entry.</EmptyState>
         ) : (
           days.map((key) => (
             <div key={key} className="jday">

@@ -1,4 +1,24 @@
 @font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-latin-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('/fonts/figtree-latin-var.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
   font-family: 'Amiri';
   src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
   font-weight: 400;
@@ -47,8 +67,18 @@
   --radius-sm: 13px;
   --shadow-1: 0 1px 2px rgba(21, 37, 31, 0.05), 0 10px 26px -18px rgba(21, 37, 31, 0.4);
   --shadow-2: 0 24px 60px -30px rgba(8, 32, 25, 0.6);
-  --font-ui: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+  --font-ui: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+
+  /* One type scale (major third-ish). Use these, not ad-hoc sizes. */
+  --fs-xs: 11.5px;
+  --fs-sm: 13px;
+  --fs-base: 15px;
+  --fs-md: 17px;
+  --fs-lg: 21px;
+  --fs-xl: 27px;
+  --fs-2xl: 34px;
+  --fs-3xl: 44px;
   --font-arabic: 'Amiri', 'Noto Naskh Arabic', 'Segoe UI', serif;
   --pattern-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0L21.21 8.79L21.21 21.21L8.79 21.21L0 30L-8.79 21.21L-21.21 21.21L-21.21 8.79L-30 0L-21.21 -8.79L-21.21 -21.21L-8.79 -21.21L0 -30L8.79 -21.21L21.21 -21.21L21.21 -8.79ZM14.41 5.97L8.44 8.44L5.97 14.41L0 11.94L-5.97 14.41L-8.44 8.44L-14.41 5.97L-11.94 0L-14.41 -5.97L-8.44 -8.44L-5.97 -14.41L0 -11.94L5.97 -14.41L8.44 -8.44L14.41 -5.97L11.94 0ZM5.54 2.3L2.3 5.54L-2.3 5.54L-5.54 2.3L-5.54 -2.3L-2.3 -5.54L2.3 -5.54L5.54 -2.3ZM90 0L81.21 8.79L81.21 21.21L68.79 21.21L60 30L51.21 21.21L38.79 21.21L38.79 8.79L30 0L38.79 -8.79L38.79 -21.21L51.21 -21.21L60 -30L68.79 -21.21L81.21 -21.21L81.21 -8.79ZM74.41 5.97L68.44 8.44L65.97 14.41L60 11.94L54.03 14.41L51.56 8.44L45.59 5.97L48.06 0L45.59 -5.97L51.56 -8.44L54.03 -14.41L60 -11.94L65.97 -14.41L68.44 -8.44L74.41 -5.97L71.94 0ZM65.54 2.3L62.3 5.54L57.7 5.54L54.46 2.3L54.46 -2.3L57.7 -5.54L62.3 -5.54L65.54 -2.3ZM30 60L21.21 68.79L21.21 81.21L8.79 81.21L0 90L-8.79 81.21L-21.21 81.21L-21.21 68.79L-30 60L-21.21 51.21L-21.21 38.79L-8.79 38.79L0 30L8.79 38.79L21.21 38.79L21.21 51.21ZM14.41 65.97L8.44 68.44L5.97 74.41L0 71.94L-5.97 74.41L-8.44 68.44L-14.41 65.97L-11.94 60L-14.41 54.03L-8.44 51.56L-5.97 45.59L0 48.06L5.97 45.59L8.44 51.56L14.41 54.03L11.94 60ZM5.54 62.3L2.3 65.54L-2.3 65.54L-5.54 62.3L-5.54 57.7L-2.3 54.46L2.3 54.46L5.54 57.7ZM90 60L81.21 68.79L81.21 81.21L68.79 81.21L60 90L51.21 81.21L38.79 81.21L38.79 68.79L30 60L38.79 51.21L38.79 38.79L51.21 38.79L60 30L68.79 38.79L81.21 38.79L81.21 51.21ZM74.41 65.97L68.44 68.44L65.97 74.41L60 71.94L54.03 74.41L51.56 68.44L45.59 65.97L48.06 60L45.59 54.03L51.56 51.56L54.03 45.59L60 48.06L65.97 45.59L68.44 51.56L74.41 54.03L71.94 60ZM65.54 62.3L62.3 65.54L57.7 65.54L54.46 62.3L54.46 57.7L57.7 54.46L62.3 54.46L65.54 57.7ZM30 22.8L37.2 30L30 37.2L22.8 30ZM30 0V22.8M30 37.2V60M0 30H22.8M37.2 30H60' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
   --pattern-ink: #b08a4a;
@@ -155,6 +185,19 @@ h4 {
   margin: 0;
   font-weight: 600;
   letter-spacing: -0.015em;
+}
+
+.dateline,
+.screen-head h1,
+.hero-name,
+.setup h1,
+.guide-step,
+.tally-value,
+.comfort-title,
+.sheet-title {
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 p {
@@ -272,7 +315,7 @@ ul {
 
 .dateline {
   font-family: var(--font-display);
-  font-size: clamp(26px, 7vw, 32px);
+  font-size: var(--fs-2xl);
   line-height: 1.15;
   font-weight: 500;
 }
@@ -292,7 +335,7 @@ ul {
 
 .screen-head h1 {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: var(--fs-2xl);
   font-weight: 500;
 }
 
@@ -3424,6 +3467,401 @@ ul {
   }
 }
 
+/* ---------- sun arc (Today hero) ---------- */
+
+.sky-arc {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 6px;
+  overflow: visible;
+}
+
+.sky-arc-horizon {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.sky-arc-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 1.5;
+}
+
+.sky-arc-trail {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease;
+}
+
+.sky-arc-mark circle {
+  fill: rgba(255, 255, 255, 0.55);
+}
+
+.sky-arc-mark text {
+  fill: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.sky-arc-mark.is-now circle {
+  fill: #fff;
+}
+
+.sky-arc-mark.is-now text {
+  fill: #fff;
+}
+
+.sky-arc-body {
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.sky-arc-sun {
+  fill: #fff4cf;
+}
+
+.sky-arc-moon {
+  fill: #f3ecd7;
+}
+
+/* ---------- mihrab arch motif ---------- */
+
+/* The hero, Hasanat tally and Qibla card rise into a gentle arch, like the icon. */
+.hero,
+.tally,
+.compass {
+  border-radius: 120px 120px var(--radius-lg) var(--radius-lg) / 60px 60px var(--radius-lg) var(--radius-lg);
+}
+
+.hero {
+  padding-top: 30px;
+}
+
+.tally,
+.compass {
+  padding-top: 28px;
+}
+
+/* A thin arch drawn behind each screen title. */
+.screen-head {
+  position: relative;
+  padding-left: 2px;
+}
+
+.screen-head::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: -18px;
+  width: 78px;
+  height: 92px;
+  background: var(--gold-ink);
+  opacity: 0.22;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 78 92'%3E%3Cpath d='M4 92V39A35 35 0 0 1 74 39V92' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 78 92'%3E%3Cpath d='M4 92V39A35 35 0 0 1 74 39V92' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E") no-repeat;
+  pointer-events: none;
+}
+
+.screen-head > * {
+  position: relative;
+}
+
+/* The active tab is an arched pill. */
+.nav-btn[aria-current='page'] {
+  border-radius: 24px 24px 13px 13px / 20px 20px 13px 13px;
+}
+
+.nav-btn[aria-current='page'] svg {
+  stroke-width: 2.3;
+}
+
+/* Empty states: a small arch with a crescent. */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 18px 18px;
+}
+
+.empty-state svg {
+  width: 84px;
+  height: auto;
+  margin-bottom: 14px;
+  color: var(--gold-ink);
+}
+
+.empty-state h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+}
+
+.empty-state p {
+  margin-top: 6px;
+  max-width: 30ch;
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+}
+
+.empty-state .btn {
+  margin-top: 14px;
+}
+
+/* ---------- Today: one card of next steps ---------- */
+
+.next-steps {
+  margin-top: 12px;
+  padding: 6px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+
+.next-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px;
+  border-radius: 13px;
+  text-align: left;
+}
+
+.next-step:hover {
+  background: var(--surface-2);
+}
+
+.next-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px 12px 8px 8px / 14px 14px 8px 8px;
+  background: color-mix(in srgb, var(--gold) 18%, transparent);
+  color: var(--gold-ink);
+}
+
+.next-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.next-text b {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.next-text span {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  line-height: 1.3;
+}
+
+.next-step > svg:last-child {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.next-guides {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 4px 4px;
+}
+
+.next-steps .next-step + .next-guides {
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+/* ---------- prayer rows: a colour per time of day ---------- */
+
+.row {
+  --row-accent: var(--gold);
+  border-left: 3px solid var(--row-accent);
+}
+
+.row[data-prayer='fajr'] {
+  --row-accent: #7a63a8;
+}
+
+.row[data-prayer='dhuhr'] {
+  --row-accent: #3d86c4;
+}
+
+.row[data-prayer='asr'] {
+  --row-accent: #d49a2a;
+}
+
+.row[data-prayer='maghrib'] {
+  --row-accent: #c75a4c;
+}
+
+.row[data-prayer='isha'] {
+  --row-accent: #3a3f86;
+}
+
+[data-theme='dark'] .row[data-prayer='isha'] {
+  --row-accent: #7f86d6;
+}
+
+/* ---------- press feedback ---------- */
+
+:is(.option, .chip, .pick, .kind-tab, .tier-tab, .row-main, .next-step, .chip-btn, .choice, .deed-btn, .nav-btn) {
+  transition: transform 0.12s ease, background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+:is(.option, .chip, .pick, .kind-tab, .tier-tab, .row-main, .next-step, .chip-btn, .choice, .nav-btn):active {
+  transform: scale(0.97);
+}
+
+/* ---------- living sky (src/domain/sky.ts sets the colours) ---------- */
+
+/* The card colours, kept so cards can restore them on top of the sky. */
+:root {
+  --base-ink: var(--ink);
+  --base-ink-2: var(--ink-2);
+  --base-ink-3: var(--ink-3);
+  --base-gold-ink: var(--gold-ink);
+}
+
+:root[data-sky] {
+  --surface: rgba(255, 255, 255, 0.84);
+  --shadow-1: 0 1px 2px rgba(10, 20, 40, 0.06), 0 14px 30px -18px rgba(10, 20, 40, 0.45);
+}
+
+:root[data-sky][data-theme='dark'] {
+  --surface: rgba(20, 27, 32, 0.8);
+}
+
+:root[data-sky] body {
+  background-color: var(--sky-bottom);
+  background-image: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 48%, var(--sky-bottom) 100%);
+  background-attachment: fixed;
+  transition: background-color 1.2s ease;
+}
+
+:root[data-sky] body::before {
+  background: var(--sky-pattern);
+  opacity: var(--sky-pattern-opacity);
+}
+
+/* Text drawn straight on the sky takes the sky's ink... */
+:root[data-sky] .shell {
+  --ink: var(--sky-ink);
+  --ink-2: var(--sky-ink-2);
+  --ink-3: var(--sky-ink-3);
+  --gold-ink: var(--sky-accent);
+  color: var(--ink);
+}
+
+/* ...while anything on a card keeps the card's own ink. */
+:root[data-sky] .shell :is(
+    .card,
+    .card-soft,
+    .group-body,
+    .catchup,
+    .reflect-card,
+    .learn-card,
+    .next-steps,
+    .row,
+    .placechip,
+    .btn-quiet,
+    .qada,
+    .cell,
+    .seg,
+    .tier-tabs,
+    .chip,
+    .kind-tab,
+    .pick,
+    .input,
+    .select,
+    .option,
+    .search-results,
+    .note,
+    .stepper,
+    .legend-key
+  ) {
+  --ink: var(--base-ink);
+  --ink-2: var(--base-ink-2);
+  --ink-3: var(--base-ink-3);
+  --gold-ink: var(--base-gold-ink);
+  color: var(--ink);
+}
+
+/* Frosted surfaces let the sky show through without hurting legibility. */
+:root[data-sky]:not([data-calm]) :is(.card, .group-body, .catchup, .reflect-card, .learn-card, .next-steps, .list, .placechip) {
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+
+:root[data-sky] .hero {
+  background:
+    radial-gradient(120% 120% at 85% -10%, color-mix(in srgb, var(--sky-accent) 30%, transparent), transparent 60%),
+    linear-gradient(165deg, var(--hero-top) 0%, var(--hero-bottom) 100%);
+}
+
+/* Stars for Isha and the night: static, twinkling only when motion is allowed. */
+:root[data-stars]:not([data-calm]) body::after {
+  content: '';
+  position: fixed;
+  inset: 0 0 35% 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 28% 8%, #fff 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 44% 22%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 63% 12%, #fff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 78% 26%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 90% 6%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 8% 42%, #fff 50%, transparent 52%),
+    radial-gradient(1.3px 1.3px at 35% 48%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 56% 38%, #fff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 84% 52%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 20% 62%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 70% 66%, #fff 50%, transparent 52%);
+  background-size: 360px 420px;
+  opacity: 0.55;
+  animation: twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.65;
+  }
+}
+
 /* ---------- low-stimulation mode (Settings → Comfort & support) ---------- */
 
 :root[data-calm] {
@@ -3438,7 +3876,16 @@ ul {
 }
 
 :root[data-calm] body {
-  background: var(--sand);
+  background: var(--sky-mid, var(--sand));
+}
+
+/* Solid, not frosted, surfaces in low-stimulation mode. */
+:root[data-calm][data-sky] {
+  --surface: #ffffff;
+}
+
+:root[data-calm][data-sky][data-theme='dark'] {
+  --surface: #15221d;
 }
 
 :root[data-calm] body::before,
@@ -3451,11 +3898,14 @@ ul {
   display: none;
 }
 
-:root[data-calm] .hero,
 :root[data-calm] .compass,
 :root[data-calm] .tally,
 :root[data-calm] .tapper {
   background: var(--green-900);
+}
+
+:root[data-calm] .hero {
+  background: var(--hero-bottom, var(--green-900));
 }
 
 :root[data-calm] *,

@@ -38,6 +38,10 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
   reflections, gratitude, duas you can later mark answered, and an intention for tomorrow.
   Today offers one prompt at a time — right after you log a prayer, it asks about that
   prayer. Private to the device and included in backups.
+- **A living sky.** The whole app takes the colour of the sky outside — indigo dawn, clear
+  midday blue, Asr gold, sunset violet, starry night — and the Today card shows the day as a
+  sun (or moon) travelling an arc past the five prayers. Low-stimulation mode turns it into one
+  flat, quiet tint.
 - **Hijri date** (Umm al-Qura) beside the Gregorian one.
 - **Week grid** of prayer history you can correct by tapping any cell — a record, not
   a scoreboard. No broken streaks, no red crosses, no scolding copy.
@@ -51,7 +55,7 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
 | Prayer times | Computed on device with [`adhan`](https://github.com/batoulapps/adhan-js). No API, no key. |
 | Qur'an letters | `public/quran-meta.json` — letter counts per ayah (no text) from the Tanzil text, 28 KB, loaded on demand. |
 | City search | `public/cities.json` — 3,429 cities with coordinates and IANA timezones (GeoNames), bundled. 292 KB raw / 110 KB gzipped, loaded on demand. |
-| Fonts & icons | Amiri Arabic subset bundled as `.woff2` (SIL OFL, `public/fonts/Amiri-OFL.txt`); all icons inline SVG. No CDN. |
+| Fonts & icons | Amiri (Arabic), Fraunces and Figtree (Latin) bundled as `.woff2` (SIL OFL, licences in `public/fonts/`); all icons inline SVG. No CDN. |
 | History & settings | `localStorage`, on the device. Export/import a JSON file to move between phone and PC. |
 | Browser build | `public/sw.js` precaches the shell and city list, so a reload works in airplane mode. |
 | Timezones | Times are shown in the chosen **place's** clock (per-city IANA zone), and the app says so when that differs from your device clock. |
@@ -153,4 +157,4 @@ between devices, Play Store listing, iOS.
 Prayer calculations by [adhan-js](https://github.com/batoulapps/adhan-js) (MIT).
 City data from [GeoNames](https://www.geonames.org/) (CC BY 4.0).
 Qur'an letter counts derived from the [Tanzil Project](https://tanzil.net) text (simple-clean), used unchanged for counting.
-Amiri typeface (SIL Open Font License).
+Amiri, Fraunces and Figtree typefaces (SIL Open Font License; licences in `public/fonts/`).

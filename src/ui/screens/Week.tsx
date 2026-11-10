@@ -1,4 +1,5 @@
 import { Icon } from '../components/Icons';
+import { EmptyState } from '../components/EmptyState';
 import { statusText } from '../components/StatusMark';
 import { fmtDayNumber, fmtWeekdayShort } from '../../domain/format';
 import { addDays, dateKey, placeCivilDate, prayerDay, PRAYERS } from '../../domain/prayer-times';
@@ -23,10 +24,7 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
 
   if (!settings.place) {
     return (
-      <div className="empty">
-        <h3>No location yet</h3>
-        <p>Add a city in Settings to see your week.</p>
-      </div>
+      <EmptyState title="No location yet">Add a city in Settings to see your week.</EmptyState>
     );
   }
 
