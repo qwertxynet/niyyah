@@ -20,6 +20,17 @@ for (const [out, size] of targets) {
   console.log('wrote', out, size);
 }
 
+// iPhone home-screen icon: 180 px and fully opaque — iOS fills transparent
+// corners with black and applies its own rounded mask.
+// Square the background off first so iOS's mask is the only rounding.
+const fullBleed = Buffer.from(icon.toString('utf8').replace(/(<rect width="512" height="512") rx="\d+"/, '$1'));
+await sharp(fullBleed, { density: 384 })
+  .resize(180, 180)
+  .flatten({ background: '#0B2B22' })
+  .png()
+  .toFile('public/icons/apple-touch-icon.png');
+console.log('wrote public/icons/apple-touch-icon.png 180');
+
 // Transparent mark for Android adaptive icons + the tray.
 await sharp(mark, { density: 512 }).resize(1024, 1024).png().toFile('assets/icon-only.png');
 await sharp(mark, { density: 128 }).resize(32, 32).png().toFile('electron/tray.png');

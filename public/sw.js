@@ -1,4 +1,4 @@
-const CACHE = 'niyyah-shell-v3';
+const CACHE = 'niyyah-shell-v4';
 
 // Everything the app needs to open with no network at all.
 const CORE = [
@@ -6,6 +6,8 @@ const CORE = [
   './index.html',
   './manifest.webmanifest',
   './icon.svg',
+  './icons/apple-touch-icon.png',
+  './icons/icon-192.png',
   './cities.json',
   './quran-meta.json',
   './fonts/amiri-arabic-400.woff2',
@@ -59,7 +61,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (REFRESH.has(`./${url.pathname.replace(/^\/+/, '')}`)) {
+  // Compare paths relative to where the app lives, so this also works when it
+  // is served from a subfolder such as https://<user>.github.io/niyyah/.
+  const scopePath = new URL(self.registration.scope).pathname;
+  const relative = url.pathname.startsWith(scopePath) ? url.pathname.slice(scopePath.length) : url.pathname;
+  if (REFRESH.has(`./${relative.replace(/^\/+/, '')}`)) {
     event.respondWith(
       (async () => {
         try {
