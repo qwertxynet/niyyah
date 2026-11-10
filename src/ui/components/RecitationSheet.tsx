@@ -5,6 +5,7 @@ import { fatihaLetters, lettersIn, useQuran, type QuranMeta } from '../../domain
 import { actions, useStore } from '../../domain/store';
 import type { PrayerKey, Recitation } from '../../domain/types';
 import { Toggle } from './Controls';
+import { Term } from './Term';
 import { Icon } from './Icons';
 import { Sheet } from './Sheet';
 import { rangeLabel, VersePicker, type VerseRange } from './VersePicker';
@@ -89,7 +90,9 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
       <div className="rec-row rec-jamaah">
         <span>
           <b>Prayed in congregation</b>
-          <span className="muted">Jama‘ah · ×27</span>
+          <span className="muted">
+            <Term id="jamaah" /> · ×27
+          </span>
         </span>
         <Toggle checked={Boolean(entry.j)} onChange={(next) => save({ j: next })} label="Prayed in congregation" />
       </div>
@@ -101,12 +104,16 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
         return (
           <div key={k} className="rakah">
             <div className="rakah-head">
-              <h3>Rak‘ah {k}</h3>
+              <h3>
+                <Term id="rakah" /> {k}
+              </h3>
               <span className="muted tnum">≈ {fmtHasanat(letters * PER_LETTER)}</span>
             </div>
 
             <div className="rec-row">
-              <span>Al-Fatihah</span>
+              <span>
+                <Term id="fatiha" />
+              </span>
               <Toggle checked={!skipped.has(k)} onChange={(on) => toggleFatiha(k, on)} label={`Al-Fatihah in rak'ah ${k}`} />
             </div>
 

@@ -5,6 +5,7 @@ import type { LogStatus, PrayerKey } from '../../domain/types';
 import { useUi } from '../ui-context';
 import { Icon, type IconName } from './Icons';
 import { Sheet } from './Sheet';
+import { Term } from './Term';
 
 const CHOICES: { status: LogStatus; title: string; hint: string; icon: IconName }[] = [
   { status: 'ontime', title: 'Prayed', hint: 'Within the window', icon: 'check' },
@@ -57,7 +58,7 @@ export function PrayerSheet({
         <>
           <div className="sheet-head">
             <h2 className="sheet-title">
-              {meta.name}
+              <Term id={target!.prayer}>{meta.name}</Term>
               <span className="arabic">{meta.arabic}</span>
             </h2>
           </div>
