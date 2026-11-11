@@ -27,7 +27,11 @@ export type IconName =
   | 'star'
   | 'book'
   | 'focus'
-  | 'rows';
+  | 'rows'
+  | 'play'
+  | 'pause'
+  | 'headphones'
+  | 'trash';
 
 const paths: Record<IconName, ReactElement> = {
   check: <path d="m5 13 4 4L19 7" />,
@@ -129,6 +133,21 @@ const paths: Record<IconName, ReactElement> = {
     </>
   ),
   rows: <path d="M5 7h14M5 12h14M5 17h9" />,
+  play: <path d="M8 5.5v13l10.5-6.5L8 5.5Z" fill="currentColor" strokeLinejoin="round" />,
+  pause: (
+    <>
+      <rect x="7" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
+      <rect x="13.6" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
+    </>
+  ),
+  headphones: (
+    <>
+      <path d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3" />
+      <rect x="3.5" y="14" width="4" height="6" rx="1.5" />
+      <rect x="16.5" y="14" width="4" height="6" rx="1.5" />
+    </>
+  ),
+  trash: <path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" />,
   // Eight-point star (two overlapping squares), the khatam of the background pattern.
   star: (
     <>

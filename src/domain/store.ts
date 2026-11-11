@@ -15,6 +15,7 @@ import type {
   Recitation,
   Settings,
 } from './types';
+import { normalizeHifz, rate as rateHifz, type HifzPlan, type Rating } from './hifz';
 
 const STORAGE_KEY = 'niyyah.state.v1';
 
@@ -45,6 +46,10 @@ export const DEFAULT_SETTINGS: Settings = {
   language: 'en',
   quranSize: 3,
   quranFocus: false,
+  reciter: 'husary',
+  audioRate: 1,
+  audioRepeat: 1,
+  audioGap: 'none',
 };
 
 export function defaultState(): Persisted {
@@ -56,6 +61,7 @@ export function defaultState(): Persisted {
     deeds: {},
     journal: {},
     reading: null,
+    hifz: { plan: null, ayahs: {} },
   };
 }
 
@@ -83,6 +89,7 @@ function normalize(input: unknown): Persisted {
     deeds: raw.deeds && typeof raw.deeds === 'object' ? (raw.deeds as Record<string, DeedEntry[]>) : {},
     journal: raw.journal && typeof raw.journal === 'object' ? (raw.journal as Record<string, JournalEntry[]>) : {},
     reading: validMark(raw.reading) ? raw.reading : null,
+    hifz: normalizeHifz(raw.hifz),
   };
 }
 
@@ -191,6 +198,15 @@ export const actions = {
     const list = [...(state.deeds[dayKeyValue] ?? []), entry];
     persist({ ...state, deeds: { ...state.deeds, [dayKeyValue]: list } });
     return id;
+  },
+
+  setHifzPlan(plan: HifzPlan | null) {
+    persist({ ...state, hifz: { ...state.hifz, plan } });
+  },
+
+  /** Records a memorisation rating for one ayah (learns it if new). */
+  rateAyah(s: number, a: number, today: string, rating: Rating) {
+    persist({ ...state, hifz: rateHifz(state.hifz, s, a, today, rating) });
   },
 
   setReading(mark: ReadingMark | null) {

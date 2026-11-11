@@ -15,6 +15,7 @@
     "cities": "node scripts/build-cities.mjs",
     "quran": "node scripts/build-quran.mjs",
     "quran:text": "node scripts/build-quran-text.mjs",
+    "quran:audio": "node scripts/build-quran-audio.mjs",
     "readme:images": "electron scripts/readme-shots.cjs",
     "electron:start": "npm run build && electron .",
     "windows:build": "npm run build && electron-builder --win",

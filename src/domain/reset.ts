@@ -1,10 +1,12 @@
 import { syncSchedule } from './notify';
 import { actions, currentState } from './store';
 import { clearWidget } from './widget';
+import { deleteAllAudio } from './audio-store';
+import { stop as stopPlayer } from './player';
 
 /** What a full reset will delete, for the confirmation sheet. */
 export function resetSummary() {
-  const { logs, journal, deeds, qada, settings } = currentState();
+  const { logs, journal, deeds, qada, settings, hifz } = currentState();
   const count = (record: Record<string, unknown[] | object>) =>
     Object.values(record).reduce<number>(
       (sum, value) => sum + (Array.isArray(value) ? value.length : Object.keys(value).length),
@@ -15,6 +17,7 @@ export function resetSummary() {
     journal: count(journal),
     deeds: count(deeds),
     qada,
+    memorised: Object.keys(hifz.ayahs).length,
     hasAnswers: Boolean(settings.profile || settings.name),
   };
 }
@@ -29,6 +32,8 @@ export async function resetAllData(): Promise<void> {
   // Reminders first: on Android and Windows they live outside the app.
   await syncSchedule([]).catch(() => undefined);
   await clearWidget();
+  stopPlayer();
+  await deleteAllAudio();
 
   try {
     const keys: string[] = [];

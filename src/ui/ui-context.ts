@@ -15,7 +15,7 @@ export interface UiApi {
   /** Jump to the Journal tab with a kind of entry (and prayer) ready to write. */
   openJournal(intent: JournalIntent): void;
   /** The Qur'an reader, at a surah and ayah, or at the surah list. */
-  openReader(target?: { s?: number; from?: number }): void;
+  openReader(target?: { s?: number; from?: number; memorise?: 'tab' | 'session' }): void;
   toast(message: string, undo?: () => void): void;
 }
 

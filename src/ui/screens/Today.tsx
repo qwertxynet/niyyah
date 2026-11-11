@@ -23,8 +23,10 @@ import { actions, useStore } from '../../domain/store';
 import type { Logs, Persisted, PrayerKey, Settings } from '../../domain/types';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
-import { t } from '../../i18n';
+import { plural, t } from '../../i18n';
 import { celebrate } from '../celebrate';
+import { todayQueue } from '../../domain/hifz';
+import { useQuran } from '../../domain/quran';
 
 const URGENT_MS = 20 * 60 * 1000;
 /** An after-prayer reflection is offered for this long after logging. */
@@ -123,6 +125,12 @@ export function Today() {
   const reflect = pickReflect(now, state);
   const arc = dayArc(now, settings, cycle.active);
   const name = settings.name?.trim();
+  const quran = useQuran();
+  const hifzQueue =
+    state.hifz.plan && quran
+      ? todayQueue(state.hifz, dateKey(placeCivilDate(now, settings)), (s) => quran.surahs[s - 1]?.l.length ?? 0)
+      : null;
+  const hifzDue = hifzQueue ? hifzQueue.reviews.length + hifzQueue.fresh.length : 0;
 
   function logCurrent(status: 'ontime' | 'late' | 'missed') {
     if (!current) return;
@@ -293,7 +301,7 @@ export function Today() {
         )}
       </section>
 
-      {reflect || (settings.learn && guidePrayer) ? (
+      {reflect || hifzDue || (settings.learn && guidePrayer) ? (
         <section className="next-steps" aria-label={t('Next steps')}>
           {reflect ? (
             <button
@@ -311,6 +319,20 @@ export function Today() {
                     : kindMeta(reflect.kind).label}
                 </b>
                 <span>{promptFor(reflect.kind, reflect.dayKey, 0, reflect.prayerName)}</span>
+              </span>
+              <Icon name="chevron" size={18} className="flip-rtl" />
+            </button>
+          ) : null}
+          {hifzDue ? (
+            <button type="button" className="next-step" onClick={() => ui.openReader({ memorise: 'tab' })}>
+              <span className="next-icon" aria-hidden="true">
+                <Icon name="headphones" size={17} />
+              </span>
+              <span className="next-text">
+                <b>{t('Memorise')}</b>
+                <span>
+                  {plural(hifzDue, { one: '{n} ayah to practise today', other: '{n} ayahs to practise today' })}
+                </span>
               </span>
               <Icon name="chevron" size={18} className="flip-rtl" />
             </button>

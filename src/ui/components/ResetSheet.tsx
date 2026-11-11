@@ -50,6 +50,10 @@ export function ResetSheet({ open, onClose, onBackup }: { open: boolean; onClose
             <Icon name="clock" size={16} /> {t('Make-up count')} · {summary.qada}
           </li>
           <li>
+            <Icon name="headphones" size={16} /> {t('Memorisation progress and downloaded recitation')} ·{' '}
+            {plural(summary.memorised, { one: '{n} ayah', other: '{n} ayahs' })}
+          </li>
+          <li>
             <Icon name="sliders" size={16} /> {t('Your name, answers, location and every setting')}
           </li>
           <li>

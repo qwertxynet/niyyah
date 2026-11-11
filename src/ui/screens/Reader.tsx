@@ -5,7 +5,6 @@ import { dateKey, placeCivilDate } from '../../domain/prayer-times';
 import { surahName, useQuran, type QuranMeta, type Surah } from '../../domain/quran';
 import {
   arabicNumber,
-  BASMALAH,
   loadSurahText,
   QuranIntegrityError,
   saveWholeQuran,
@@ -16,11 +15,19 @@ import { isArabic, plural, t } from '../../i18n';
 import { Icon } from '../components/Icons';
 import { useUi } from '../ui-context';
 import { celebrate } from '../celebrate';
+import { isActive, pause as pausePlayer, play, stop as stopPlayer, usePlayer } from '../../domain/player';
+import { AudioDownloadSheet } from '../components/AudioDownloadSheet';
+import { cacheBuiltIn } from '../../domain/audio-store';
+import { PlayerBar } from '../components/PlayerBar';
+import { Memorise } from './Memorise';
+import { MemoriseSession } from './MemoriseSession';
 
 /** Where to open the reader: a surah (and ayah), or the surah list when empty. */
 export interface ReaderTarget {
   s?: number;
   from?: number;
+  /** Open on the memorisation tab, or straight into today's session. */
+  memorise?: 'tab' | 'session';
 }
 
 const SIZES = [1, 2, 3, 4, 5];
@@ -35,6 +42,7 @@ export function Reader({ target, onClose }: { target: ReaderTarget; onClose: () 
   const [open, setOpen] = useState<{ s: number; from: number } | null>(
     target.s ? { s: target.s, from: target.from ?? 1 } : null,
   );
+  const [session, setSession] = useState(target.memorise === 'session');
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -67,8 +75,15 @@ export function Reader({ target, onClose }: { target: ReaderTarget; onClose: () 
           onGo={(s, from) => setOpen({ s, from })}
         />
       ) : (
-        <SurahIndex meta={meta} onClose={onClose} onOpen={(s, from) => setOpen({ s, from })} />
+        <SurahIndex
+          meta={meta}
+          onClose={onClose}
+          onOpen={(s, from) => setOpen({ s, from })}
+          initialMode={target.memorise ? 'hifz' : 'surah'}
+          onMemorise={() => setSession(true)}
+        />
       )}
+      {meta && session ? <MemoriseSession meta={meta} onClose={() => setSession(false)} /> : null}
     </div>,
     document.body,
   );
@@ -88,13 +103,17 @@ function SurahIndex({
   meta,
   onClose,
   onOpen,
+  initialMode,
+  onMemorise,
 }: {
   meta: QuranMeta;
   onClose: () => void;
   onOpen: (s: number, from: number) => void;
+  initialMode: 'surah' | 'juz' | 'hifz';
+  onMemorise: () => void;
 }) {
   const { reading } = useStore();
-  const [mode, setMode] = useState<'surah' | 'juz'>('surah');
+  const [mode, setMode] = useState<'surah' | 'juz' | 'hifz'>(initialMode);
   const [query, setQuery] = useState('');
 
   const resume = reading ? nextAfter(meta, reading.s, reading.a) : null;
@@ -131,9 +150,14 @@ function SurahIndex({
             <button type="button" role="tab" aria-selected={mode === 'juz'} onClick={() => setMode('juz')}>
               {t('Juz’')}
             </button>
+            <button type="button" role="tab" aria-selected={mode === 'hifz'} onClick={() => setMode('hifz')}>
+              {t('Memorise')}
+            </button>
           </div>
 
-          {mode === 'surah' ? (
+          {mode === 'hifz' ? (
+            <Memorise meta={meta} onStart={onMemorise} />
+          ) : mode === 'surah' ? (
             <>
               <input
                 className="input reader-search"
@@ -205,10 +229,12 @@ function OfflineSave() {
         onClick={() => {
           setFailed(false);
           setDone(0);
-          saveWholeQuran(setDone).catch(() => {
-            setFailed(true);
-            setDone(null);
-          });
+          saveWholeQuran(setDone)
+            .then(() => cacheBuiltIn('husary', () => undefined))
+            .catch(() => {
+              setFailed(true);
+              setDone(null);
+            });
         }}
       >
         <Icon name="download" size={16} />
@@ -276,6 +302,37 @@ function SurahView({
   // In focus mode the ayah on screen is how far you have read.
   const to = focus ? focusAt : end;
   const estimate = to !== null && to >= start ? rangeHasanat(meta, n, start, to) : null;
+
+  // Recitation: which ayah is playing here, and a download offer when it isn't on the device.
+  const player = usePlayer();
+  const playingHere = player.status !== 'idle' && player.queue[0]?.s === n;
+  const playingAyah = playingHere ? (player.queue[player.index]?.a ?? null) : null;
+  const [downloadFor, setDownloadFor] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (player.status === 'missing' && player.missing?.s === n) setDownloadFor([n]);
+  }, [player.status, player.missing, n]);
+
+  // Follow the recitation: scroll the page, or move focus mode along with it.
+  useEffect(() => {
+    if (playingAyah === null) return;
+    if (focus) setFocusAt(playingAyah);
+    else document.getElementById(`ayah-${n}-${playingAyah}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [playingAyah, focus, n]);
+
+  // Leaving the surah stops it.
+  useEffect(() => () => stopPlayer(), []);
+
+  function listenFrom(ayah: number) {
+    const queue = Array.from({ length: count - ayah + 1 }, (_, i) => ({ s: n, a: ayah + i }));
+    void play(queue, {
+      reciter: settings.reciter,
+      repeat: settings.audioRepeat,
+      gap: settings.audioGap,
+      rate: settings.audioRate,
+      title: surahName(surah),
+    });
+  }
 
   const scrolled = useRef(false);
   useEffect(() => {
@@ -362,13 +419,15 @@ function SurahView({
             start={start}
             size={size}
             onMove={(ayah) => setFocusAt(Math.min(count, Math.max(1, ayah)))}
+            onListen={() => listenFrom(focusAt)}
+            listening={playingAyah === focusAt && isActive(player)}
           />
         ) : (
           <div className={`mushaf size-${size}`} lang="ar" dir="rtl">
             <p className="mushaf-meta">
               {surah.ar} · <bdi>{plural(count, { one: '{n} ayah', other: '{n} ayahs' })}</bdi>
             </p>
-            {load.text.basmalah ? <p className="mushaf-basmalah">{BASMALAH}</p> : null}
+            {load.text.basmalah ? <p className="mushaf-basmalah">{load.text.basmalahText}</p> : null}
             <p className="mushaf-text">
               {load.text.ayahs.map((ayah, index) => {
                 const number = index + 1;
@@ -386,7 +445,9 @@ function SurahView({
                       id={`ayah-${n}-${number}`}
                       role="button"
                       tabIndex={0}
-                      className={`ayah${inRange ? ' is-range' : ''}${read ? ' is-read' : ''}`}
+                      className={`ayah${inRange ? ' is-range' : ''}${read ? ' is-read' : ''}${
+                        playingAyah === number ? ' is-playing' : ''
+                      }`}
                       onClick={() => tap(number)}
                       onKeyDown={(event) => {
                         if (event.key === 'Enter' || event.key === ' ') {
@@ -398,9 +459,14 @@ function SurahView({
                     >
                       {ayah}
                     </span>{' '}
-                    <span className="ayah-mark" aria-hidden="true">
+                    <button
+                      type="button"
+                      className="ayah-mark"
+                      onClick={() => listenFrom(number)}
+                      aria-label={t('Listen from ayah {n}', { n: number })}
+                    >
                       ﴿{arabicNumber(number)}﴾
-                    </span>{' '}
+                    </button>{' '}
                   </span>
                 );
               })}
@@ -413,6 +479,23 @@ function SurahView({
           </div>
         )}
       </div>
+
+      {load.status === 'ready' ? (
+        <PlayerBar s={n} count={count} title={surahName(surah)} from={focus ? focusAt : (end ?? start)} />
+      ) : null}
+
+      <AudioDownloadSheet
+        surahs={downloadFor}
+        onClose={() => {
+          setDownloadFor([]);
+          stopPlayer();
+        }}
+        onDone={() => {
+          const missingAyah = player.missing?.a ?? start;
+          setDownloadFor([]);
+          listenFrom(missingAyah);
+        }}
+      />
 
       {load.status === 'ready' ? (
         <div className="reader-dock" aria-live="polite">
@@ -479,12 +562,16 @@ function FocusView({
   start,
   size,
   onMove,
+  onListen,
+  listening,
 }: {
   text: SurahText;
   at: number;
   start: number;
   size: number;
   onMove: (ayah: number) => void;
+  onListen: () => void;
+  listening: boolean;
 }) {
   const count = text.ayahs.length;
   const progress = useMemo(() => (at / count) * 100, [at, count]);
@@ -510,7 +597,7 @@ function FocusView({
       </p>
       {at === 1 && text.basmalah ? (
         <p className="mushaf-basmalah" lang="ar" dir="rtl">
-          {BASMALAH}
+          {text.basmalahText}
         </p>
       ) : null}
       <p className={`focus-ayah size-${size}`} lang="ar" dir="rtl" key={at}>
@@ -522,6 +609,14 @@ function FocusView({
       <div className="focus-nav">
         <button type="button" className="btn btn-quiet" disabled={at <= 1} onClick={() => onMove(at - 1)}>
           {t('Previous')}
+        </button>
+        <button
+          type="button"
+          className="btn btn-quiet focus-listen"
+          onClick={() => (listening ? pausePlayer() : onListen())}
+          aria-label={listening ? t('Pause') : t('Listen')}
+        >
+          <Icon name={listening ? 'pause' : 'play'} size={18} />
         </button>
         <button type="button" className="btn btn-solid" disabled={at >= count} onClick={() => onMove(at + 1)}>
           {t('Next ayah')}

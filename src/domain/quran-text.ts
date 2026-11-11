@@ -9,7 +9,9 @@
  * showing a surah's opening Basmalah as a heading, the way printed mushafs do.
  */
 
-export const BASMALAH = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+/** Exactly as Tanzil writes al-Fatihah 1:1 (mark order matters: shadda before fatha). */
+export const BASMALAH =
+  'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
 
 export interface SurahText {
   n: number;
@@ -17,6 +19,8 @@ export interface SurahText {
   ayahs: string[];
   /** True when the Basmalah is shown as a heading above ayah 1. */
   basmalah: boolean;
+  /** The heading Basmalah exactly as this surah's file writes it (95 and 97 differ slightly). */
+  basmalahText: string;
 }
 
 export class QuranIntegrityError extends Error {
@@ -60,6 +64,11 @@ async function sha256(text: string): Promise<string | null> {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+/** Arabic letters with every vowel and Qur'anic mark removed, for comparing. */
+function lettersOnly(text: string): string {
+  return text.replace(/[ً-ٰٟۖ-ۭ]/g, '');
+}
+
 async function fetchSurah(n: number): Promise<SurahText> {
   const entry = (await loadIndex()).files.find((file) => file.n === n);
   if (!entry) throw new Error(`No surah ${n}`);
@@ -78,12 +87,20 @@ async function fetchSurah(n: number): Promise<SurahText> {
   });
 
   // Tanzil starts ayah 1 of most surahs with the Basmalah; show it as a heading.
+  // Compare letters only, so a variant mark (e.g. بِّسْمِ in 95 and 97) still
+  // matches — and keep the file's own words for the heading, unchanged.
   let basmalah = false;
-  if (n !== 1 && n !== 9 && ayahs[0].startsWith(`${BASMALAH} `)) {
-    ayahs[0] = ayahs[0].slice(BASMALAH.length + 1);
-    basmalah = true;
+  let basmalahText = BASMALAH;
+  if (n !== 1 && n !== 9) {
+    const words = ayahs[0].split(' ');
+    const head = words.slice(0, 4).join(' ');
+    if (words.length > 4 && lettersOnly(head) === lettersOnly(BASMALAH)) {
+      basmalah = true;
+      basmalahText = head;
+      ayahs[0] = words.slice(4).join(' ');
+    }
   }
-  return { n, ayahs, basmalah };
+  return { n, ayahs, basmalah, basmalahText };
 }
 
 export function loadSurahText(n: number): Promise<SurahText> {

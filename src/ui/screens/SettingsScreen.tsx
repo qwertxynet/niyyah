@@ -14,6 +14,7 @@ import { ComfortSection } from '../components/ComfortSection';
 import { Segmented, SettingRow, SettingStack, Toggle } from '../components/Controls';
 import { Icon } from '../components/Icons';
 import { LocationPicker } from '../components/LocationPicker';
+import { RecitationSettings } from '../components/RecitationSettings';
 import { ResetSheet } from '../components/ResetSheet';
 import { Sheet } from '../components/Sheet';
 import { useUi } from '../ui-context';
@@ -209,6 +210,8 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
           </SettingRow>
         </div>
       </section>
+
+      <RecitationSettings />
 
       <section className="group">
         <h2>{t('Reminders')}</h2>

@@ -4882,3 +4882,362 @@ ul {
 :root[data-sky] .shell .kind-tab[aria-selected='true'] {
   color: #f4efe2;
 }
+
+
+/* ---------- recitation and memorisation ---------- */
+
+/* Sheets and the memorisation session sit above the reader. */
+.sheet-backdrop {
+  z-index: 92;
+}
+
+.hifz-session {
+  z-index: 90;
+}
+
+.player-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.player-main {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--green-700);
+  color: #f4efe2;
+  box-shadow: 0 6px 16px -8px rgba(8, 32, 25, 0.6);
+}
+
+.player-bar.is-on .player-main {
+  background: var(--gold);
+  color: var(--green-950);
+}
+
+.player-mid {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-now {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.player-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.player-chip {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.player-steps {
+  display: flex;
+  gap: 4px;
+}
+
+.player-steps .reader-icon-btn {
+  width: 38px;
+  height: 38px;
+}
+
+/* The ayah number doubles as its play button. */
+button.ayah-mark {
+  border: 0;
+  padding: 0 2px;
+  background: none;
+  font: inherit;
+  color: var(--gold-ink);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+button.ayah-mark:focus-visible {
+  outline: 2px solid var(--green-600);
+}
+
+.ayah.is-playing {
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+.focus-nav {
+  grid-template-columns: 1fr auto 1.4fr;
+}
+
+.focus-listen {
+  min-width: 56px;
+}
+
+.dl-progress {
+  margin: 12px 0;
+}
+
+.dl-progress .guide-progress {
+  margin-top: 0;
+}
+
+.dl-progress p {
+  margin-top: 6px;
+  font-size: var(--fs-sm);
+}
+
+.dl-ios {
+  margin: 10px 0;
+}
+
+.dl-list {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.dl-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dl-list li > span {
+  display: flex;
+  flex-direction: column;
+}
+
+.dl-list .muted {
+  font-size: var(--fs-sm);
+}
+
+/* Memorise tab */
+.hifz {
+  display: grid;
+  gap: 14px;
+}
+
+.hifz-intro {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+}
+
+.hifz-intro p {
+  margin-top: 4px;
+  font-size: var(--fs-sm);
+}
+
+.hifz-pick {
+  display: flex;
+  gap: 8px;
+}
+
+.hifz-pick .select {
+  flex: 1;
+  min-width: 0;
+}
+
+.hifz-today {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+}
+
+.hifz-kicker {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.hifz-big {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 500;
+}
+
+.hifz-today .btn {
+  margin-top: 8px;
+  gap: 8px;
+}
+
+.hifz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.hifz-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.hifz-summary {
+  font-size: var(--fs-sm);
+}
+
+.hifz-map {
+  display: grid;
+  gap: 10px;
+}
+
+.hz-surah {
+  display: grid;
+  gap: 5px;
+}
+
+.hz-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.hz-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.hz-cell {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+}
+
+.hz-cell.is-sabaq {
+  background: #f3e3bd;
+  border-color: #e2c98f;
+}
+
+.hz-cell.is-sabqi {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.hz-cell.is-manzil {
+  background: var(--green-600);
+  border-color: var(--green-600);
+}
+
+.hifz-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Memorisation session */
+.hifz-ayah {
+  margin: 18px 0 8px;
+  font-family: var(--font-quran);
+  font-size: 32px;
+  line-height: 2.3;
+  text-align: center;
+}
+
+.hifz-ayah.is-faint {
+  font-size: 22px;
+  color: var(--ink-3);
+  margin-bottom: 0;
+}
+
+.hz-word {
+  display: inline-block;
+  min-width: 2.2em;
+  margin: 0 0.12em;
+  padding: 0 0.2em;
+  border: 0;
+  border-bottom: 2px dotted var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  border-radius: 6px 6px 0 0;
+  font: inherit;
+  line-height: 1.6;
+  color: var(--ink-3);
+  vertical-align: baseline;
+  cursor: pointer;
+}
+
+.hz-word.is-hint {
+  min-width: 1.6em;
+  color: var(--gold-ink);
+}
+
+.hz-shown {
+  margin: 0 0.12em;
+}
+
+.hz-shown.is-peeked {
+  color: var(--gold-ink);
+}
+
+.hifz-tools {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 12px;
+}
+
+.hifz-tools .btn {
+  gap: 8px;
+}
+
+.hifz-aloud {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  text-align: center;
+}
+
+.hifz-rate {
+  display: grid;
+  gap: 8px;
+}
+
+.hifz-check {
+  margin-top: 6px;
+}
+
+.hifz-done {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.hifz-done .tapper-arabic {
+  color: var(--gold-ink);
+}
+
+:root[data-calm] .hz-word {
+  background: transparent;
+}

@@ -1,4 +1,4 @@
-const CACHE = 'niyyah-shell-v6';
+const CACHE = 'niyyah-shell-v7';
 
 // Everything the app needs to open with no network at all.
 const CORE = [
@@ -24,7 +24,7 @@ const CORE = [
 // new city list actually lands, but keep the cached copy for offline use.
 // Surah files (./quran/NNN.txt) are fetched when first opened and kept the same way.
 const REFRESH = new Set(['./cities.json', './quran-meta.json', './quran/index.json']);
-const isRefreshed = (path) => REFRESH.has(path) || /^\.\/quran\/\d{3}\.txt$/.test(path);
+const isRefreshed = (path) => REFRESH.has(path) || /^\.\/quran\/\d{3}\.txt$/.test(path) || /^\.\/audio\/[\w-]+\/index\.json$/.test(path);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

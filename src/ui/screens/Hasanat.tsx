@@ -235,6 +235,9 @@ export function Hasanat() {
             <button type="button" className={markSurah ? 'btn btn-quiet' : 'btn btn-solid'} onClick={() => ui.openReader()}>
               {markSurah ? t('All surahs') : t('Open the reader')}
             </button>
+            <button type="button" className="btn btn-quiet" onClick={() => ui.openReader({ memorise: 'tab' })}>
+              {t('Memorise')}
+            </button>
           </div>
         </div>
       </section>

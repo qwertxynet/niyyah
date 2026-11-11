@@ -1,4 +1,7 @@
 import type { JournalEntry } from './journal';
+import type { HifzState } from './hifz';
+import type { GapMode } from './player';
+import type { ReciterId } from './reciters';
 
 export const PRAYER_KEYS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const;
 
@@ -123,6 +126,15 @@ export interface Settings {
   quranSize: number;
   /** Qur'an reader shows one ayah at a time. */
   quranFocus: boolean;
+
+  // ---- recitation audio ----
+  reciter: ReciterId;
+  /** Playback speed: 0.75, 1 or 1.25. */
+  audioRate: number;
+  /** Times each ayah plays before moving on. */
+  audioRepeat: number;
+  /** Pause after each ayah, for reciting it back. */
+  audioGap: GapMode;
 }
 
 export interface LogEntry {
@@ -185,4 +197,6 @@ export interface Persisted {
   journal: Record<string, JournalEntry[]>;
   /** Qur'an reader bookmark; null until something is read. */
   reading: ReadingMark | null;
+  /** Memorisation plan and progress per ayah. */
+  hifz: HifzState;
 }
