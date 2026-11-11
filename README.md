@@ -118,6 +118,23 @@ Gregorian, light and dark themes, 12/24-hour clock, 48 px tap targets.
 
 </td>
 </tr>
+<tr>
+<td valign="top">
+
+### 📖 A Qur'an reader
+The full Uthmani text, offline, in Amiri Quran. Tap the last ayah you read and exactly those
+letters count toward your hasanat; it remembers where you stopped. One-ayah-at-a-time focus mode,
+five text sizes, and every surah is checked against a checksum before it is shown.
+
+</td>
+<td valign="top">
+
+### 🌐 English or العربية
+The whole app — screens, reminders, guides, journal prompts and the Android widget — switches to
+Arabic with a right-to-left layout. Pick it on the very first screen or any time in Settings.
+
+</td>
+</tr>
 </table>
 
 ## 📴 Offline, concretely
@@ -126,8 +143,9 @@ Gregorian, light and dark themes, 12/24-hour clock, 48 px tap targets.
 | --- | --- |
 | Prayer times | Computed on device with [`adhan`](https://github.com/batoulapps/adhan-js). No API, no key. |
 | Qur'an letters | `public/quran-meta.json` — letter counts per ayah (no text) from the Tanzil text, 28 KB, loaded on demand. |
+| Qur'an text | `public/quran/NNN.txt` — the Tanzil Uthmani text, one verbatim file per surah (1.5 MB in all), each checked against a SHA-256 in `public/quran/index.json` before display. Opened surahs are cached for offline reading; the apps bundle them all. |
 | City search | `public/cities.json` — 3,429 cities with coordinates and IANA timezones (GeoNames), bundled. 292 KB raw / 110 KB gzipped, loaded on demand. |
-| Fonts & icons | Amiri (Arabic), Fraunces and Figtree (Latin) bundled as `.woff2` (SIL OFL, licences in `public/fonts/`); all icons inline SVG. No CDN. |
+| Fonts & icons | Amiri, Amiri Quran and IBM Plex Sans Arabic (Arabic), Fraunces and Figtree (Latin) bundled as `.woff2` (SIL OFL, licences in `public/fonts/`); all icons inline SVG. No CDN. |
 | History & settings | `localStorage`, on the device. Export/import a JSON file to move between phone and PC. |
 | Browser build | `public/sw.js` precaches the shell and city list, so a reload works in airplane mode. |
 | Timezones | Times are shown in the chosen **place's** clock (per-city IANA zone), and the app says so when that differs from your device clock. |
@@ -183,6 +201,7 @@ Regenerate bundled assets (network needed once):
 npm run icons    # rasterises public/icon.svg + assets/mark.svg
 npm run cities   # rebuilds public/cities.json from a GeoNames dump
 npm run quran    # rebuilds public/quran-meta.json from the Tanzil text (URLs in the script)
+npm run quran:text  # rebuilds public/quran/ (the reader's text) from the Tanzil Uthmani file
 ```
 
 The README images are real screenshots: with `npm run dev` running, `npm run readme:images -- http://localhost:5173`
@@ -203,6 +222,7 @@ identity. They are personal-use credentials for sideloading, not store credentia
 ```
 src/domain/    prayer engine, formatting, persistence, reminder builder, notification drivers
 src/ui/        screens and components, identical on every platform
+src/i18n/      t() and plural(); English strings are the keys, ar.ts holds the Arabic
 electron/      main.cjs (app:// protocol, tray, toasts, autostart) + preload.cjs
 android/       Capacitor project; SCHEDULE_EXACT_ALARM and POST_NOTIFICATIONS from the plugin
 public/        cities.json, service worker, manifest, icons, Amiri font
@@ -239,7 +259,8 @@ between devices, a Play Store listing, a native iOS build (the web app installs 
 
 Prayer calculations by [adhan-js](https://github.com/batoulapps/adhan-js) (MIT).
 City data from [GeoNames](https://www.geonames.org/) (CC BY 4.0).
-Qur'an letter counts derived from the [Tanzil Project](https://tanzil.net) text (simple-clean), used unchanged for counting.
-Amiri, Fraunces and Figtree typefaces (SIL Open Font License; licences in `public/fonts/`).
+Qur'an text from the [Tanzil Project](https://tanzil.net) (Uthmani, Creative Commons Attribution 3.0), copied verbatim with its notice;
+letter counts derived from the Tanzil simple-clean text, used unchanged for counting.
+Amiri, Amiri Quran, IBM Plex Sans Arabic, Fraunces and Figtree typefaces (SIL Open Font License; licences in `public/fonts/`).
 
 <div align="center"><br><sub>Made with care, for the moments between intention and action.</sub></div>
