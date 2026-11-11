@@ -129,11 +129,23 @@ five text sizes, and every surah is checked against a checksum before it is show
 </td>
 <td valign="top">
 
+### 🎧 Listen and memorise
+Ayah-by-ayah recitation from four reciters (Husary, Husary's teaching recitation, Alafasy,
+Minshawi): repeat each ayah, pause to recite it back, slow it down. A memorisation helper walks
+you through listen → words fade → recite from memory, then brings ayahs back for review just
+before you'd forget them. No streaks, no timers, nothing lost if you miss a day.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
 ### 🌐 English or العربية
 The whole app — screens, reminders, guides, journal prompts and the Android widget — switches to
 Arabic with a right-to-left layout. Pick it on the very first screen or any time in Settings.
 
 </td>
+<td></td>
 </tr>
 </table>
 
@@ -145,6 +157,8 @@ Arabic with a right-to-left layout. Pick it on the very first screen or any time
 | Qur'an letters | `public/quran-meta.json` — letter counts per ayah (no text) from the Tanzil text, 28 KB, loaded on demand. |
 | Qur'an text | `public/quran/NNN.txt` — the Tanzil Uthmani text, one verbatim file per surah (1.5 MB in all), each checked against a SHA-256 in `public/quran/index.json` before display. Opened surahs are cached for offline reading; the apps bundle them all. |
 | City search | `public/cities.json` — 3,429 cities with coordinates and IANA timezones (GeoNames), bundled. 292 KB raw / 110 KB gzipped, loaded on demand. |
+| Recitation | Downloaded only when you tap Download, per surah, straight from [EveryAyah.com](https://everyayah.com) into the device's own storage (IndexedDB), then played with no connection. Al-Fatihah, Ayat al-Kursi and Juz 30 can ship built in (`npm run quran:audio`, once redistribution permission is confirmed). |
+| Memorisation | Progress per ayah in the same local state as everything else, so it is in backups. |
 | Fonts & icons | Amiri, Amiri Quran and IBM Plex Sans Arabic (Arabic), Fraunces and Figtree (Latin) bundled as `.woff2` (SIL OFL, licences in `public/fonts/`); all icons inline SVG. No CDN. |
 | History & settings | `localStorage`, on the device. Export/import a JSON file to move between phone and PC. |
 | Browser build | `public/sw.js` precaches the shell and city list, so a reload works in airplane mode. |
@@ -202,6 +216,7 @@ npm run icons    # rasterises public/icon.svg + assets/mark.svg
 npm run cities   # rebuilds public/cities.json from a GeoNames dump
 npm run quran    # rebuilds public/quran-meta.json from the Tanzil text (URLs in the script)
 npm run quran:text  # rebuilds public/quran/ (the reader's text) from the Tanzil Uthmani file
+npm run quran:audio -- --permission-confirmed  # built-in Husary audio for al-Fatihah, Ayat al-Kursi, Juz 30
 ```
 
 The README images are real screenshots: with `npm run dev` running, `npm run readme:images -- http://localhost:5173`
