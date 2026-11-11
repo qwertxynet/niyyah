@@ -157,7 +157,7 @@ Arabic with a right-to-left layout. Pick it on the very first screen or any time
 | Qur'an letters | `public/quran-meta.json` — letter counts per ayah (no text) from the Tanzil text, 28 KB, loaded on demand. |
 | Qur'an text | `public/quran/NNN.txt` — the Tanzil Uthmani text, one verbatim file per surah (1.5 MB in all), each checked against a SHA-256 in `public/quran/index.json` before display. Opened surahs are cached for offline reading; the apps bundle them all. |
 | City search | `public/cities.json` — 3,429 cities with coordinates and IANA timezones (GeoNames), bundled. 292 KB raw / 110 KB gzipped, loaded on demand. |
-| Recitation | Downloaded only when you tap Download, per surah, straight from [EveryAyah.com](https://everyayah.com) into the device's own storage (IndexedDB), then played with no connection. Al-Fatihah, Ayat al-Kursi and Juz 30 can ship built in (`npm run quran:audio`, once redistribution permission is confirmed). |
+| Recitation | Downloaded only when you tap Download, per surah, straight from [EveryAyah.com](https://everyayah.com) into the device's own storage (IndexedDB), then played with no connection. Al-Fatihah, Ayat al-Kursi and Juz 30 ship built in (Husary, 39 MB in `public/audio/husary-64/`, included with EveryAyah's permission; rebuilt by `npm run quran:audio`). |
 | Memorisation | Progress per ayah in the same local state as everything else, so it is in backups. |
 | Fonts & icons | Amiri, Amiri Quran and IBM Plex Sans Arabic (Arabic), Fraunces and Figtree (Latin) bundled as `.woff2` (SIL OFL, licences in `public/fonts/`); all icons inline SVG. No CDN. |
 | History & settings | `localStorage`, on the device. Export/import a JSON file to move between phone and PC. |

@@ -55,7 +55,7 @@ export function RecitationSettings() {
           hint={t('Downloads come from EveryAyah.com once, then play with no connection.')}
         >
           {downloads.length === 0 ? (
-            <p className="muted">{t('Nothing downloaded yet. Al-Fatihah, Ayat al-Kursi and Juz 30 can come built in.')}</p>
+            <p className="muted">{t('Nothing downloaded yet. Al-Fatihah, Ayat al-Kursi and Juz 30 (Husary) are built in.')}</p>
           ) : (
             <ul className="dl-list">
               {downloads.map((item) => (

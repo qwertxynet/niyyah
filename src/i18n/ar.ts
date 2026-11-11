@@ -949,7 +949,7 @@ export const AR: Record<string, string> = {
   "Change these from the player too.": "يمكنك تغييرها من المشغّل أيضًا.",
   "Downloaded recitation": "التلاوات المنزّلة",
   "Downloads come from EveryAyah.com once, then play with no connection.": "تُنزَّل من EveryAyah.com مرة واحدة، ثم تعمل دون اتصال.",
-  "Nothing downloaded yet. Al-Fatihah, Ayat al-Kursi and Juz 30 can come built in.": "لم يُنزَّل شيء بعد. يمكن أن تأتي الفاتحة وآية الكرسي وجزء عمّ مضمّنة.",
+  "Nothing downloaded yet. Al-Fatihah, Ayat al-Kursi and Juz 30 (Husary) are built in.": "لم يُنزَّل شيء بعد. الفاتحة وآية الكرسي وجزء عمّ (بصوت الحصري) مضمّنة في التطبيق.",
   "{n} of {total} ayahs": "{n} من {total} آية",
   "Delete": "حذف",
   "Recitation on this device: {size}": "التلاوة على هذا الجهاز: {size}",
