@@ -76,12 +76,12 @@ export function SkyArc({ arc, current, label }: { arc: DayArc; current?: string;
       <g className="sky-arc-body" style={{ transform: `translate(${sx}px, ${sy}px)` }}>
         {arc.night ? (
           <>
-            <circle r="13" fill={`url(#${id}-sun)`} opacity="0.5" />
+            <circle r="13" fill={`url(#${id}-sun)`} opacity="0.5" className="sky-arc-glow" />
             <path d="M3.5 -7.2A7.8 7.8 0 1 0 7.6 3.4 6.2 6.2 0 0 1 3.5 -7.2Z" className="sky-arc-moon" />
           </>
         ) : (
           <>
-            <circle r="13" fill={`url(#${id}-sun)`} />
+            <circle r="13" fill={`url(#${id}-sun)`} className="sky-arc-glow" />
             <circle r="6.5" className="sky-arc-sun" />
           </>
         )}

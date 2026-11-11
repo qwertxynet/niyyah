@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
 import { Icon, type IconName } from './Icons';
 
@@ -21,9 +22,31 @@ export function BottomNav({
   /** Tabs switched off in Settings → Comfort & support. */
   hidden?: Tab[];
 }) {
+  const navRef = useRef<HTMLElement>(null);
+  // One highlight that glides between tabs instead of jumping.
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  const tabs = TABS.filter((entry) => !hidden.includes(entry.id));
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const active = navRef.current?.querySelector<HTMLElement>('[aria-current="page"]');
+      setPill(active ? { left: active.offsetLeft, width: active.offsetWidth } : null);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [tab, tabs.length]);
+
   return (
-    <nav className="nav" aria-label={t('Main')}>
-      {TABS.filter((entry) => !hidden.includes(entry.id)).map((entry) => (
+    <nav className={pill ? 'nav has-pill' : 'nav'} aria-label={t('Main')} ref={navRef}>
+      {pill ? (
+        <span
+          className="nav-pill"
+          aria-hidden="true"
+          style={{ width: pill.width, transform: `translateX(${pill.left}px)` }}
+        />
+      ) : null}
+      {tabs.map((entry) => (
         <button
           key={entry.id}
           type="button"

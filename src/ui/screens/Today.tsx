@@ -24,6 +24,7 @@ import type { Logs, Persisted, PrayerKey, Settings } from '../../domain/types';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
 import { t } from '../../i18n';
+import { celebrate } from '../celebrate';
 
 const URGENT_MS = 20 * 60 * 1000;
 /** An after-prayer reflection is offered for this long after logging. */
@@ -246,7 +247,14 @@ export function Today() {
             </div>
 
             <div className="hero-actions">
-              <button type="button" className="btn btn-primary" onClick={() => logCurrent('ontime')}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={(event) => {
+                  celebrate(event.currentTarget, { count: 18 });
+                  logCurrent('ontime');
+                }}
+              >
                 <Icon name="check" size={17} strokeWidth={2.6} />
                 {t('I prayed {name}', { name: current.name })}
               </button>
@@ -350,6 +358,7 @@ export function Today() {
               key={slot.key}
               slot={slot}
               status={dayLog[slot.key]?.s}
+              loggedAt={dayLog[slot.key]?.at}
               timeFormat={settings.timeFormat}
               now={now}
               onOpen={() => ui.openPrayer(cycle.active.key, slot.key)}

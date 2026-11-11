@@ -22,6 +22,7 @@ import { useUi, type JournalIntent } from '../ui-context';
 import { useNow } from '../useNow';
 import { Week } from './Week';
 import { t } from '../../i18n';
+import { celebrate } from '../celebrate';
 
 type View = 'entries' | 'week';
 const VIEW_KEY = 'niyyah.journal.view';
@@ -127,8 +128,9 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
     setEnergy(null);
   }
 
-  function save() {
+  function save(button?: Element) {
     if (!canSave) return;
+    celebrate(button, { count: 10 });
     const entry: Omit<JournalEntry, 'id' | 'at'> = {
       kind,
       prompt,
@@ -262,7 +264,12 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
           />
         )}
 
-        <button type="button" className="btn btn-solid btn-block" disabled={!canSave} onClick={save}>
+        <button
+          type="button"
+          className="btn btn-solid btn-block"
+          disabled={!canSave}
+          onClick={(event) => save(event.currentTarget)}
+        >
           {t('Save {what}', { what: kindMeta(kind).label.toLowerCase() })}
         </button>
       </section>
@@ -282,7 +289,8 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
                   <button
                     type="button"
                     className="btn btn-quiet"
-                    onClick={() => {
+                    onClick={(event) => {
+                      celebrate(event.currentTarget, { count: 14 });
                       actions.updateJournal(key, entry.id, { answered: Date.now() });
                       ui.toast(t('Marked as answered · Alhamdulillah'), () =>
                         actions.updateJournal(key, entry.id, { answered: undefined }),

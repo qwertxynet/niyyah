@@ -3,10 +3,12 @@ import type { Slot } from '../../domain/prayer-times';
 import type { LogStatus, TimeFormat } from '../../domain/types';
 import { StatusMark, statusText } from './StatusMark';
 import { t } from '../../i18n';
+import { celebrate } from '../celebrate';
 
 export function PrayerRow({
   slot,
   status,
+  loggedAt,
   timeFormat,
   now,
   onOpen,
@@ -14,6 +16,8 @@ export function PrayerRow({
 }: {
   slot: Slot;
   status?: LogStatus;
+  /** When it was logged, so a just-logged row can celebrate quietly. */
+  loggedAt?: number;
   timeFormat: TimeFormat;
   now: Date;
   onOpen: () => void;
@@ -50,7 +54,10 @@ export function PrayerRow({
       <button
         type="button"
         className="row-action"
-        onClick={onQuickLog}
+        onClick={(event) => {
+          if (!status) celebrate(event.currentTarget, { count: 9 });
+          onQuickLog();
+        }}
         disabled={!started}
         aria-label={
           status
@@ -60,7 +67,7 @@ export function PrayerRow({
               : t('{name} has not begun yet', { name: slot.name })
         }
       >
-        <StatusMark status={status} future={!started} />
+        <StatusMark status={status} future={!started} fresh={Boolean(loggedAt && now.getTime() - loggedAt < 2500)} />
       </button>
     </li>
   );

@@ -15,6 +15,7 @@ import { actions, currentState, useStore } from '../../domain/store';
 import { isArabic, plural, t } from '../../i18n';
 import { Icon } from '../components/Icons';
 import { useUi } from '../ui-context';
+import { celebrate } from '../celebrate';
 
 /** Where to open the reader: a surah (and ayah), or the surah list when empty. */
 export interface ReaderTarget {
@@ -290,8 +291,9 @@ function SurahView({
     } else setEnd(ayah === end ? null : ayah);
   }
 
-  function save() {
+  function save(button?: Element) {
     if (to === null || estimate === null) return;
+    celebrate(button, { count: 14, label: `+${fmtHasanat(estimate)}` });
     const previous = currentState().reading;
     const key = dateKey(placeCivilDate(new Date(), settings));
     const label = start === to ? `${surahName(surah)} ${start}` : `${surahName(surah)} ${start}–${to}`;
@@ -432,7 +434,7 @@ function SurahView({
                 <b>{start === to ? t('Ayah {n}', { n: start }) : t('Ayahs {from}–{to}', { from: start, to })}</b>
                 <span className="tnum">{t('≈ +{h} hasanat', { h: fmtHasanat(estimate) })}</span>
               </p>
-              <button type="button" className="btn btn-solid" onClick={save}>
+              <button type="button" className="btn btn-solid" onClick={(event) => save(event.currentTarget)}>
                 <Icon name="check" size={16} /> {t('I read these')}
               </button>
             </>

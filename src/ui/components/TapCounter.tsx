@@ -4,6 +4,15 @@ import { fmtHasanat, type DeedDef } from '../../domain/hasanat';
 import { buzz } from '../useCountUp';
 import { Icon } from './Icons';
 import { isArabic, t } from '../../i18n';
+import { celebrate } from '../celebrate';
+
+/** The finishing burst, once per completed count. */
+const celebrated = new WeakSet<Element>();
+function celebrateOnce(el: Element | null) {
+  if (!el || celebrated.has(el)) return;
+  celebrated.add(el);
+  window.setTimeout(() => celebrate(el, { count: 22 }), 120);
+}
 
 /**
  * Full-screen dhikr counter: tap anywhere. Big target, haptic tick on every
@@ -95,7 +104,9 @@ export function TapCounter({
 
       {finished ? (
         <div className="tapper-done">
-          <div className="tapper-arabic">مَا شَاءَ ٱللَّٰهُ</div>
+          <div className="tapper-arabic tapper-arabic-done" ref={(el) => celebrateOnce(el)}>
+            مَا شَاءَ ٱللَّٰهُ
+          </div>
           <p className="tapper-done-title">{t('Complete')}</p>
           <p className="tapper-done-sub">{t('≈ +{h} hasanat', { h: fmtHasanat(estimate) })}</p>
           <button type="button" className="btn btn-primary tapper-save" onClick={() => onSave(estimate, done, total)}>
@@ -118,7 +129,9 @@ export function TapCounter({
           </svg>
           <span className="tapper-center">
             <span className="tapper-arabic">{phase.arabic}</span>
-            <span className="tapper-count tnum">{inPhase}</span>
+            <span className="tapper-count tnum" key={done}>
+              {inPhase}
+            </span>
             <span className="tapper-of tnum">{t('of {n}', { n: phase.count })}</span>
           </span>
         </button>

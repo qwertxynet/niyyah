@@ -121,6 +121,14 @@ export function App() {
 
   return (
     <UiContext.Provider value={ui}>
+      {/* Decoration only: shooting stars at night, drifting light by day. */}
+      <div className="sky-fx" aria-hidden="true">
+        <i className="shoot" />
+        <i className="shoot shoot-2" />
+        {[0, 1, 2, 3, 4, 5].map((index) => (
+          <b key={index} className={`mote mote-${index}`} />
+        ))}
+      </div>
       <div className="shell">
         <div className="brand">
           <span className="wordmark">

@@ -6,14 +6,17 @@ export function StatusMark({
   status,
   future = false,
   size = 30,
+  fresh = false,
 }: {
   status?: LogStatus;
   future?: boolean;
   size?: number;
+  /** Just logged: the mark pops in and the tick draws itself. */
+  fresh?: boolean;
 }) {
   if (status === 'ontime') {
     return (
-      <span className="statusmark is-ontime" style={{ width: size, height: size }}>
+      <span className={`statusmark is-ontime${fresh ? ' is-fresh' : ''}`} style={{ width: size, height: size }}>
         <Icon name="check" size={size * 0.55} strokeWidth={2.6} />
       </span>
     );
@@ -21,7 +24,7 @@ export function StatusMark({
 
   if (status === 'late') {
     return (
-      <span className="statusmark is-late" style={{ width: size, height: size }}>
+      <span className={`statusmark is-late${fresh ? ' is-fresh' : ''}`} style={{ width: size, height: size }}>
         <Icon name="clock" size={size * 0.55} strokeWidth={2} />
       </span>
     );

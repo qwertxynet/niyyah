@@ -25,6 +25,7 @@ import { buzz, useCountUp } from '../useCountUp';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
 import { t } from '../../i18n';
+import { celebrate } from '../celebrate';
 
 const TIER_KEY = 'niyyah.hasanat.tier';
 
@@ -58,8 +59,12 @@ export function Hasanat() {
 
   // A small tick in the hand whenever today's figure grows.
   const lastToday = useRef(totals.today);
+  const tallyRef = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (totals.today > lastToday.current && !quiet) buzz(18);
+    if (totals.today > lastToday.current && !quiet) {
+      buzz(18);
+      celebrate(tallyRef.current?.querySelector('.tally-value'), { count: 16 });
+    }
     lastToday.current = totals.today;
   }, [totals.today, quiet]);
 
@@ -130,7 +135,7 @@ export function Hasanat() {
         </p>
       </div>
 
-      <section className="tally" aria-label={t('Estimated hasanat')}>
+      <section className="tally" aria-label={t('Estimated hasanat')} ref={tallyRef}>
         <span className="tally-label">{t('Today')}</span>
         <span className={today.rising ? 'tally-value tnum is-rising' : 'tally-value tnum'} aria-live="polite">
           <small>≈</small> {fmtHasanat(today.value)}
