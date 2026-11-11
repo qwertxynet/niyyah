@@ -1,0 +1,92 @@
+/* Shared by the README image layouts (rendered by scripts/readme-shots.cjs). */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../../public/fonts/fraunces-latin-var.woff2') format('woff2');
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: 'Figtree';
+  src: url('../../public/fonts/figtree-latin-var.woff2') format('woff2');
+  font-weight: 300 900;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../../public/fonts/amiri-arabic-700.woff2') format('woff2');
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Figtree', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.canvas {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+/* Eight-point stars, the same family as the app's background. */
+.pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.2'%3E%3Cpath d='M48 18l9 21 21 9-21 9-9 21-9-21-21-9 21-9z'/%3E%3Crect x='30' y='30' width='36' height='36' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 96px 96px;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 28% 8%, #fff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 44% 22%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 7% 52%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 36% 40%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 58% 6%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 20% 70%, #fff 50%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 50% 62%, #fff 50%, transparent 51%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.phone {
+  position: relative;
+  border-radius: 46px;
+  padding: 9px;
+  background: linear-gradient(145deg, #2c2f38, #0b0c10 40%, #1c1e25);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.12) inset,
+    0 30px 60px -12px rgba(5, 4, 20, 0.55),
+    0 12px 24px -8px rgba(5, 4, 20, 0.4);
+}
+
+.phone img {
+  display: block;
+  width: 100%;
+  border-radius: 37px;
+}
+
+.crop {
+  overflow: hidden;
+  border-radius: 37px;
+}
+
+.crop img {
+  border-radius: 0;
+  object-fit: cover;
+  object-position: top;
+}

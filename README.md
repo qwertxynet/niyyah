@@ -1,54 +1,126 @@
-# Niyyah — an offline-first prayer companion
+<div align="center">
 
-A calm prayer app built around how ADHD actually fails: time blindness, prospective
-memory, task initiation and emotional regulation. One React + TypeScript codebase
-runs as an **Android app**, a **Windows program**, and a **browser build**.
+<a href="https://qwertxynet.github.io/niyyah/"><img src="docs/readme/banner.png" alt="Niyyah — a calm prayer companion, built around how ADHD and autistic minds actually work" width="100%"></a>
 
-Nothing you do leaves the device. There is no account, no analytics, no server and
-**no network request at runtime**.
+<br>
 
-## What it does
+**[Open the app](https://qwertxynet.github.io/niyyah/)** &nbsp;·&nbsp; [What it does](#-what-it-does) &nbsp;·&nbsp; [Get it](#-where-the-builds-are) &nbsp;·&nbsp; [Build it](#-development)
 
-- **Adapts to you.** An optional name, then three optional questions — your relationship with Islam, whether you
-  are autistic, ADHD (both = AuDHD), neurotypical or unsure, and what gets in the way —
-  suggest settings such as a low-stimulation mode, minutes-only countdowns, transition
-  warnings (wrap up → wudu → adhan), plain wording, a gentle/encouraging/minimal tone and
-  learning support (tap-to-explain terms, step-by-step wudu and prayer guides). Every
-  change says why, and each one can be reversed in Settings → Comfort & support.
-- **Prayer windows, not just clock times.** Every prayer shows the deadline you are
-  racing: "Asr · 1h 02m left", with a bar that fills and turns amber under 20 minutes,
-  and a live countdown to the next adhan.
-- **One-tap logging** — *Prayed*, *Prayed late*, *Not today*. Always undoable. No forms.
-- **A gentle catch-up card.** When a window closes unlogged it asks "Did you pray
-  Maghrib?" — forgetting that you *did* pray is as real as forgetting to pray.
-- **Reminders that actually arrive.** Alarms are scheduled 30 days ahead; a pre-alert
-  (5–30 min) warns you before the window; notifications survive reboots on Android.
-- **Home-screen widget (Android).** The current window with a live countdown to its
-  end — amber under 20 minutes — and today's five times. Once you log the prayer it
-  counts down to the next adhan instead. Runs off a 30-day schedule the app hands it,
-  so it stays right without opening Niyyah. Follows the system light/dark theme.
-- **Qibla compass.** A dial that turns with your phone, a Kaaba marker and a gold glow
-  (plus one buzz) when you are facing it. Without a compass it shows the bearing from north.
-- **Hasanat, as encouragement.** A page that estimates hasanat from your logged prayers
-  (al-Fatihah in every rak'ah, plus any verses you record per rak'ah, ×27 in jama'ah) and
-  offers good-deed cards from one minute to a full juz', with a tap counter for dhikr.
-  It always says that only Allah knows the reward. The method and sources sit behind
-  "How is this estimated?".
-- **A journal with prompts.** Check-ins (mood and energy in two taps), after-prayer
-  reflections, gratitude, duas you can later mark answered, and an intention for tomorrow.
-  Today offers one prompt at a time — right after you log a prayer, it asks about that
-  prayer. Private to the device and included in backups.
-- **A living sky.** The whole app takes the colour of the sky outside — indigo dawn, clear
-  midday blue, Asr gold, sunset violet, starry night — and the Today card shows the day as a
-  sun (or moon) travelling an arc past the five prayers. Low-stimulation mode turns it into one
-  flat, quiet tint.
-- **Hijri date** (Umm al-Qura) beside the Gregorian one.
-- **Week grid** of prayer history you can correct by tapping any cell — a record, not
-  a scoreboard. No broken streaks, no red crosses, no scolding copy.
-- **Optional make-up (qada) counter**, framed as mercy rather than debt.
-- Light and dark themes, 12/24-hour clock, Arabic prayer names, 48 px tap targets.
+<br>
 
-## Offline, concretely
+[![Live](https://img.shields.io/badge/live-qwertxynet.github.io%2Fniyyah-14503e?style=flat-square&logo=githubpages&logoColor=white)](https://qwertxynet.github.io/niyyah/)
+![Android](https://img.shields.io/badge/Android-widget%20%2B%20APK-3ddc84?style=flat-square&logo=android&logoColor=white)
+![iPhone](https://img.shields.io/badge/iPhone-Add%20to%20Home%20Screen-111111?style=flat-square&logo=apple&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-installer-0078d4?style=flat-square&logo=windows11&logoColor=white)
+<br>
+![Offline](https://img.shields.io/badge/network%20at%20runtime-none-c39a55?style=flat-square)
+![Tracking](https://img.shields.io/badge/accounts%20%26%20analytics-none-c39a55?style=flat-square)
+![React](https://img.shields.io/badge/React%2019-TypeScript-3178c6?style=flat-square&logo=typescript&logoColor=white)
+
+</div>
+
+<br>
+
+> [!NOTE]
+> **Niyyah** (نِيَّة) means *intention*. It is a prayer app built around how ADHD actually fails —
+> time blindness, prospective memory, task initiation and emotional regulation — and around
+> autistic needs for calm, predictable, literal interfaces. One React + TypeScript codebase runs as
+> an **Android app**, a **Windows program**, an **iPhone home-screen app** and a **web app**.
+>
+> Nothing you do leaves the device. No account, no analytics, no server, **no network request at runtime**.
+
+<br>
+
+## 🌅 A living sky
+
+The whole app takes the colour of the sky outside, so you can tell which prayer it is at a glance —
+a quiet answer to time blindness. The Today card shows the day as a sun (or moon) travelling an arc
+past the five prayers. Low-stimulation mode turns it all into one flat, calm tint.
+
+<p align="center"><img src="docs/readme/sky.png" alt="The Today screen at Fajr, Dhuhr, Asr, Maghrib and night, each in its own sky colour" width="100%"></p>
+
+## ✨ What it does
+
+<p align="center"><img src="docs/readme/features.png" alt="The Hasanat, Qibla and Journal screens" width="100%"></p>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🧭 Adapts to you
+An optional name, then three optional questions — your relationship with Islam; whether you
+are autistic, ADHD (both = AuDHD), neurotypical or unsure; and what gets in the way. They suggest
+low-stimulation mode, minutes-only countdowns, transition warnings (wrap up → wudu → adhan),
+plain wording, a gentle / encouraging / minimal tone and learning support. **Every change says
+why, and each one can be reversed** in Settings → Comfort & support.
+
+</td>
+<td width="50%" valign="top">
+
+### ⏳ Windows, not just clock times
+Every prayer shows the deadline you are racing — *"Asr · 1h 02m left"* — with a bar that turns
+amber under 20 minutes and a live countdown to the next adhan. **One-tap logging** (*Prayed*,
+*Prayed late*, *Not today*), always undoable. A gentle **catch-up card** asks "Did you pray
+Maghrib?" when a window closes unlogged.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 🔔 Reminders that arrive
+Alarms are scheduled 30 days ahead, a pre-alert (5–30 min) warns you before the window, and
+notifications survive reboots on Android. Settings → Reminder health shows exactly what is armed.
+
+</td>
+<td valign="top">
+
+### 📱 Home-screen widget
+On Android: the current window with a live countdown to its end, and today's five times. Once
+you log the prayer it counts down to the next adhan. Runs off a 30-day schedule, so it stays right
+without opening the app.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 🕋 Qibla compass
+A dial that turns with your phone, a Kaaba marker, and a gold glow (plus one buzz) when you face
+it. Without a compass it shows the bearing from north.
+
+</td>
+<td valign="top">
+
+### 🌟 Hasanat, as encouragement
+Estimates hasanat from your logged prayers (al-Fatihah in every rak'ah, plus any verses you
+record, ×27 in jama'ah) and offers good-deed cards from one minute to a full juz', with a tap
+counter for dhikr. **It always says that only Allah knows the reward**; the method and sources
+sit behind "How is this estimated?".
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 📓 A journal with prompts
+Check-ins (mood and energy in two taps), after-prayer reflections, gratitude, duas you can later
+mark answered, and an intention for tomorrow. One prompt at a time — right after you log a
+prayer, it asks about that prayer.
+
+</td>
+<td valign="top">
+
+### 🤍 A record, not a scoreboard
+A week grid you can correct by tapping any cell. No broken streaks, no red crosses, no scolding
+copy. An optional make-up (qada) counter, framed as mercy rather than debt. Hijri date beside the
+Gregorian, light and dark themes, 12/24-hour clock, 48 px tap targets.
+
+</td>
+</tr>
+</table>
+
+## 📴 Offline, concretely
 
 | Need | How |
 | --- | --- |
@@ -63,7 +135,7 @@ Nothing you do leaves the device. There is no account, no analytics, no server a
 Verify it yourself: load the app once, then turn Wi-Fi off and reload. The only
 `http://` string in the built CSS/HTML is the SVG namespace.
 
-## Where the builds are
+## 📦 Where the builds are
 
 | Platform | File | Notes |
 | --- | --- | --- |
@@ -73,7 +145,9 @@ Verify it yourself: load the app once, then turn Wi-Fi off and reload. The only
 | Browser | `npm run preview` after `npm run build` | Installable PWA; reminders only fire while the tab is open. |
 | iPhone & web | https://qwertxynet.github.io/niyyah/ | Deployed by `.github/workflows/pages.yml` on every push to `main`. In Safari: Share → **Add to Home Screen**. Works offline; reminders only fire while it is open. |
 
-### Android first-run checklist
+<details>
+<summary><b>Android first-run checklist</b></summary>
+
 
 1. Install the APK and open Niyyah.
 2. Allow notifications when asked (Android 13+).
@@ -85,7 +159,9 @@ Verify it yourself: load the app once, then turn Wi-Fi off and reload. The only
 Settings → Reminder health shows permission state, exact-alarm state and how many
 alerts are armed. If exact alarms are denied, Niyyah says so instead of pretending.
 
-## Development
+</details>
+
+## 🔧 Development
 
 ```bash
 npm install
@@ -109,6 +185,9 @@ npm run cities   # rebuilds public/cities.json from a GeoNames dump
 npm run quran    # rebuilds public/quran-meta.json from the Tanzil text (URLs in the script)
 ```
 
+The README images are real screenshots: with `npm run dev` running, `npm run readme:images -- http://localhost:5173`
+loads the app with demo data and a fake clock for each sky phase, then lays the shots out from `scripts/readme/`.
+
 `scripts/get-android-sdk.mjs` installs a user-local Android SDK (platform 36,
 build-tools 36.0.0, platform-tools) without administrator rights.
 
@@ -119,7 +198,7 @@ build-tools 36.0.0, platform-tools) without administrator rights.
 means the Play Store (or an update path) can no longer accept builds signed with that
 identity. They are personal-use credentials for sideloading, not store credentials.
 
-## Architecture
+## 🧱 Architecture
 
 ```
 src/domain/    prayer engine, formatting, persistence, reminder builder, notification drivers
@@ -134,7 +213,9 @@ Android, IPC to the Electron main process on Windows, in-page timers in a browse
 State lives in one `localStorage` key (`niyyah.state.v1`), so all three platforms
 share the same model.
 
-## Verification performed
+<details>
+<summary><b>Verification performed</b></summary>
+
 
 - Prayer times compared with Aladhan for London, Makkah and New York on two dates:
   30 comparisons, all within 2 minutes except a 3-minute Asr difference in London and
@@ -147,14 +228,18 @@ share the same model.
 - Android and Windows notification delivery need one real-device check: I cannot see
   a phone screen or a native toast from here.
 
-## Not in 1.0
+</details>
+
+## 🗺️ Not in 1.0
 
 Post-salah adhkar reminders, encrypted sync
-between devices, Play Store listing, iOS.
+between devices, a Play Store listing, a native iOS build (the web app installs on iPhone today).
 
-## Credits
+## 🙏 Credits
 
 Prayer calculations by [adhan-js](https://github.com/batoulapps/adhan-js) (MIT).
 City data from [GeoNames](https://www.geonames.org/) (CC BY 4.0).
 Qur'an letter counts derived from the [Tanzil Project](https://tanzil.net) text (simple-clean), used unchanged for counting.
 Amiri, Fraunces and Figtree typefaces (SIL Open Font License; licences in `public/fonts/`).
+
+<div align="center"><br><sub>Made with care, for the moments between intention and action.</sub></div>

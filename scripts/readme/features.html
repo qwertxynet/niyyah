@@ -1,0 +1,75 @@
+<!doctype html>
+<html data-size="1280x760">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      .canvas {
+        width: 1280px;
+        height: 760px;
+        background:
+          radial-gradient(700px 400px at 50% 0%, rgba(195, 154, 85, 0.28), transparent 70%),
+          linear-gradient(170deg, #14503e 0%, #0b2b22 100%);
+      }
+      .pattern {
+        opacity: 0.06;
+      }
+      .row {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        display: flex;
+        justify-content: center;
+        gap: 64px;
+      }
+      figure {
+        width: 300px;
+      }
+      figcaption {
+        height: 104px;
+        color: #f5ead2;
+      }
+      figcaption b {
+        display: block;
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 34px;
+        font-variation-settings: 'opsz' 72;
+      }
+      figcaption span {
+        display: block;
+        margin-top: 6px;
+        font-size: 18px;
+        line-height: 1.4;
+        color: rgba(245, 234, 210, 0.75);
+      }
+      .crop {
+        height: 560px;
+      }
+      .crop img {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas">
+      <div class="pattern"></div>
+      <div class="row">
+        <figure>
+          <figcaption><b>Hasanat</b><span>Small good deeds, from one minute to a juz'.</span></figcaption>
+          <div class="phone"><div class="crop"><img src="../../.cache/readme/shot-hasanat.png" alt="" /></div></div>
+        </figure>
+        <figure>
+          <figcaption><b>Qibla</b><span>A compass that glows when you face the Kaaba.</span></figcaption>
+          <div class="phone"><div class="crop"><img src="../../.cache/readme/shot-qibla.png" alt="" /></div></div>
+        </figure>
+        <figure>
+          <figcaption><b>Journal</b><span>Check-ins, gratitude and duas, one prompt at a time.</span></figcaption>
+          <div class="phone"><div class="crop"><img src="../../.cache/readme/shot-journal.png" alt="" /></div></div>
+        </figure>
+      </div>
+    </div>
+  </body>
+</html>

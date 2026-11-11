@@ -14,6 +14,7 @@
     "icons": "node scripts/build-icons.mjs",
     "cities": "node scripts/build-cities.mjs",
     "quran": "node scripts/build-quran.mjs",
+    "readme:images": "electron scripts/readme-shots.cjs",
     "electron:start": "npm run build && electron .",
     "windows:build": "npm run build && electron-builder --win",
     "cap:sync": "npm run build && cap sync android",

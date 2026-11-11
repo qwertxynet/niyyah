@@ -1,0 +1,123 @@
+<!doctype html>
+<html data-size="1280x640">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      .canvas {
+        width: 1280px;
+        height: 640px;
+        background:
+          radial-gradient(900px 500px at 85% 115%, rgba(236, 132, 92, 0.75), transparent 60%),
+          radial-gradient(700px 420px at 10% -10%, rgba(42, 30, 92, 0.9), transparent 65%),
+          linear-gradient(160deg, #1b1640 0%, #3c2457 38%, #7a3a5e 70%, #c76a50 100%);
+      }
+      .copy {
+        position: absolute;
+        left: 84px;
+        top: 112px;
+        width: 560px;
+        color: #fbf3ea;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      .brand img {
+        width: 92px;
+        height: 92px;
+        border-radius: 22px;
+        box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 108px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        font-variation-settings: 'opsz' 144;
+      }
+      .arabic {
+        margin: 26px 0 0 4px;
+        font-family: 'Amiri', serif;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 1.2;
+        color: #f0cf95;
+      }
+      .arabic small {
+        font-family: 'Figtree', sans-serif;
+        font-size: 17px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(240, 207, 149, 0.8);
+        margin-left: 12px;
+      }
+      .tag {
+        margin-top: 22px;
+        font-size: 29px;
+        line-height: 1.35;
+        font-weight: 450;
+        color: rgba(251, 243, 234, 0.92);
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        margin-top: 34px;
+      }
+      .chips span {
+        padding: 9px 18px;
+        border-radius: 999px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #fbf3ea;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+      .phones .phone {
+        position: absolute;
+        width: 268px;
+      }
+      .p1 {
+        left: 690px;
+        top: 150px;
+        transform: rotate(-7deg);
+        opacity: 0.96;
+      }
+      .p3 {
+        left: 1000px;
+        top: 150px;
+        transform: rotate(7deg);
+        opacity: 0.96;
+      }
+      .p2 {
+        left: 840px;
+        top: 70px;
+        width: 290px !important;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas">
+      <div class="pattern"></div>
+      <div class="stars"></div>
+      <div class="copy">
+        <div class="brand">
+          <img src="../../public/icon.svg" alt="" />
+          <h1>Niyyah</h1>
+        </div>
+        <p class="arabic">نِيَّة <small>intention</small></p>
+        <p class="tag">A calm prayer companion, built around how ADHD and autistic minds actually work.</p>
+        <div class="chips"><span>Android</span><span>iPhone</span><span>Windows</span><span>Offline</span></div>
+      </div>
+      <div class="phones">
+        <div class="phone p1"><img src="../../.cache/readme/shot-today-fajr.png" alt="" /></div>
+        <div class="phone p3"><img src="../../.cache/readme/shot-today-night.png" alt="" /></div>
+        <div class="phone p2"><img src="../../.cache/readme/shot-today-maghrib.png" alt="" /></div>
+      </div>
+    </div>
+  </body>
+</html>
