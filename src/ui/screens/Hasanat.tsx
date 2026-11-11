@@ -5,6 +5,7 @@ import {
   fmtHasanat,
   hasanatTotals,
   prayerHasanat,
+  readCovers,
   TIERS,
   type DeedDef,
   type Tier,
@@ -12,6 +13,7 @@ import {
 import { say } from '../../domain/copy';
 import { placeCivilDate, prayerDay } from '../../domain/prayer-times';
 import { useQuran } from '../../domain/quran';
+import { surahTitle } from './Reader';
 import { actions, useStore } from '../../domain/store';
 import { EstimateSheet } from '../components/EstimateSheet';
 import { Icon } from '../components/Icons';
@@ -94,7 +96,18 @@ export function Hasanat() {
   }
 
   const doneToday = new Map<string, number>();
-  for (const deed of state.deeds[totals.todayKey] ?? []) doneToday.set(deed.rule, (doneToday.get(deed.rule) ?? 0) + 1);
+  const todayDeeds = state.deeds[totals.todayKey] ?? [];
+  for (const deed of todayDeeds) doneToday.set(deed.rule, (doneToday.get(deed.rule) ?? 0) + 1);
+  // Reading a card's surah in the reader counts as doing that card.
+  for (const def of DEEDS) {
+    if (!def.range) continue;
+    const range = def.range;
+    const read = todayDeeds.filter((deed) => deed.rule === 'reader' && readCovers(deed, range)).length;
+    if (read) doneToday.set(def.id, (doneToday.get(def.id) ?? 0) + read);
+  }
+  const readToday = todayDeeds.filter((deed) => deed.rule === 'reader').reduce((sum, deed) => sum + deed.h, 0);
+  const mark = state.reading;
+  const markSurah = mark && meta ? meta.surahs[mark.s - 1] : null;
 
   return (
     <div className="hasanat fade-in">
@@ -175,6 +188,41 @@ export function Hasanat() {
 
       <section className="section">
         <div className="section-head">
+          <h2>Read the Qur’an</h2>
+          {readToday ? <span className="meta tnum">≈ +{fmtHasanat(readToday)} today</span> : null}
+        </div>
+        <div className="read-card card">
+          <span className="read-card-ar arabic" aria-hidden="true">
+            ٱقْرَأْ
+          </span>
+          <div className="read-card-main">
+            <b>{markSurah && mark ? `${surahTitle(markSurah)} · ayah ${mark.a}` : 'Arabic text, ayah by ayah'}</b>
+            <span>
+              {markSurah ? 'Where you left off. ' : ''}Tap the last ayah you read and its letters are counted here.
+            </span>
+          </div>
+          <div className="read-card-actions">
+            {markSurah && mark ? (
+              <button
+                type="button"
+                className="btn btn-solid"
+                onClick={() => {
+                  const last = markSurah.l.length;
+                  ui.openReader(mark.a < last ? { s: mark.s, from: mark.a + 1 } : { s: mark.s < 114 ? mark.s + 1 : 1, from: 1 });
+                }}
+              >
+                Continue
+              </button>
+            ) : null}
+            <button type="button" className={markSurah ? 'btn btn-quiet' : 'btn btn-solid'} onClick={() => ui.openReader()}>
+              {markSurah ? 'All surahs' : 'Open the reader'}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-head">
           <h2>Good deeds</h2>
           <span className="meta">By the time you have</span>
         </div>
@@ -216,9 +264,20 @@ export function Hasanat() {
                     <Icon name="clock" size={14} /> {deed.time}
                     {times > 0 ? <span className="deed-done">{` · done${times > 1 ? ` ${times}×` : ''} today`}</span> : null}
                   </span>
-                  <button type="button" className="btn btn-solid deed-btn" onClick={() => start(deed)}>
-                    {deed.kind === 'count' ? 'Start' : deed.kind === 'once' ? 'I did this' : 'Choose'}
-                  </button>
+                  <span className="deed-btns">
+                    {deed.range ? (
+                      <button
+                        type="button"
+                        className="btn btn-quiet deed-btn"
+                        onClick={() => ui.openReader({ s: deed.range?.s, from: deed.range?.from })}
+                      >
+                        <Icon name="book" size={15} /> Read
+                      </button>
+                    ) : null}
+                    <button type="button" className="btn btn-solid deed-btn" onClick={() => start(deed)}>
+                      {deed.kind === 'count' ? 'Start' : deed.kind === 'once' ? 'I did this' : 'Choose'}
+                    </button>
+                  </span>
                 </div>
               </article>
             );
@@ -245,6 +304,10 @@ export function Hasanat() {
       <ReadingSheet
         deed={reading}
         onClose={() => setReading(null)}
+        onRead={(s, from) => {
+          setReading(null);
+          ui.openReader({ s, from });
+        }}
         onSave={(label, hasanat) => {
           if (reading) record(reading, label, hasanat);
           setReading(null);

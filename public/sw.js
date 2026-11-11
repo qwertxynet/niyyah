@@ -1,4 +1,4 @@
-const CACHE = 'niyyah-shell-v5';
+const CACHE = 'niyyah-shell-v6';
 
 // Everything the app needs to open with no network at all.
 const CORE = [
@@ -14,11 +14,17 @@ const CORE = [
   './fonts/amiri-arabic-700.woff2',
   './fonts/fraunces-latin-var.woff2',
   './fonts/figtree-latin-var.woff2',
+  './fonts/amiri-quran-arabic-400.woff2',
+  './fonts/plex-arabic-400.woff2',
+  './fonts/plex-arabic-600.woff2',
+  './quran/index.json',
 ];
 
 // Data files that may be republished between releases: try the network first so a
 // new city list actually lands, but keep the cached copy for offline use.
-const REFRESH = new Set(['./cities.json', './quran-meta.json']);
+// Surah files (./quran/NNN.txt) are fetched when first opened and kept the same way.
+const REFRESH = new Set(['./cities.json', './quran-meta.json', './quran/index.json']);
+const isRefreshed = (path) => REFRESH.has(path) || /^\.\/quran\/\d{3}\.txt$/.test(path);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -67,7 +73,7 @@ self.addEventListener('fetch', (event) => {
   // is served from a subfolder such as https://<user>.github.io/niyyah/.
   const scopePath = new URL(self.registration.scope).pathname;
   const relative = url.pathname.startsWith(scopePath) ? url.pathname.slice(scopePath.length) : url.pathname;
-  if (REFRESH.has(`./${relative.replace(/^\/+/, '')}`)) {
+  if (isRefreshed(`./${relative.replace(/^\/+/, '')}`)) {
     event.respondWith(
       (async () => {
         try {

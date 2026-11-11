@@ -1,0 +1,2 @@
+# The Qur'n text is copied verbatim from Tanzil: keep its bytes exactly as built.
+public/quran/*.txt -text

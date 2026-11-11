@@ -36,6 +36,32 @@
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('/fonts/amiri-quran-arabic-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/plex-arabic-400.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/plex-arabic-600.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
+}
+
 :root {
   --sand: #fbf7f0;
   --sand-2: #f3ebdd;
@@ -80,6 +106,7 @@
   --fs-2xl: 34px;
   --fs-3xl: 44px;
   --font-arabic: 'Amiri', 'Noto Naskh Arabic', 'Segoe UI', serif;
+  --font-quran: 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', serif;
   --pattern-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0L21.21 8.79L21.21 21.21L8.79 21.21L0 30L-8.79 21.21L-21.21 21.21L-21.21 8.79L-30 0L-21.21 -8.79L-21.21 -21.21L-8.79 -21.21L0 -30L8.79 -21.21L21.21 -21.21L21.21 -8.79ZM14.41 5.97L8.44 8.44L5.97 14.41L0 11.94L-5.97 14.41L-8.44 8.44L-14.41 5.97L-11.94 0L-14.41 -5.97L-8.44 -8.44L-5.97 -14.41L0 -11.94L5.97 -14.41L8.44 -8.44L14.41 -5.97L11.94 0ZM5.54 2.3L2.3 5.54L-2.3 5.54L-5.54 2.3L-5.54 -2.3L-2.3 -5.54L2.3 -5.54L5.54 -2.3ZM90 0L81.21 8.79L81.21 21.21L68.79 21.21L60 30L51.21 21.21L38.79 21.21L38.79 8.79L30 0L38.79 -8.79L38.79 -21.21L51.21 -21.21L60 -30L68.79 -21.21L81.21 -21.21L81.21 -8.79ZM74.41 5.97L68.44 8.44L65.97 14.41L60 11.94L54.03 14.41L51.56 8.44L45.59 5.97L48.06 0L45.59 -5.97L51.56 -8.44L54.03 -14.41L60 -11.94L65.97 -14.41L68.44 -8.44L74.41 -5.97L71.94 0ZM65.54 2.3L62.3 5.54L57.7 5.54L54.46 2.3L54.46 -2.3L57.7 -5.54L62.3 -5.54L65.54 -2.3ZM30 60L21.21 68.79L21.21 81.21L8.79 81.21L0 90L-8.79 81.21L-21.21 81.21L-21.21 68.79L-30 60L-21.21 51.21L-21.21 38.79L-8.79 38.79L0 30L8.79 38.79L21.21 38.79L21.21 51.21ZM14.41 65.97L8.44 68.44L5.97 74.41L0 71.94L-5.97 74.41L-8.44 68.44L-14.41 65.97L-11.94 60L-14.41 54.03L-8.44 51.56L-5.97 45.59L0 48.06L5.97 45.59L8.44 51.56L14.41 54.03L11.94 60ZM5.54 62.3L2.3 65.54L-2.3 65.54L-5.54 62.3L-5.54 57.7L-2.3 54.46L2.3 54.46L5.54 57.7ZM90 60L81.21 68.79L81.21 81.21L68.79 81.21L60 90L51.21 81.21L38.79 81.21L38.79 68.79L30 60L38.79 51.21L38.79 38.79L51.21 38.79L60 30L68.79 38.79L81.21 38.79L81.21 51.21ZM74.41 65.97L68.44 68.44L65.97 74.41L60 71.94L54.03 74.41L51.56 68.44L45.59 65.97L48.06 60L45.59 54.03L51.56 51.56L54.03 45.59L60 48.06L65.97 45.59L68.44 51.56L74.41 54.03L71.94 60ZM65.54 62.3L62.3 65.54L57.7 65.54L54.46 62.3L54.46 57.7L57.7 54.46L62.3 54.46L65.54 57.7ZM30 22.8L37.2 30L30 37.2L22.8 30ZM30 0V22.8M30 37.2V60M0 30H22.8M37.2 30H60' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
   --pattern-ink: #b08a4a;
   --pattern-opacity: 0.17;
@@ -3152,9 +3179,12 @@ ul {
 
 .toast {
   position: fixed;
-  left: 50%;
+  /* Centred with margins, not a transform: the rise animation owns transform. */
+  left: 16px;
+  right: 16px;
+  width: fit-content;
+  margin: 0 auto;
   bottom: calc(92px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -3164,9 +3194,9 @@ ul {
   color: #f4efe2;
   font-size: 13.5px;
   box-shadow: 0 16px 40px -18px rgba(0, 0, 0, 0.7);
-  z-index: 70;
+  /* Above the Qur'an reader too, so a save there can be undone. */
+  z-index: 95;
   animation: rise 0.22s ease both;
-  max-width: calc(100% - 32px);
 }
 
 .toast button {
@@ -3923,4 +3953,501 @@ ul {
 :root[data-calm] .qd-needle,
 :root[data-calm] .qd-kaaba {
   filter: none;
+}
+
+
+/* ---------- Qur'an reader ---------- */
+
+.reader {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: flex;
+  flex-direction: column;
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--sand);
+  color: var(--ink);
+}
+
+@media (min-width: 641px) {
+  .reader {
+    box-shadow: 0 0 0 100vmax rgba(8, 20, 16, 0.45);
+  }
+}
+
+.reader-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.reader-title {
+  flex: 1;
+  min-width: 0;
+  padding: 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+}
+
+.reader-title .arabic {
+  margin-inline-start: 6px;
+  color: var(--gold-ink);
+}
+
+.reader-title-surah {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.reader-title-surah .arabic {
+  margin: 0;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+
+.reader-title-surah small {
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.reader-icon-btn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  align-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.reader-icon-btn:disabled {
+  opacity: 0.4;
+}
+
+.reader-icon-btn[aria-pressed='true'] {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: #f4efe2;
+}
+
+.reader-a {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.reader-a small {
+  font-size: 13px;
+}
+
+.reader-size-dots {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.reader-size-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.reader-size-dots i.on {
+  background: var(--gold);
+}
+
+/* Arrows point the way the page turns: flipped in right-to-left layouts. */
+.flip {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .flip {
+  transform: none;
+}
+
+[dir='rtl'] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+.reader-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.reader-index {
+  padding: 16px 16px 40px;
+}
+
+.reader-resume {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 0;
+  background: var(--green-700);
+  color: #f4efe2;
+  font: inherit;
+  text-align: start;
+  box-shadow: var(--shadow-1);
+}
+
+.reader-resume-label {
+  grid-column: 1;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
+.reader-resume-where {
+  grid-column: 1;
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+}
+
+.reader-resume svg {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.reader-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0 12px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--surface-3);
+}
+
+.reader-tabs button {
+  flex: 1;
+  min-height: 40px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-weight: 600;
+}
+
+.reader-tabs button[aria-selected='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+}
+
+.reader-search {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.reader-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.reader-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.reader-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+}
+
+.reader-row:active {
+  background: var(--surface-2);
+}
+
+.reader-num {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  border: 1.5px solid var(--gold);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--gold-ink);
+}
+
+.reader-row-main {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.reader-row-main b {
+  font-weight: 650;
+}
+
+.reader-row-main span {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+}
+
+.reader-row-ar {
+  font-size: var(--fs-lg);
+  color: var(--gold-ink);
+}
+
+.reader-none {
+  padding: 18px 16px;
+}
+
+.reader-offline {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.reader-offline .btn {
+  gap: 8px;
+}
+
+.reader-credit {
+  margin-top: 18px;
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.reader-status {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+/* The text itself: plain paper, generous leading, nothing moving. */
+.mushaf {
+  padding: 22px 20px 40px;
+}
+
+.mushaf-meta {
+  font-family: var(--font-arabic);
+  font-size: var(--fs-md);
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.mushaf-basmalah {
+  margin: 14px 0 18px;
+  font-family: var(--font-quran);
+  font-size: 30px;
+  line-height: 2;
+  text-align: center;
+  color: var(--gold-ink);
+}
+
+.mushaf-text {
+  font-family: var(--font-quran);
+  line-height: 2.35;
+  text-align: justify;
+  text-align-last: center;
+}
+
+.size-1 .mushaf-text { font-size: 22px; }
+.size-2 .mushaf-text { font-size: 26px; }
+.size-3 .mushaf-text { font-size: 30px; }
+.size-4 .mushaf-text { font-size: 36px; }
+.size-5 .mushaf-text { font-size: 43px; }
+
+.ayah {
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ayah:focus-visible {
+  outline: 2px solid var(--green-600);
+  outline-offset: 2px;
+}
+
+.ayah.is-read {
+  color: var(--ink-2);
+}
+
+.ayah-start {
+  display: inline-block;
+  margin-inline-end: 0.2em;
+  font-size: 0.5em;
+  vertical-align: middle;
+  color: var(--gold);
+}
+
+.ayah.is-range {
+  background: var(--glow);
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.ayah-mark {
+  font-family: var(--font-quran);
+  color: var(--gold-ink);
+  white-space: nowrap;
+}
+
+.mushaf-next {
+  display: flex;
+  margin: 26px auto 0;
+}
+
+.reader-dock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 72px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.reader-dock-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.reader-dock-text span {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+}
+
+.reader-dock .btn {
+  flex: none;
+  gap: 6px;
+}
+
+.reader-dock-hint {
+  width: 100%;
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.focus-reader {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 4px 20px 24px;
+}
+
+.focus-where {
+  margin-top: 12px;
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+}
+
+.focus-ayah {
+  flex: 1;
+  margin: 20px 0;
+  font-family: var(--font-quran);
+  line-height: 2.3;
+  text-align: center;
+  align-content: center;
+}
+
+.focus-ayah.size-1 { font-size: 26px; }
+.focus-ayah.size-2 { font-size: 30px; }
+.focus-ayah.size-3 { font-size: 35px; }
+.focus-ayah.size-4 { font-size: 42px; }
+.focus-ayah.size-5 { font-size: 50px; }
+
+.focus-nav {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.focus-nav .btn {
+  min-height: 56px;
+}
+
+/* Hasanat page entry */
+.read-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  align-items: center;
+  padding: 16px;
+}
+
+.read-card-ar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--green-700);
+  color: var(--gold-2);
+  font-size: 24px;
+}
+
+.read-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.read-card-main span {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+}
+
+.read-card-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.read-card-actions .btn {
+  flex: 1;
+}
+
+.deed-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.deed-btns .btn-quiet {
+  gap: 5px;
+  padding: 0 12px;
+}
+
+.reading-open {
+  margin-top: 8px;
 }

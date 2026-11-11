@@ -25,7 +25,9 @@ export type IconName =
   | 'arrowRight'
   | 'compass'
   | 'star'
-  | 'book';
+  | 'book'
+  | 'focus'
+  | 'rows';
 
 const paths: Record<IconName, ReactElement> = {
   check: <path d="m5 13 4 4L19 7" />,
@@ -119,6 +121,14 @@ const paths: Record<IconName, ReactElement> = {
       <path d="M5 16a3 3 0 0 1 3-3h10M9 8.5h5" />
     </>
   ),
+  // One line on its own: the reader's one-ayah-at-a-time mode.
+  focus: (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="3" />
+      <path d="M8 12h8" />
+    </>
+  ),
+  rows: <path d="M5 7h14M5 12h14M5 17h9" />,
   // Eight-point star (two overlapping squares), the khatam of the background pattern.
   star: (
     <>

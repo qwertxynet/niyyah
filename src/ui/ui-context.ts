@@ -14,6 +14,8 @@ export interface UiApi {
   openGuide(guide: GuideTarget): void;
   /** Jump to the Journal tab with a kind of entry (and prayer) ready to write. */
   openJournal(intent: JournalIntent): void;
+  /** The Qur'an reader, at a surah and ayah, or at the surah list. */
+  openReader(target?: { s?: number; from?: number }): void;
   toast(message: string, undo?: () => void): void;
 }
 
@@ -23,6 +25,7 @@ export const UiContext = createContext<UiApi>({
   openAboutYou: () => undefined,
   openGuide: () => undefined,
   openJournal: () => undefined,
+  openReader: () => undefined,
   toast: () => undefined,
 });
 

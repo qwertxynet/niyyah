@@ -9,9 +9,12 @@ export function ReadingSheet({
   deed,
   onClose,
   onSave,
+  onRead,
 }: {
   deed: DeedDef | null;
   onClose: () => void;
+  /** Open the reader at this surah and ayah instead of logging from memory. */
+  onRead: (s: number, from: number) => void;
   onSave: (label: string, hasanat: number) => void;
 }) {
   const meta = useQuran();
@@ -62,6 +65,15 @@ export function ReadingSheet({
       >
         I read this
       </button>
+      {meta ? (
+        <button
+          type="button"
+          className="btn btn-quiet btn-block reading-open"
+          onClick={() => (isJuz ? onRead(meta.juz[juz - 1][0], meta.juz[juz - 1][1]) : onRead(range.s, range.from))}
+        >
+          Read it in the reader instead
+        </button>
+      ) : null}
     </Sheet>
   );
 }

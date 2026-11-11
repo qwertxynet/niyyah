@@ -11,6 +11,7 @@ import type {
   Persisted,
   PrayerKey,
   Profile,
+  ReadingMark,
   Recitation,
   Settings,
 } from './types';
@@ -41,6 +42,9 @@ export const DEFAULT_SETTINGS: Settings = {
   catchup: true,
   learn: false,
   hasanatTab: true,
+  language: 'en',
+  quranSize: 3,
+  quranFocus: false,
 };
 
 export function defaultState(): Persisted {
@@ -51,7 +55,14 @@ export function defaultState(): Persisted {
     dismissed: {},
     deeds: {},
     journal: {},
+    reading: null,
   };
+}
+
+function validMark(value: unknown): value is ReadingMark {
+  if (!value || typeof value !== 'object') return false;
+  const mark = value as ReadingMark;
+  return Number.isInteger(mark.s) && mark.s >= 1 && mark.s <= 114 && Number.isInteger(mark.a) && mark.a >= 1;
 }
 
 function normalize(input: unknown): Persisted {
@@ -71,6 +82,7 @@ function normalize(input: unknown): Persisted {
     dismissed: raw.dismissed && typeof raw.dismissed === 'object' ? (raw.dismissed as Record<string, number>) : {},
     deeds: raw.deeds && typeof raw.deeds === 'object' ? (raw.deeds as Record<string, DeedEntry[]>) : {},
     journal: raw.journal && typeof raw.journal === 'object' ? (raw.journal as Record<string, JournalEntry[]>) : {},
+    reading: validMark(raw.reading) ? raw.reading : null,
   };
 }
 
@@ -179,6 +191,10 @@ export const actions = {
     const list = [...(state.deeds[dayKeyValue] ?? []), entry];
     persist({ ...state, deeds: { ...state.deeds, [dayKeyValue]: list } });
     return id;
+  },
+
+  setReading(mark: ReadingMark | null) {
+    persist({ ...state, reading: mark });
   },
 
   removeDeed(dayKeyValue: string, id: string) {

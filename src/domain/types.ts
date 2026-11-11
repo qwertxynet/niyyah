@@ -116,6 +116,13 @@ export interface Settings {
   /** Explain terms and offer step-by-step guides. */
   learn: boolean;
   hasanatTab: boolean;
+
+  /** Interface language. Arabic also turns the layout right-to-left. */
+  language: 'en' | 'ar';
+  /** Qur'an reader text size, 1 (small) to 5 (largest). */
+  quranSize: number;
+  /** Qur'an reader shows one ayah at a time. */
+  quranFocus: boolean;
 }
 
 export interface LogEntry {
@@ -151,6 +158,15 @@ export interface DeedEntry {
   /** Estimated hasanat at the time it was recorded. */
   h: number;
   at: number;
+  /** For Qur'an read in the reader: the surah and ayahs. */
+  q?: { s: number; from: number; to: number };
+}
+
+/** Where the reader left off: the last ayah saved as read. */
+export interface ReadingMark {
+  s: number;
+  a: number;
+  at: number;
 }
 
 export type DayLog = Partial<Record<PrayerKey, LogEntry>>;
@@ -167,4 +183,6 @@ export interface Persisted {
   deeds: Record<string, DeedEntry[]>;
   /** Journal entries by prayer-day key. Never leaves the device except in a backup you export. */
   journal: Record<string, JournalEntry[]>;
+  /** Qur'an reader bookmark; null until something is read. */
+  reading: ReadingMark | null;
 }

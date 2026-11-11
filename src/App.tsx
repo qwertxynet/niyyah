@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { setDisplayTimeZone } from './domain/format';
+import { setLanguage } from './i18n';
 import { buildReminderEvents } from './domain/reminders';
 import { syncSchedule, type Health } from './domain/notify';
 import { actions, useStore } from './domain/store';
@@ -14,6 +15,7 @@ import { Guide } from './ui/screens/Guide';
 import { Hasanat } from './ui/screens/Hasanat';
 import { Journal } from './ui/screens/Journal';
 import { Qibla } from './ui/screens/Qibla';
+import { Reader, type ReaderTarget } from './ui/screens/Reader';
 import { SettingsScreen } from './ui/screens/SettingsScreen';
 import { Setup } from './ui/screens/Setup';
 import { Today } from './ui/screens/Today';
@@ -35,6 +37,7 @@ export function App() {
 
   // Times belong to the chosen place, so every formatter reads that clock.
   setDisplayTimeZone(settings.place?.timezone);
+  setLanguage(settings.language);
 
   const [tab, setTab] = useState<Tab>('today');
   useEffect(() => {
@@ -46,6 +49,7 @@ export function App() {
   const [guide, setGuide] = useState<GuideTarget | null>(null);
   const [journalIntent, setJournalIntent] = useState<JournalIntent | null>(null);
   const clearJournalIntent = useCallback(() => setJournalIntent(null), []);
+  const [reader, setReader] = useState<ReaderTarget | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
@@ -107,6 +111,7 @@ export function App() {
         setJournalIntent(intent);
         setTab('week');
       },
+      openReader: (target) => setReader(target ?? {}),
       toast: (message, undo) => setToast({ id: Date.now(), message, undo }),
     }),
     [],
@@ -162,6 +167,7 @@ export function App() {
       ) : null}
 
       {guide ? <Guide target={guide} onClose={() => setGuide(null)} /> : null}
+      {reader ? <Reader target={reader} onClose={() => setReader(null)} /> : null}
 
       {toast ? (
         <div className="toast" role="status" key={toast.id}>

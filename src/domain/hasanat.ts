@@ -95,6 +95,8 @@ export interface DeedDef {
   estimate(meta: QuranMeta | null): number | null;
   virtue: string;
   source: string;
+  /** Qur'an deeds that can be read in the reader: the surah and ayahs. */
+  range?: { s: number; from: number; to: number };
 }
 
 const quran = (fn: (meta: QuranMeta) => number) => (meta: QuranMeta | null) => (meta ? fn(meta) * PER_LETTER : null);
@@ -138,6 +140,7 @@ export const DEEDS: DeedDef[] = [
     estimate: quran((m) => lettersIn(m, 2, 255, 255)),
     virtue: 'The greatest verse in the Book of Allah.',
     source: 'Muslim 810',
+    range: { s: 2, from: 255, to: 255 },
   },
   {
     id: 'ikhlas-3',
@@ -172,6 +175,7 @@ export const DEEDS: DeedDef[] = [
     estimate: quran((m) => lettersIn(m, 67)),
     virtue: 'A surah of thirty verses that intercedes for its reader until he is forgiven.',
     source: 'Tirmidhi 2891',
+    range: { s: 67, from: 1, to: 30 },
   },
   {
     id: 'istighfar-100',
@@ -206,6 +210,7 @@ export const DEEDS: DeedDef[] = [
     estimate: quran((m) => lettersIn(m, 18)),
     virtue: 'Read on Friday, it is a light between the two Fridays.',
     source: 'al-Hakim 3392',
+    range: { s: 18, from: 1, to: 110 },
   },
   {
     id: 'yasin',
@@ -217,6 +222,7 @@ export const DEEDS: DeedDef[] = [
     estimate: quran((m) => lettersIn(m, 36)),
     virtue: 'Every letter of the Qur’an is a good deed, and each good deed is ten like it.',
     source: 'Tirmidhi 2910',
+    range: { s: 36, from: 1, to: 83 },
   },
   {
     id: 'duha',
@@ -253,6 +259,11 @@ export const DEEDS: DeedDef[] = [
     source: 'Tirmidhi 2910',
   },
 ];
+
+/** True when a deed read in the reader covers all of `range`. */
+export function readCovers(entry: { q?: { s: number; from: number; to: number } }, range: { s: number; from: number; to: number }) {
+  return Boolean(entry.q && entry.q.s === range.s && entry.q.from <= range.from && entry.q.to >= range.to);
+}
 
 export function deedById(id: string): DeedDef | undefined {
   return DEEDS.find((deed) => deed.id === id);
