@@ -2,6 +2,7 @@ import { registerPlugin } from '@capacitor/core';
 import { fmtTime } from './format';
 import { platform } from './notify';
 import { addDays, placeCivilDate, prayerDay } from './prayer-times';
+import { t } from '../i18n';
 import type { Persisted } from './types';
 
 /**
@@ -38,7 +39,25 @@ export interface WidgetPayload {
   generatedAt: number;
   /** Minutes-only countdown: no ticking seconds. */
   coarse: boolean;
+  /** Widget wording in the app's language (Java format strings). */
+  labels: Record<string, string>;
   days: WidgetDay[];
+}
+
+/** The widget's few words, translated here because the widget itself cannot. */
+function widgetLabels(): Record<string, string> {
+  return {
+    now: t('Now'),
+    nextIn: t('{name} in %s'),
+    left: t('%s left'),
+    under: t('under a minute'),
+    hm: t('%d h %02d min'),
+    h: t('%d h'),
+    m: t('%d min'),
+    ontime: t('Prayed'),
+    late: t('Prayed late'),
+    missed: t('Not today'),
+  };
 }
 
 interface WidgetBridge {
@@ -72,7 +91,14 @@ export function buildWidgetPayload(state: Persisted, now = new Date(), days = WI
     });
   }
 
-  return { v: 1, place: settings.place.label, generatedAt: now.getTime(), coarse: settings.coarseTime, days: out };
+  return {
+    v: 1,
+    place: settings.place.label,
+    generatedAt: now.getTime(),
+    coarse: settings.coarseTime,
+    labels: widgetLabels(),
+    days: out,
+  };
 }
 
 let lastJson = '';

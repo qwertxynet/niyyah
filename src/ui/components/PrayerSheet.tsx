@@ -6,6 +6,7 @@ import { useUi } from '../ui-context';
 import { Icon, type IconName } from './Icons';
 import { Sheet } from './Sheet';
 import { Term } from './Term';
+import { t } from '../../i18n';
 
 const CHOICES: { status: LogStatus; title: string; hint: string; icon: IconName }[] = [
   { status: 'ontime', title: 'Prayed', hint: 'Within the window', icon: 'check' },
@@ -33,7 +34,9 @@ export function PrayerSheet({
     const previous = current?.s ?? null;
     actions.setStatus(target.dayKey, target.prayer, status);
     ui.toast(
-      `${meta?.name} · ${status === 'ontime' ? 'prayed' : status === 'late' ? 'prayed late' : 'not prayed'}`,
+      t(status === 'ontime' ? '{name} · prayed' : status === 'late' ? '{name} · prayed late' : '{name} · not prayed', {
+        name: meta?.name ?? '',
+      }),
       () => actions.setStatus(target.dayKey, target.prayer, previous),
     );
     onClose();
@@ -43,7 +46,7 @@ export function PrayerSheet({
     if (!target) return;
     const previous = current;
     actions.setStatus(target.dayKey, target.prayer, null);
-    ui.toast(`${meta?.name} cleared`, () => {
+    ui.toast(t('{name} cleared', { name: meta?.name ?? '' }), () => {
       if (!previous) return;
       actions.setStatus(target.dayKey, target.prayer, previous.s);
       // Bring back jama'ah and recitation too.
@@ -53,13 +56,13 @@ export function PrayerSheet({
   }
 
   return (
-    <Sheet open={Boolean(target)} onClose={onClose} title={meta ? `Log ${meta.name}` : 'Log prayer'}>
+    <Sheet open={Boolean(target)} onClose={onClose} title={meta ? t('Log {name}', { name: meta.name }) : t('Log prayer')}>
       {meta && slot ? (
         <>
           <div className="sheet-head">
             <h2 className="sheet-title">
               <Term id={target!.prayer}>{meta.name}</Term>
-              <span className="arabic">{meta.arabic}</span>
+              <span className="arabic ar-dup">{meta.arabic}</span>
             </h2>
           </div>
           <p className="sheet-sub">
@@ -80,8 +83,8 @@ export function PrayerSheet({
                   <Icon name={choice.icon} size={18} strokeWidth={2.2} />
                 </span>
                 <span className="choice-text">
-                  <b>{choice.title}</b>
-                  <span>{choice.hint}</span>
+                  <b>{t(choice.title)}</b>
+                  <span>{t(choice.hint)}</span>
                 </span>
               </button>
             ))}
@@ -97,7 +100,7 @@ export function PrayerSheet({
                 onClose();
               }}
             >
-              <Icon name="star" size={16} /> Recitation &amp; jama‘ah (optional)
+              <Icon name="star" size={16} /> {t('Recitation & jama‘ah (optional)')}
             </button>
           ) : null}
 
@@ -108,7 +111,7 @@ export function PrayerSheet({
               style={{ marginTop: 12 }}
               onClick={clear}
             >
-              Clear this log
+              {t('Clear this log')}
             </button>
           ) : null}
         </>

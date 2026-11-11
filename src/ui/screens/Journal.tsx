@@ -21,6 +21,7 @@ import { Icon } from '../components/Icons';
 import { useUi, type JournalIntent } from '../ui-context';
 import { useNow } from '../useNow';
 import { Week } from './Week';
+import { t } from '../../i18n';
 
 type View = 'entries' | 'week';
 const VIEW_KEY = 'niyyah.journal.view';
@@ -52,18 +53,18 @@ export function Journal({ intent, onIntentUsed }: { intent: JournalIntent | null
   return (
     <div className="fade-in journal">
       <header className="screen-head">
-        <h1>Journal</h1>
-        <p>Private to this device. Write as little or as much as you like.</p>
+        <h1>{t('Journal')}</h1>
+        <p>{t('Private to this device. Write as little or as much as you like.')}</p>
       </header>
 
       <div className="journal-switch">
         <Segmented<View>
           value={view}
           onChange={choose}
-          label="Journal view"
+          label={t('Journal view')}
           options={[
-            { value: 'entries', label: 'Journal' },
-            { value: 'week', label: 'Prayer week' },
+            { value: 'entries', label: t('Journal') },
+            { value: 'week', label: t('Prayer week') },
           ]}
         />
       </div>
@@ -138,12 +139,12 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
     };
     const id = actions.addJournal(todayKey, entry);
     reset();
-    ui.toast(`${kindMeta(kind).label} saved`, () => actions.removeJournal(todayKey, id));
+    ui.toast(t('{what} saved', { what: kindMeta(kind).label }), () => actions.removeJournal(todayKey, id));
   }
 
   function remove(dayKeyValue: string, entry: JournalEntry) {
     const removed = actions.removeJournal(dayKeyValue, entry.id);
-    ui.toast('Entry deleted', () => {
+    ui.toast(t('Entry deleted'), () => {
       if (removed) actions.restoreJournal(dayKeyValue, removed);
     });
   }
@@ -155,8 +156,8 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
 
   return (
     <>
-      <section className="composer card" aria-label="New journal entry">
-        <div className="kind-tabs" role="tablist" aria-label="Kind of entry">
+      <section className="composer card" aria-label={t('New journal entry')}>
+        <div className="kind-tabs" role="tablist" aria-label={t('Kind of entry')}>
           {KINDS.map((entry) => (
             <button
               key={entry.id}
@@ -169,20 +170,20 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
                 setShift(0);
               }}
             >
-              {entry.label}
+              {t(entry.label)}
             </button>
           ))}
         </div>
 
         <p className="composer-hint">
-          <span className="arabic">{kindMeta(kind).arabic}</span> {kindMeta(kind).hint}
+          <span className="arabic ar-dup">{kindMeta(kind).arabic}</span> {kindMeta(kind).hint}
         </p>
 
         {kind === 'reflection' ? (
           <label className="field composer-prayer">
-            <span className="field-label">After which prayer?</span>
+            <span className="field-label">{t('After which prayer?')}</span>
             <select className="select" value={prayer} onChange={(event) => setPrayer(event.target.value as PrayerKey | '')}>
-              <option value="">Not a particular prayer</option>
+              <option value="">{t('Not a particular prayer')}</option>
               {(prayedToday.length ? prayedToday : prayerDay(parseDayKey(todayKey), settings).slots).map((slot) => (
                 <option key={slot.key} value={slot.key}>
                   {slot.name}
@@ -195,14 +196,14 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
         <div className="composer-prompt">
           <p>{prompt}</p>
           <button type="button" className="composer-shuffle" onClick={() => setShift((value) => value + 1)}>
-            <Icon name="refresh" size={14} /> Different prompt
+            <Icon name="refresh" size={14} /> {t('Different prompt')}
           </button>
         </div>
 
         {kind === 'checkin' ? (
           <>
-            <p className="field-label">Mood</p>
-            <div className="pick-row" role="group" aria-label="Mood">
+            <p className="field-label">{t('Mood')}</p>
+            <div className="pick-row" role="group" aria-label={t('Mood')}>
               {MOODS.map((option) => (
                 <button
                   key={option.id}
@@ -212,12 +213,12 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
                   onClick={() => setMood(mood === option.id ? null : option.id)}
                 >
                   <span aria-hidden="true">{option.face}</span>
-                  {option.label}
+                  {t(option.label)}
                 </button>
               ))}
             </div>
-            <p className="field-label">Energy</p>
-            <div className="pick-row" role="group" aria-label="Energy">
+            <p className="field-label">{t('Energy')}</p>
+            <div className="pick-row" role="group" aria-label={t('Energy')}>
               {ENERGY.map((option) => (
                 <button
                   key={option.id}
@@ -226,7 +227,7 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
                   aria-pressed={energy === option.id}
                   onClick={() => setEnergy(energy === option.id ? null : option.id)}
                 >
-                  {option.label}
+                  {t(option.label)}
                 </button>
               ))}
             </div>
@@ -242,8 +243,8 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
                   className="input"
                   value={item}
                   maxLength={160}
-                  placeholder={index === 0 ? 'Something you are grateful for' : 'And another'}
-                  aria-label={`Gratitude ${index + 1}`}
+                  placeholder={index === 0 ? t('Something you are grateful for') : t('And another')}
+                  aria-label={t('Gratitude {n}', { n: index + 1 })}
                   onChange={(event) => setItems(items.map((value, i) => (i === index ? event.target.value : value)))}
                 />
               </label>
@@ -254,7 +255,7 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
             className="input composer-text"
             rows={kind === 'checkin' ? 2 : 4}
             maxLength={4000}
-            placeholder={kind === 'checkin' ? 'Optional — a line or two' : 'Write here…'}
+            placeholder={kind === 'checkin' ? t('Optional — a line or two') : t('Write here…')}
             aria-label={prompt}
             value={text}
             onChange={(event) => setText(event.target.value)}
@@ -262,33 +263,33 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
         )}
 
         <button type="button" className="btn btn-solid btn-block" disabled={!canSave} onClick={save}>
-          Save {kindMeta(kind).label.toLowerCase()}
+          {t('Save {what}', { what: kindMeta(kind).label.toLowerCase() })}
         </button>
       </section>
 
       {openDuas.length ? (
         <section className="section">
           <div className="section-head">
-            <h2>Duas you are making</h2>
-            <span className="meta">{openDuas.length} open</span>
+            <h2>{t('Duas you are making')}</h2>
+            <span className="meta">{t('{n} open', { n: openDuas.length })}</span>
           </div>
           <ul className="dua-list">
             {openDuas.map(({ key, entry }) => (
               <li key={entry.id} className="dua card">
                 <p>{entry.text}</p>
                 <div className="dua-foot">
-                  <span className="muted">Since {fmtLongDate(parseDayKey(key))}</span>
+                  <span className="muted">{t('Since {date}', { date: fmtLongDate(parseDayKey(key)) })}</span>
                   <button
                     type="button"
                     className="btn btn-quiet"
                     onClick={() => {
                       actions.updateJournal(key, entry.id, { answered: Date.now() });
-                      ui.toast('Marked as answered · Alhamdulillah', () =>
+                      ui.toast(t('Marked as answered · Alhamdulillah'), () =>
                         actions.updateJournal(key, entry.id, { answered: undefined }),
                       );
                     }}
                   >
-                    <Icon name="check" size={15} /> Answered
+                    <Icon name="check" size={15} /> {t('Answered')}
                   </button>
                 </div>
               </li>
@@ -299,14 +300,14 @@ function Entries({ intent, onIntentUsed }: { intent: JournalIntent | null; onInt
 
       <section className="section">
         <div className="section-head">
-          <h2>Your entries</h2>
+          <h2>{t('Your entries')}</h2>
         </div>
         {days.length === 0 ? (
-          <EmptyState title="Nothing yet">Start with a check-in above. Two taps is a whole entry.</EmptyState>
+          <EmptyState title={t('Nothing yet')}>{t('Start with a check-in above. Two taps is a whole entry.')}</EmptyState>
         ) : (
           days.map((key) => (
             <div key={key} className="jday">
-              <p className="jday-date">{key === todayKey ? 'Today' : fmtLongDate(parseDayKey(key))}</p>
+              <p className="jday-date">{key === todayKey ? t('Today') : fmtLongDate(parseDayKey(key))}</p>
               {[...(journal[key] ?? [])].reverse().map((entry) => (
                 <EntryCard key={entry.id} entry={entry} onDelete={() => remove(key, entry)} timeFormat={settings.timeFormat} />
               ))}
@@ -335,10 +336,10 @@ function EntryCard({
       <div className="jentry-top">
         <span className="jentry-kind">
           {meta.label}
-          {entry.prayer ? ` · after ${prayerMeta(entry.prayer).name}` : ''}
+          {entry.prayer ? ` · ${t('after {name}', { name: prayerMeta(entry.prayer).name })}` : ''}
         </span>
         <span className="jentry-time tnum">{fmtTime(new Date(entry.at), timeFormat)}</span>
-        <button type="button" className="jentry-delete" onClick={onDelete} aria-label="Delete entry">
+        <button type="button" className="jentry-delete" onClick={onDelete} aria-label={t('Delete entry')}>
           <Icon name="close" size={15} />
         </button>
       </div>
@@ -347,10 +348,10 @@ function EntryCard({
         <p className="jentry-tags">
           {mood ? (
             <span className="tag">
-              {mood.face} {mood.label}
+              {mood.face} {t(mood.label)}
             </span>
           ) : null}
-          {energy ? <span className="tag">Energy: {energy.label}</span> : null}
+          {energy ? <span className="tag">{t('Energy: {level}', { level: t(energy.label) })}</span> : null}
         </p>
       ) : null}
       {entry.kind === 'gratitude' && entry.items?.length ? (
@@ -362,7 +363,7 @@ function EntryCard({
       ) : entrySummary(entry) ? (
         <p className="jentry-text">{entrySummary(entry)}</p>
       ) : null}
-      {entry.kind === 'dua' && entry.answered ? <p className="jentry-answered">Answered · Alhamdulillah</p> : null}
+      {entry.kind === 'dua' && entry.answered ? <p className="jentry-answered">{t('Answered · Alhamdulillah')}</p> : null}
     </article>
   );
 }

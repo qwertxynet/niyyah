@@ -278,7 +278,10 @@ export const actions = {
   },
 
   resetAll() {
-    persist(defaultState());
+    // Everything goes except the language, so the fresh start reads the same.
+    const fresh = defaultState();
+    fresh.settings.language = state.settings.language;
+    persist(fresh);
   },
 };
 

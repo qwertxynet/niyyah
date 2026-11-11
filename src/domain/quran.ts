@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isArabic } from '../i18n';
 
 /**
  * Letter counts for every ayah, from public/quran-meta.json (built by
@@ -64,6 +65,11 @@ export function useQuran(): QuranMeta | null {
     };
   }, [data]);
   return data;
+}
+
+/** A surah's name in the interface language: "Al-Kahf" or "الكهف". */
+export function surahName(entry: Surah): string {
+  return isArabic() ? entry.ar : entry.name;
 }
 
 export function surah(meta: QuranMeta, n: number): Surah | undefined {

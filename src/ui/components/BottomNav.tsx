@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 import { Icon, type IconName } from './Icons';
 
 export type Tab = 'today' | 'qibla' | 'hasanat' | 'week' | 'settings';
@@ -21,7 +22,7 @@ export function BottomNav({
   hidden?: Tab[];
 }) {
   return (
-    <nav className="nav" aria-label="Main">
+    <nav className="nav" aria-label={t('Main')}>
       {TABS.filter((entry) => !hidden.includes(entry.id)).map((entry) => (
         <button
           key={entry.id}
@@ -31,7 +32,7 @@ export function BottomNav({
           onClick={() => onChange(entry.id)}
         >
           <Icon name={entry.icon} size={19} />
-          <span>{entry.label}</span>
+          <span>{t(entry.label)}</span>
         </button>
       ))}
     </nav>

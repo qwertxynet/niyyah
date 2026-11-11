@@ -17,6 +17,7 @@ import { LocationPicker } from '../components/LocationPicker';
 import { ResetSheet } from '../components/ResetSheet';
 import { Sheet } from '../components/Sheet';
 import { useUi } from '../ui-context';
+import { t, tc, type Lang } from '../../i18n';
 
 const HIGH_LATITUDES: { value: HighLatKey; label: string }[] = [
   { value: 'auto', label: 'Method default' },
@@ -53,7 +54,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
     if (platform === 'android') {
       try {
         await navigator.clipboard.writeText(text);
-        ui.toast('Backup copied to the clipboard');
+        ui.toast(t('Backup copied to the clipboard'));
         return;
       } catch {
         /* fall through to a download */
@@ -68,7 +69,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
     anchor.click();
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 4000);
-    ui.toast('Backup downloaded');
+    ui.toast(t('Backup downloaded'));
   }
 
   async function onFile(event: ChangeEvent<HTMLInputElement>) {
@@ -77,7 +78,7 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
     if (!file) return;
     const text = await file.text();
     const result = importSnapshot(text);
-    ui.toast(result.ok ? 'Backup restored' : (result.error ?? 'Import failed'));
+    ui.toast(result.ok ? t('Backup restored') : t(result.error ?? 'Import failed'));
   }
 
   const permissionPill =
@@ -86,76 +87,93 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
   return (
     <div className="fade-in">
       <header className="screen-head">
-        <h1>Settings</h1>
-        <p>Everything here works offline and stays on this device.</p>
+        <h1>{t('Settings')}</h1>
+        <p>{t('Everything here works offline and stays on this device.')}</p>
       </header>
+
+      <section className="group">
+        <h2>{t('Language')}</h2>
+        <div className="group-body">
+          <SettingRow label={t('App language')} hint={t('Arabic also turns the layout right to left.')}>
+            <Segmented<Lang>
+              value={settings.language}
+              onChange={(language) => actions.updateSettings({ language })}
+              label={t('App language')}
+              options={[
+                { value: 'en', label: 'English' },
+                { value: 'ar', label: 'العربية' },
+              ]}
+            />
+          </SettingRow>
+        </div>
+      </section>
 
       <ComfortSection />
 
       <section className="group">
-        <h2>Location</h2>
+        <h2>{t('Location')}</h2>
         <div className="group-body">
           <SettingRow
-            label={settings.place?.label ?? 'Not set'}
+            label={settings.place?.label ?? t('Not set')}
             hint={
               settings.place
                 ? `${settings.place.lat.toFixed(3)}, ${settings.place.lng.toFixed(3)} · ${
                     settings.place.source === 'gps'
-                      ? 'from GPS'
+                      ? t('from GPS')
                       : settings.place.source === 'search'
-                        ? 'chosen from the bundled list'
-                        : 'entered by hand'
+                        ? t('chosen from the bundled list')
+                        : t('entered by hand')
                   }`
-                : 'Pick a city to calculate prayer times'
+                : t('Pick a city to calculate prayer times')
             }
           >
             <button type="button" className="btn btn-quiet" onClick={() => setLocationOpen(true)}>
-              Change
+              {t('Change')}
             </button>
           </SettingRow>
         </div>
       </section>
 
       <section className="group">
-        <h2>Prayer calculation</h2>
+        <h2>{t('Prayer calculation')}</h2>
         <div className="group-body">
-          <SettingStack label="Method" hint="Pick the authority your community follows.">
+          <SettingStack label={t('Method')} hint={t('Pick the authority your community follows.')}>
             <select
               className="select"
               value={settings.method}
               onChange={(event) => actions.updateSettings({ method: event.target.value as MethodKey })}
-              aria-label="Calculation method"
+              aria-label={t('Calculation method')}
             >
               {METHODS.map((method) => (
                 <option key={method.id} value={method.id}>
-                  {method.label} — {method.hint}
+                  {t(method.label)} — {t(method.hint)}
                 </option>
               ))}
             </select>
           </SettingStack>
 
-          <SettingRow label="Asr madhab" hint="Hanafi calculates Asr later.">
+          <SettingRow label={t('Asr madhab')} hint={t('Hanafi calculates Asr later.')}>
             <Segmented<MadhabKey>
               value={settings.madhab}
               onChange={(madhab) => actions.updateSettings({ madhab })}
-              label="Asr madhab"
+              label={t('Asr madhab')}
               options={[
-                { value: 'shafi', label: 'Shafi' },
-                { value: 'hanafi', label: 'Hanafi' },
+                { value: 'shafi', label: t('Shafi') },
+                { value: 'hanafi', label: t('Hanafi') },
               ]}
             />
           </SettingRow>
 
-          <SettingStack label="High latitude rule" hint="Only matters where the sun barely sets.">
+          <SettingStack label={t('High latitude rule')} hint={t('Only matters where the sun barely sets.')}>
             <select
               className="select"
               value={settings.highLat}
               onChange={(event) => actions.updateSettings({ highLat: event.target.value as HighLatKey })}
-              aria-label="High latitude rule"
+              aria-label={t('High latitude rule')}
             >
               {HIGH_LATITUDES.map((rule) => (
                 <option key={rule.value} value={rule.value}>
-                  {rule.label}
+                  {t(rule.label)}
                 </option>
               ))}
             </select>
@@ -164,28 +182,28 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
       </section>
 
       <section className="group">
-        <h2>Display</h2>
+        <h2>{t('Display')}</h2>
         <div className="group-body">
-          <SettingRow label="Theme">
+          <SettingRow label={t('Theme')}>
             <Segmented<ThemeMode>
               value={settings.theme}
               onChange={(theme) => actions.updateSettings({ theme })}
-              label="Theme"
+              label={t('Theme')}
               options={[
-                { value: 'auto', label: 'Auto' },
-                { value: 'light', label: 'Light' },
-                { value: 'dark', label: 'Dark' },
+                { value: 'auto', label: t('Auto') },
+                { value: 'light', label: tc('Light', 'theme') },
+                { value: 'dark', label: tc('Dark', 'theme') },
               ]}
             />
           </SettingRow>
-          <SettingRow label="Clock">
+          <SettingRow label={t('Clock')}>
             <Segmented<TimeFormat>
               value={settings.timeFormat}
               onChange={(timeFormat) => actions.updateSettings({ timeFormat })}
-              label="Clock format"
+              label={t('Clock format')}
               options={[
-                { value: '12h', label: '12h' },
-                { value: '24h', label: '24h' },
+                { value: '12h', label: t('12h') },
+                { value: '24h', label: t('24h') },
               ]}
             />
           </SettingRow>
@@ -193,129 +211,128 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
       </section>
 
       <section className="group">
-        <h2>Reminders</h2>
+        <h2>{t('Reminders')}</h2>
         <div className="group-body">
-          <SettingRow label="Allow reminders" hint="Adhan alerts and a pre-alert before each one.">
+          <SettingRow label={t('Allow reminders')} hint={t('Adhan alerts and a pre-alert before each one.')}>
             <Toggle
               checked={settings.reminders}
               onChange={(reminders) => actions.updateSettings({ reminders })}
-              label="Allow reminders"
+              label={t('Allow reminders')}
             />
           </SettingRow>
 
           <SettingStack
-            label="Pre-alert"
-            hint={settings.ladder ? 'Transition warnings are on, so they replace this. See Comfort & support.' : undefined}
+            label={t('Pre-alert')}
+            hint={settings.ladder ? t('Transition warnings are on, so they replace this. See Comfort & support.') : undefined}
           >
             <select
               disabled={settings.ladder}
               className="select"
               value={String(settings.preAlert)}
               onChange={(event) => actions.updateSettings({ preAlert: Number(event.target.value) })}
-              aria-label="Pre-alert lead time"
+              aria-label={t('Pre-alert lead time')}
             >
-              <option value="0">Off — only at the adhan</option>
+              <option value="0">{t('Off — only at the adhan')}</option>
               {[5, 10, 15, 20, 30].map((minutes) => (
                 <option key={minutes} value={minutes}>
-                  {minutes} minutes before
+                  {t('{n} minutes before', { n: minutes })}
                 </option>
               ))}
             </select>
           </SettingStack>
 
-          <SettingRow label="Sound" hint="Off keeps nudges silent.">
+          <SettingRow label={t('Sound')} hint={t('Off keeps nudges silent.')}>
             <Toggle
               checked={settings.sound}
               onChange={(sound) => actions.setAdaptation('sound', sound)}
-              label="Notification sound"
+              label={t('Notification sound')}
             />
           </SettingRow>
 
           {platform === 'windows' ? (
-            <SettingRow label="Start with Windows" hint="Keeps reminders working with the window closed.">
+            <SettingRow label={t('Start with Windows')} hint={t('Keeps reminders working with the window closed.')}>
               <Toggle
                 checked={Boolean(autostart)}
                 onChange={async (enabled) => {
                   const next = await window.niyyah?.setAutostart(enabled);
                   setAutostart(Boolean(next));
                 }}
-                label="Start with Windows"
+                label={t('Start with Windows')}
               />
             </SettingRow>
           ) : null}
 
-          <SettingStack label="Reminder health" hint="A quick check that nudges can actually reach you.">
+          <SettingStack label={t('Reminder health')} hint={t('A quick check that nudges can actually reach you.')}>
             <div className="health">
               <div className="health-row">
-                <span>Platform</span>
-                <span className="pill">{platformLabel}</span>
+                <span>{t('Platform')}</span>
+                <span className="pill">{t(platformLabel)}</span>
               </div>
               <div className="health-row">
-                <span>Notification permission</span>
+                <span>{t('Notification permission')}</span>
                 <span className={`pill ${permissionPill}`}>
                   {permissionLabel(health?.permission ?? 'prompt')}
                 </span>
               </div>
               {platform === 'android' ? (
                 <div className="health-row">
-                  <span>Alarms &amp; reminders</span>
+                  <span>{t('Alarms & reminders')}</span>
                   <span
                     className={`pill ${
                       health?.exact === 'granted' ? 'is-good' : health?.exact === 'denied' ? 'is-bad' : 'is-warn'
                     }`}
                   >
-                    {health?.exact === 'granted' ? 'Allowed' : health?.exact === 'denied' ? 'Blocked' : 'Unknown'}
+                    {health?.exact === 'granted' ? t('Allowed') : health?.exact === 'denied' ? t('Blocked') : t('Unknown')}
                   </span>
                 </div>
               ) : null}
               <div className="health-row">
-                <span>Scheduled</span>
+                <span>{t('Scheduled')}</span>
                 <span className="tnum">
-                  {health ? `${health.scheduled} alerts` : settings.reminders ? 'checking…' : 'off'}
+                  {health ? t('{n} alerts', { n: health.scheduled }) : settings.reminders ? t('checking…') : t('off')}
                 </span>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
               <button type="button" className="btn btn-quiet" onClick={onResync}>
-                <Icon name="refresh" size={15} /> Recheck
+                <Icon name="refresh" size={15} /> {t('Recheck')}
               </button>
               <button type="button" className="btn btn-quiet" onClick={runTest}>
-                <Icon name="bell" size={15} /> Send test
+                <Icon name="bell" size={15} /> {t('Send test')}
               </button>
             </div>
 
             {health?.note ? (
               <div className="note warn" style={{ marginTop: 10 }}>
-                {health.note}
+                {t(health.note)}
               </div>
             ) : null}
             {testMessage ? (
               <div className="note" style={{ marginTop: 10 }} role="status">
-                {testMessage}
+                {t(testMessage)}
               </div>
             ) : null}
           </SettingStack>
 
           {platform === 'android' && settings.reminders ? (
-            <SettingStack label="If reminders go missing">
+            <SettingStack label={t('If reminders go missing')}>
               <div className="note">
-                <b>1.</b> Android Settings → Apps → Niyyah → Battery → <b>Unrestricted</b>.
+                <b>1.</b> {t('Android Settings → Apps → Niyyah → Battery → Unrestricted.')}
                 <br />
-                <b>2.</b> On Samsung, Xiaomi, Oppo or Vivo, also allow <b>Auto-start</b> for Niyyah.
+                <b>2.</b> {t('On Samsung, Xiaomi, Oppo or Vivo, also allow Auto-start for Niyyah.')}
                 <br />
-                <b>3.</b> Settings → Apps → Niyyah → <b>Alarms &amp; reminders</b> → allow.
+                <b>3.</b> {t('Settings → Apps → Niyyah → Alarms & reminders → allow.')}
                 <br />
-                These three settings are the usual reason a scheduled nudge never arrives.
+                {t('These three settings are the usual reason a scheduled nudge never arrives.')}
               </div>
             </SettingStack>
           ) : null}
 
           {platform === 'web' ? (
-            <SettingStack label="Browser limits">
+            <SettingStack label={t('Browser limits')}>
               <div className="note">
-                A browser can only alert you while Niyyah is open. For reminders that arrive with the
-                app closed, use the Android or Windows build.
+                {t('A browser can only alert you while Niyyah is open. For reminders that arrive with the app closed, use the Android or Windows build.')}
               </div>
             </SettingStack>
           ) : null}
@@ -323,29 +340,29 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
       </section>
 
       <section className="group">
-        <h2>Making up prayers</h2>
+        <h2>{t('Making up prayers')}</h2>
         <div className="group-body">
-          <SettingRow label="Track make-up prayers" hint="An optional, quiet counter. Never a debt collector.">
+          <SettingRow label={t('Track make-up prayers')} hint={t('An optional, quiet counter. Never a debt collector.')}>
             <Toggle
               checked={settings.qadaEnabled}
               onChange={(qadaEnabled) => actions.updateSettings({ qadaEnabled })}
-              label="Track make-up prayers"
+              label={t('Track make-up prayers')}
             />
           </SettingRow>
-          <SettingRow label="Set aside" hint="Adjust the counter by hand at any time.">
+          <SettingRow label={t('Set aside')} hint={t('Adjust the counter by hand at any time.')}>
             <div className="stepper">
               <button
                 type="button"
                 onClick={() => actions.setQada(qada - 1)}
                 disabled={qada === 0}
-                aria-label="One fewer"
+                aria-label={t('One fewer')}
               >
                 <Icon name="minus" size={15} strokeWidth={2.2} />
               </button>
               <span className="tnum" style={{ minWidth: 34, textAlign: 'center', fontWeight: 600 }}>
                 {qada}
               </span>
-              <button type="button" onClick={() => actions.setQada(qada + 1)} aria-label="One more">
+              <button type="button" onClick={() => actions.setQada(qada + 1)} aria-label={t('One more')}>
                 <Icon name="plus" size={15} strokeWidth={2.2} />
               </button>
             </div>
@@ -354,54 +371,58 @@ export function SettingsScreen({ health, onResync }: { health: Health | null; on
       </section>
 
       <section className="group">
-        <h2>Your data</h2>
+        <h2>{t('Your data')}</h2>
         <div className="group-body">
-          <SettingRow label="Backup" hint="A single JSON file you can move to another device.">
+          <SettingRow label={t('Backup')} hint={t('A single JSON file you can move to another device.')}>
             <button type="button" className="btn btn-quiet" onClick={exportData}>
-              <Icon name="download" size={15} /> Export
+              <Icon name="download" size={15} /> {t('Export')}
             </button>
           </SettingRow>
-          <SettingRow label="Restore" hint="Replaces everything currently stored.">
+          <SettingRow label={t('Restore')} hint={t('Replaces everything currently stored.')}>
             <button type="button" className="btn btn-quiet" onClick={() => fileRef.current?.click()}>
-              <Icon name="upload" size={15} /> Import
+              <Icon name="upload" size={15} /> {t('Import')}
             </button>
             <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={onFile} />
           </SettingRow>
           <SettingRow
-            label="Reset all app data"
-            hint="Deletes prayer history, journal, hasanat, answers and settings, and cancels reminders."
+            label={t('Reset all app data')}
+            hint={t('Deletes prayer history, journal, hasanat, answers and settings, and cancels reminders.')}
           >
             <button type="button" className="btn btn-quiet btn-danger" onClick={() => setResetOpen(true)}>
-              <Icon name="refresh" size={15} /> Reset
+              <Icon name="refresh" size={15} /> {t('Reset')}
             </button>
           </SettingRow>
         </div>
       </section>
 
       <section className="group">
-        <h2>About</h2>
+        <h2>{t('About')}</h2>
         <div className="group-body">
-          <SettingRow label="Niyyah 1.0" hint="A calm prayer companion built for an ADHD brain." />
+          <SettingRow label={t('Niyyah 1.0')} hint={t('A calm prayer companion built for an ADHD brain.')} />
           <SettingRow
-            label="Offline by design"
-            hint="Prayer times are computed on your device. No account, no analytics, no network calls at runtime."
+            label={t('Offline by design')}
+            hint={t('Prayer times are computed on your device. No account, no analytics, no network calls at runtime.')}
           >
-            <span className="pill is-good">No network</span>
+            <span className="pill is-good">{t('No network')}</span>
           </SettingRow>
           <SettingRow
-            label="Times by adhan"
-            hint="Open-source prayer time calculations (Batoul Apps). Umm al-Qura calendar for the Hijri date."
+            label={t('Times by adhan')}
+            hint={t('Open-source prayer time calculations (Batoul Apps). Umm al-Qura calendar for the Hijri date.')}
+          />
+          <SettingRow
+            label={t('Qur’an text')}
+            hint={t('Tanzil Project (tanzil.net), Uthmani text, copied unchanged. Amiri Quran typeface.')}
           />
         </div>
       </section>
 
-      <p className="footnote">Made to be gentle. Change anything, any time.</p>
+      <p className="footnote">{t('Made to be gentle. Change anything, any time.')}</p>
 
-      <Sheet open={locationOpen} onClose={() => setLocationOpen(false)} title="Choose a location">
+      <Sheet open={locationOpen} onClose={() => setLocationOpen(false)} title={t('Choose a location')}>
         <h2 className="sheet-title" style={{ marginBottom: 4 }}>
-          Where are you?
+          {t('Where are you?')}
         </h2>
-        <p className="sheet-sub">Used only to calculate times on this device.</p>
+        <p className="sheet-sub">{t('Used only to calculate times on this device.')}</p>
         <LocationPicker
           value={settings.place}
           onChange={(place) => {

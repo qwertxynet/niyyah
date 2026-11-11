@@ -11,6 +11,8 @@ import {
 import type { AdaptKey, FaithKey, NeedKey, NeuroKey, Profile, Settings, ToneKey } from '../../domain/types';
 import { AdaptList, type AdaptValues } from '../components/AdaptList';
 import { Icon } from '../components/Icons';
+import { t } from '../../i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 
 const STEPS = 5;
 const EXCLUSIVE: NeuroKey[] = ['neurotypical', 'unsure', 'unsaid'];
@@ -38,7 +40,7 @@ export function AboutYou({
   settings,
   onComplete,
   onSkip,
-  skipLabel = 'Skip',
+  skipLabel,
 }: {
   settings: Settings;
   onComplete: (profile: Profile, patch: Partial<Settings>) => void;
@@ -101,23 +103,26 @@ export function AboutYou({
     <div className="setup about">
       <div className="setup-top">
         <span className="wordmark">
-          <Icon name="moon" size={17} /> Niyyah
+          <Icon name="moon" size={17} /> {t('Niyyah')}
         </span>
-        <div className="dots" aria-label={`Step ${step + 1} of ${STEPS}`} role="status">
-          {Array.from({ length: STEPS }, (_, index) => (
-            <i key={index} className={index === step ? 'is-active' : undefined} />
-          ))}
+        <div className="setup-top-end">
+          {settings.setupComplete ? null : <LanguageSwitch />}
+          <div className="dots" aria-label={t('Step {n} of {total}', { n: step + 1, total: STEPS })} role="status">
+            {Array.from({ length: STEPS }, (_, index) => (
+              <i key={index} className={index === step ? 'is-active' : undefined} />
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="setup-body fade-in" key={step}>
         {step === 0 ? (
           <>
-            <p className="about-kicker">Welcome</p>
-            <h1>What should Niyyah call you?</h1>
-            <p className="lede">Optional. A first name or nickname is plenty — it&apos;s only used to greet you.</p>
+            <p className="about-kicker">{t('Welcome')}</p>
+            <h1>{t('What should Niyyah call you?')}</h1>
+            <p className="lede">{t('Optional. A first name or nickname is plenty — it’s only used to greet you.')}</p>
             <label className="field" htmlFor="about-name">
-              <span className="field-label">Your name</span>
+              <span className="field-label">{t('Your name')}</span>
               <input
                 id="about-name"
                 className="input"
@@ -125,7 +130,7 @@ export function AboutYou({
                 autoComplete="given-name"
                 autoCapitalize="words"
                 maxLength={40}
-                placeholder="e.g. Aisha"
+                placeholder={t('e.g. Aisha')}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 onKeyDown={(event) => {
@@ -138,9 +143,9 @@ export function AboutYou({
 
         {step === 1 ? (
           <>
-            <p className="about-kicker">About you · 1 of 3</p>
-            <h1>Where are you with Islam right now?</h1>
-            <p className="lede">There is no wrong answer. This only changes how much Niyyah explains.</p>
+            <p className="about-kicker">{t('About you · {n} of 3', { n: 1 })}</p>
+            <h1>{t('Where are you with Islam right now?')}</h1>
+            <p className="lede">{t('There is no wrong answer. This only changes how much Niyyah explains.')}</p>
             <div className="option-list about-options">
               {FAITH_OPTIONS.map((option) => (
                 <button
@@ -151,8 +156,8 @@ export function AboutYou({
                   onClick={() => setFaith(option.id)}
                 >
                   <span className="option-text">
-                    <b>{option.label}</b>
-                    {option.hint ? <span>{option.hint}</span> : null}
+                    <b>{t(option.label)}</b>
+                    {option.hint ? <span>{t(option.hint)}</span> : null}
                   </span>
                   {faith === option.id ? (
                     <span className="option-mark">
@@ -167,10 +172,10 @@ export function AboutYou({
 
         {step === 2 ? (
           <>
-            <p className="about-kicker">About you · 2 of 3</p>
-            <h1>How does your mind work?</h1>
+            <p className="about-kicker">{t('About you · {n} of 3', { n: 2 })}</p>
+            <h1>{t('How does your mind work?')}</h1>
             <p className="lede">
-              Pick any that fit. A diagnosis isn&apos;t needed. Autistic and ADHD together is often called AuDHD.
+              {t('Pick any that fit. A diagnosis isn’t needed. Autistic and ADHD together is often called AuDHD.')}
             </p>
             <div className="option-list about-options">
               {NEURO_OPTIONS.map((option) => {
@@ -184,8 +189,8 @@ export function AboutYou({
                     onClick={() => toggleNeuro(option.id)}
                   >
                     <span className="option-text">
-                      <b>{option.label}</b>
-                      {option.hint ? <span>{option.hint}</span> : null}
+                      <b>{t(option.label)}</b>
+                      {option.hint ? <span>{t(option.hint)}</span> : null}
                     </span>
                     {on ? (
                       <span className="option-mark">
@@ -197,21 +202,21 @@ export function AboutYou({
               })}
             </div>
             {neuro.includes('autistic') && neuro.includes('adhd') ? (
-              <p className="about-tag">AuDHD — Niyyah was built with you in mind.</p>
+              <p className="about-tag">{t('AuDHD — Niyyah was built with you in mind.')}</p>
             ) : null}
           </>
         ) : null}
 
         {step === 3 ? (
           <>
-            <p className="about-kicker">About you · 3 of 3</p>
-            <h1>What gets in the way of praying?</h1>
+            <p className="about-kicker">{t('About you · {n} of 3', { n: 3 })}</p>
+            <h1>{t('What gets in the way of praying?')}</h1>
             <p className="lede">
               {needsTouched || !neuro.some((key) => key === 'autistic' || key === 'adhd')
-                ? 'Pick any that apply.'
-                : `We ticked a few that are common for ${neuroLabel(neuro)}. Untick anything that isn't you.`}
+                ? t('Pick any that apply.')
+                : t('We ticked a few that are common for {who}. Untick anything that isn’t you.', { who: neuroLabel(neuro) })}
             </p>
-            <div className="chips" role="group" aria-label="What gets in the way">
+            <div className="chips" role="group" aria-label={t('What gets in the way')}>
               {NEED_OPTIONS.map((option) => {
                 const on = needs.includes(option.id);
                 return (
@@ -223,7 +228,7 @@ export function AboutYou({
                     onClick={() => toggleNeed(option.id)}
                   >
                     {on ? <Icon name="check" size={15} strokeWidth={2.6} /> : null}
-                    {option.label}
+                    {t(option.label)}
                   </button>
                 );
               })}
@@ -233,50 +238,50 @@ export function AboutYou({
 
         {step === 4 ? (
           <>
-            <h1>Here&apos;s how Niyyah adapted{name.trim() ? `, ${name.trim()}` : ''}</h1>
+            <h1>{name.trim() ? t('Here’s how Niyyah adapted, {name}', { name: name.trim() }) : t('Here’s how Niyyah adapted')}</h1>
             <p className="lede">
               {turnedOn > 0
-                ? 'Each change says why. Flip anything that doesn’t suit you — you can change all of it later in Settings → Comfort & support.'
-                : 'Your answers didn’t call for changes, so Niyyah keeps its standard settings. You can still adjust anything here or later in Settings.'}
+                ? t('Each change says why. Flip anything that doesn’t suit you — you can change all of it later in Settings → Comfort & support.')
+                : t('Your answers didn’t call for changes, so Niyyah keeps its standard settings. You can still adjust anything here or later in Settings.')}
             </p>
 
-            <h2 className="about-group">Turned on</h2>
+            <h2 className="about-group">{t('Turned on')}</h2>
             <AdaptList values={values} applied={applied} overridden={overridden} onChange={change} group="on" />
 
-            <h2 className="about-group">Left off</h2>
+            <h2 className="about-group">{t('Left off')}</h2>
             <AdaptList values={values} applied={applied} overridden={overridden} onChange={change} group="off" />
 
-            <h2 className="about-group">Voice</h2>
+            <h2 className="about-group">{t('Voice')}</h2>
             <AdaptList values={values} applied={applied} overridden={overridden} onChange={change} group="tone" />
           </>
         ) : null}
 
         <p className="about-privacy">
-          <Icon name="shield" size={15} /> Your answers stay on this device. They only change how the app looks and
-          nudges.
+          <Icon name="shield" size={15} />{' '}
+          {t('Your answers stay on this device. They only change how the app looks and nudges.')}
         </p>
       </div>
 
       <div className="setup-foot">
         {step > 0 ? (
           <button type="button" className="btn btn-quiet" onClick={() => go(step - 1)}>
-            Back
+            {t('Back')}
           </button>
         ) : (
           <button type="button" className="btn btn-quiet" onClick={onSkip}>
-            {skipLabel}
+            {skipLabel ?? t('Skip')}
           </button>
         )}
         {step < STEPS - 1 ? (
           <button type="button" className="btn btn-solid" style={{ flex: 1 }} onClick={() => go(step + 1)}>
             {(step === 0 && !name.trim()) || (step === 1 && !faith) || (step === 2 && neuro.length === 0)
-              ? 'Skip this one'
-              : 'Continue'}{' '}
-            <Icon name="arrowRight" size={17} />
+              ? t('Skip this one')
+              : t('Continue')}{' '}
+            <Icon name="arrowRight" size={17} className="flip-rtl" />
           </button>
         ) : (
           <button type="button" className="btn btn-solid" style={{ flex: 1 }} onClick={finish}>
-            Looks good
+            {t('Looks good')}
           </button>
         )}
       </div>
@@ -287,7 +292,7 @@ export function AboutYou({
 /** The same questions as a full-screen layer over the app. */
 export function AboutYouOverlay(props: Parameters<typeof AboutYou>[0]) {
   return createPortal(
-    <div className="about-overlay" role="dialog" aria-modal="true" aria-label="About you">
+    <div className="about-overlay" role="dialog" aria-modal="true" aria-label={t('About you')}>
       <AboutYou {...props} />
     </div>,
     document.body,

@@ -9,6 +9,7 @@ import { Term } from './Term';
 import { Icon } from './Icons';
 import { Sheet } from './Sheet';
 import { rangeLabel, VersePicker, type VerseRange } from './VersePicker';
+import { t } from '../../i18n';
 
 /**
  * Optional detail for a logged prayer: what was recited in each rak'ah, and
@@ -27,12 +28,12 @@ export function RecitationSheet({
   const open = Boolean(target && entry);
 
   return (
-    <Sheet open={open} onClose={onClose} title="Recitation">
+    <Sheet open={open} onClose={onClose} title={t('Recitation')}>
       {target && entry ? (
         meta ? (
           <RecitationBody key={`${target.dayKey}:${target.prayer}`} target={target} meta={meta} />
         ) : (
-          <p className="muted">Loading the Qur’an index…</p>
+          <p className="muted">{t('Loading the Qur’an index…')}</p>
         )
       ) : null}
     </Sheet>
@@ -82,19 +83,19 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
       <div className="sheet-head">
         <h2 className="sheet-title">
           {info.name}
-          <span className="arabic">{info.arabic}</span>
+          <span className="arabic ar-dup">{info.arabic}</span>
         </h2>
       </div>
-      <p className="sheet-sub">Optional. Add what you recited for a closer estimate — it saves as you go.</p>
+      <p className="sheet-sub">{t('Optional. Add what you recited for a closer estimate — it saves as you go.')}</p>
 
       <div className="rec-row rec-jamaah">
         <span>
-          <b>Prayed in congregation</b>
+          <b>{t('Prayed in congregation')}</b>
           <span className="muted">
             <Term id="jamaah" /> · ×27
           </span>
         </span>
-        <Toggle checked={Boolean(entry.j)} onChange={(next) => save({ j: next })} label="Prayed in congregation" />
+        <Toggle checked={Boolean(entry.j)} onChange={(next) => save({ j: next })} label={t('Prayed in congregation')} />
       </div>
 
       {Array.from({ length: rakahs }, (_, index) => index + 1).map((k) => {
@@ -114,14 +115,18 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
               <span>
                 <Term id="fatiha" />
               </span>
-              <Toggle checked={!skipped.has(k)} onChange={(on) => toggleFatiha(k, on)} label={`Al-Fatihah in rak'ah ${k}`} />
+              <Toggle
+                checked={!skipped.has(k)}
+                onChange={(on) => toggleFatiha(k, on)}
+                label={t('Al-Fatihah in rak‘ah {k}', { k })}
+              />
             </div>
 
             {mine.map(({ part, index }) => (
               <div key={index} className="rec-row rec-part">
                 <span>{rangeLabel(meta, { s: part.s, from: part.from, to: part.to })}</span>
                 <span className="muted tnum">≈ {fmtHasanat(lettersIn(meta, part.s, part.from, part.to) * PER_LETTER)}</span>
-                <button type="button" className="rec-remove" onClick={() => removePart(index)} aria-label="Remove">
+                <button type="button" className="rec-remove" onClick={() => removePart(index)} aria-label={t('Remove')}>
                   <Icon name="close" size={16} />
                 </button>
               </div>
@@ -132,21 +137,21 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
                 <VersePicker meta={meta} value={draft} onChange={setDraft} idPrefix={`rak-${k}`} />
                 <div className="rec-add-actions">
                   <button type="button" className="btn btn-quiet" onClick={() => setAdding(null)}>
-                    Cancel
+                    {t('Cancel')}
                   </button>
                   <button type="button" className="btn btn-solid" onClick={() => addPart(k)}>
-                    Add · ≈ +{fmtHasanat(lettersIn(meta, draft.s, draft.from, draft.to) * PER_LETTER)}
+                    {t('Add · ≈ +{h}', { h: fmtHasanat(lettersIn(meta, draft.s, draft.from, draft.to) * PER_LETTER) })}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="rec-links">
                 <button type="button" className="rec-link" onClick={() => setAdding(k)}>
-                  + Add verses
+                  {t('+ Add verses')}
                 </button>
                 {k > 1 && parts.some((part) => part.k === 1) ? (
                   <button type="button" className="rec-link" onClick={() => copyFirst(k)}>
-                    Same as rak‘ah 1
+                    {t('Same as rak‘ah 1')}
                   </button>
                 ) : null}
               </div>
@@ -156,7 +161,7 @@ function RecitationBody({ target, meta }: { target: { dayKey: string; prayer: Pr
       })}
 
       <div className="estimate-line">
-        <span>This prayer</span>
+        <span>{t('This prayer')}</span>
         <b className="tnum">≈ {fmtHasanat(total)}</b>
       </div>
     </>

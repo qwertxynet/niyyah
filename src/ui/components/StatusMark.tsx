@@ -1,5 +1,6 @@
 import type { LogStatus } from '../../domain/types';
 import { Icon } from './Icons';
+import { t } from '../../i18n';
 
 export function StatusMark({
   status,
@@ -46,8 +47,8 @@ export function StatusMark({
 }
 
 export function statusText(status?: LogStatus): string {
-  if (status === 'ontime') return 'Prayed';
-  if (status === 'late') return 'Prayed late';
-  if (status === 'missed') return 'Not prayed';
-  return 'Not logged';
+  if (status === 'ontime') return t('Prayed');
+  if (status === 'late') return t('Prayed late');
+  if (status === 'missed') return t('Not prayed');
+  return t('Not logged');
 }

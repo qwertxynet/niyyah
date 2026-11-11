@@ -2,6 +2,7 @@ import { fmtTime } from '../../domain/format';
 import type { Slot } from '../../domain/prayer-times';
 import type { TimeFormat } from '../../domain/types';
 import { Icon } from './Icons';
+import { t } from '../../i18n';
 
 export function CatchupCard({
   slot,
@@ -20,25 +21,27 @@ export function CatchupCard({
   onSkip: () => void;
 }) {
   return (
-    <section className="catchup" aria-label="Prayer check-in">
+    <section className="catchup" aria-label={t('Prayer check-in')}>
       <div className="catchup-icon">
         <Icon name="spark" size={18} />
       </div>
       <div className="catchup-body">
-        <p className="catchup-title">Did you pray {slot.name}?</p>
+        <p className="catchup-title">{t('Did you pray {name}?', { name: slot.name })}</p>
         <p className="catchup-text">
           {text ??
-            `Its window closed at ${fmtTime(slot.end, timeFormat)}. Either answer is fine — this just keeps your record honest.`}
+            t('Its window closed at {end}. Either answer is fine — this just keeps your record honest.', {
+              end: fmtTime(slot.end, timeFormat),
+            })}
         </p>
         <div className="catchup-actions">
           <button type="button" className="btn btn-solid" onClick={onYes}>
-            I did
+            {t('I did')}
           </button>
           <button type="button" className="btn btn-quiet" onClick={onNo}>
-            Not today
+            {t('Not today')}
           </button>
           <button type="button" className="btn btn-quiet" onClick={onSkip}>
-            Ask later
+            {t('Ask later')}
           </button>
         </div>
       </div>

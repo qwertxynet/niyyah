@@ -23,6 +23,7 @@ import { actions, useStore } from '../../domain/store';
 import type { Logs, Persisted, PrayerKey, Settings } from '../../domain/types';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
+import { t } from '../../i18n';
 
 const URGENT_MS = 20 * 60 * 1000;
 /** An after-prayer reflection is offered for this long after logging. */
@@ -95,7 +96,7 @@ export function Today() {
 
   if (!settings.place) {
     return (
-      <EmptyState title="Add a location">Niyyah needs your city to calculate prayer times on the device.</EmptyState>
+      <EmptyState title={t('Add a location')}>{t('Niyyah needs your city to calculate prayer times on the device.')}</EmptyState>
     );
   }
 
@@ -128,7 +129,7 @@ export function Today() {
     ui.toast(
       status === 'ontime'
         ? say('toastPrayed', voice, { name: current.name })
-        : `${current.name} · ${status === 'late' ? 'prayed late' : 'not prayed'}`,
+        : t(status === 'late' ? '{name} · prayed late' : '{name} · not prayed', { name: current.name }),
       () => actions.setStatus(cycle.active.key, current.key, null),
     );
   }
@@ -139,37 +140,36 @@ export function Today() {
   return (
     <div className="fade-in">
       <header style={{ marginBottom: 16 }}>
-        {name ? <p className="greet">Assalamu ‘alaykum, {name}</p> : null}
+        {name ? <p className="greet">{t('Assalamu ‘alaykum, {name}', { name })}</p> : null}
         <p className="hijri">{hijriDate(now)}</p>
         <h1 className="dateline">{fmtLongDate(now)}</h1>
         {settings.place.timezone !== deviceTimeZone() ? (
           <p className="setting-hint" style={{ marginTop: 4 }}>
-            Times shown in {settings.place.label} time ({settings.place.timezone})
+            {t('Times shown in {place} time ({zone})', { place: settings.place.label, zone: settings.place.timezone })}
           </p>
         ) : null}
       </header>
 
       {askAbout ? (
-        <section className="catchup ask-card" aria-label="Personalise Niyyah">
+        <section className="catchup ask-card" aria-label={t('Personalise Niyyah')}>
           <div className="catchup-icon" aria-hidden="true">
             <Icon name="spark" size={18} />
           </div>
           <div className="catchup-body">
-            <p className="catchup-title">Help Niyyah fit you</p>
+            <p className="catchup-title">{t('Help Niyyah fit you')}</p>
             <p className="catchup-text">
-              Three quick questions about you, ADHD and autism. You&apos;ll see exactly what changes, and can undo
-              any of it.
+              {t('Three quick questions about you, ADHD and autism. You’ll see exactly what changes, and can undo any of it.')}
             </p>
             <div className="catchup-actions">
               <button type="button" className="btn btn-solid" onClick={() => ui.openAboutYou()}>
-                Start
+                {t('Start')}
               </button>
               <button
                 type="button"
                 className="btn btn-quiet"
                 onClick={() => actions.updateSettings({ profileAsked: true })}
               >
-                Not now
+                {t('Not now')}
               </button>
             </div>
           </div>
@@ -186,13 +186,13 @@ export function Today() {
           timeFormat={settings.timeFormat}
           onYes={() => {
             actions.setStatus(catchup.dayKey, catchup.slot.key, 'late');
-            ui.toast(`${catchup.slot.name} marked as prayed`, () =>
+            ui.toast(t('{name} marked as prayed', { name: catchup.slot.name }), () =>
               actions.setStatus(catchup.dayKey, catchup.slot.key, null),
             );
           }}
           onNo={() => {
             actions.setStatus(catchup.dayKey, catchup.slot.key, 'missed');
-            ui.toast(`${catchup.slot.name} recorded`, () =>
+            ui.toast(t('{name} recorded', { name: catchup.slot.name }), () =>
               actions.setStatus(catchup.dayKey, catchup.slot.key, null),
             );
           }}
@@ -200,7 +200,7 @@ export function Today() {
         />
       ) : null}
 
-      <section className="hero" aria-label="Current prayer window">
+      <section className="hero" aria-label={t('Current prayer window')}>
         {showHeroWindow && current ? (
           <>
             <div className="hero-top">
@@ -214,7 +214,7 @@ export function Today() {
             <div className="hero-line">
               <h2 className="hero-name">
                 {current.name}
-                <span className="arabic">{current.arabic}</span>
+                <span className="arabic ar-dup">{current.arabic}</span>
               </h2>
               <span className={`countdown tnum${urgent ? ' is-urgent' : ''}`} role="timer" aria-live="off">
                 {fmtLeft(msLeft, settings.coarseTime)}
@@ -226,14 +226,14 @@ export function Today() {
 
             <div className="window">
               <div className="window-row">
-                <span>As of {fmtTime(now, settings.timeFormat)}</span>
-                <span className="tnum">{Math.round(pct)}% of the window gone</span>
+                <span>{t('As of {time}', { time: fmtTime(now, settings.timeFormat) })}</span>
+                <span className="tnum">{t('{pct}% of the window gone', { pct: Math.round(pct) })}</span>
               </div>
               {arc ? (
                 <SkyArc
                   arc={arc}
                   current={current.key}
-                  label={`${current.name}: ${Math.round(pct)}% of the window has passed`}
+                  label={t('{name}: {pct}% of the window has passed', { name: current.name, pct: Math.round(pct) })}
                 />
               ) : (
                 <div className="window-track">
@@ -241,13 +241,14 @@ export function Today() {
                 </div>
               )}
               <p className="window-foot">
-                {current.name} began {fmtTime(current.start, settings.timeFormat)}
+                {t('{name} began {time}', { name: current.name, time: fmtTime(current.start, settings.timeFormat) })}
               </p>
             </div>
 
             <div className="hero-actions">
               <button type="button" className="btn btn-primary" onClick={() => logCurrent('ontime')}>
-                <Icon name="check" size={17} strokeWidth={2.6} />I prayed {current.name}
+                <Icon name="check" size={17} strokeWidth={2.6} />
+                {t('I prayed {name}', { name: current.name })}
               </button>
             </div>
           </>
@@ -257,13 +258,13 @@ export function Today() {
               <span className="eyebrow">{say('heroNextEyebrow', voice)}</span>
               <span className="hero-badge">
                 <span className="pulse" aria-hidden="true" />
-                {currentStatus ? `${current?.name} logged` : 'All clear'}
+                {currentStatus ? t('{name} logged', { name: current?.name ?? '' }) : t('All clear')}
               </span>
             </div>
             <div className="hero-line">
               <h2 className="hero-name">
                 {next.slot.name}
-                <span className="arabic">{next.slot.arabic}</span>
+                <span className="arabic ar-dup">{next.slot.arabic}</span>
               </h2>
               <span className="countdown tnum" role="timer" aria-live="off">
                 {fmtLeft(next.at.getTime() - now.getTime(), settings.coarseTime)}
@@ -271,21 +272,21 @@ export function Today() {
             </div>
             <p className="hero-sub">
               {say('heroNextSub', voice, { name: next.slot.name, start: fmtTime(next.at, settings.timeFormat) })}
-              {next.slot.name === 'Fajr' && !settings.literal ? ' · tomorrow begins with Fajr' : ''}
+              {next.slot.key === 'fajr' && !settings.literal ? ` · ${t('tomorrow begins with Fajr')}` : ''}
             </p>
             <div className="window">
               {arc ? (
-                <SkyArc arc={arc} current={next.slot.key} label={`Next: ${next.slot.name}`} />
+                <SkyArc arc={arc} current={next.slot.key} label={t('Next: {name}', { name: next.slot.name })} />
               ) : null}
             </div>
           </>
         ) : (
-          <p className="hero-sub">No prayer times available for this location and date.</p>
+          <p className="hero-sub">{t('No prayer times available for this location and date.')}</p>
         )}
       </section>
 
       {reflect || (settings.learn && guidePrayer) ? (
-        <section className="next-steps" aria-label="Next steps">
+        <section className="next-steps" aria-label={t('Next steps')}>
           {reflect ? (
             <button
               type="button"
@@ -296,23 +297,27 @@ export function Today() {
                 <Icon name="book" size={17} />
               </span>
               <span className="next-text">
-                <b>{reflect.kind === 'reflection' ? `You prayed ${reflect.prayerName}` : kindMeta(reflect.kind).label}</b>
+                <b>
+                  {reflect.kind === 'reflection'
+                    ? t('You prayed {name}', { name: reflect.prayerName ?? '' })
+                    : kindMeta(reflect.kind).label}
+                </b>
                 <span>{promptFor(reflect.kind, reflect.dayKey, 0, reflect.prayerName)}</span>
               </span>
-              <Icon name="chevron" size={18} />
+              <Icon name="chevron" size={18} className="flip-rtl" />
             </button>
           ) : null}
           {settings.learn && guidePrayer ? (
-            <div className="next-guides" aria-label="Step-by-step guides">
+            <div className="next-guides" aria-label={t('Step-by-step guides')}>
               <button type="button" className="chip-btn" onClick={() => ui.openGuide({ kind: 'wudu' })}>
-                <Icon name="star" size={14} /> Wudu
+                <Icon name="star" size={14} /> {t('Wudu')}
               </button>
               <button
                 type="button"
                 className="chip-btn"
                 onClick={() => ui.openGuide({ kind: 'prayer', prayer: guidePrayer.key })}
               >
-                How to pray {guidePrayer.name} · {RAKAHS[guidePrayer.key]} rak{'\u2018'}ah
+                {t('How to pray {name} · {n} rak‘ah', { name: guidePrayer.name, n: RAKAHS[guidePrayer.key] })}
               </button>
             </div>
           ) : null}
@@ -321,23 +326,23 @@ export function Today() {
 
       {cycle.degraded ? (
         <div className="note warn" style={{ marginTop: 12 }}>
-          <b>Unusual daylight at this latitude.</b> Times today are estimates. A different high-latitude
-          rule in Settings may give a better result.
+          <b>{t('Unusual daylight at this latitude.')}</b>{' '}
+          {t('Times today are estimates. A different high-latitude rule in Settings may give a better result.')}
         </div>
       ) : null}
 
       {cycle.active.key !== cycle.today.key ? (
         <p className="setting-hint" style={{ marginTop: 12, textAlign: 'center' }}>
-          Still in yesterday&apos;s Isha window — the new day starts at Fajr.
+          {t('Still in yesterday’s Isha window — the new day starts at Fajr.')}
         </p>
       ) : null}
 
       <section className="section">
         <div className="section-head">
           <h2>
-            Today&apos;s <Term id="salah">prayers</Term>
+            {t('Today’s')} <Term id="salah">{t('prayers')}</Term>
           </h2>
-          <span className="meta tnum">{loggedCount} of 5 logged</span>
+          <span className="meta tnum">{t('{n} of 5 logged', { n: loggedCount })}</span>
         </div>
         <ul className="list">
           {cycle.active.slots.map((slot) => (
@@ -368,7 +373,7 @@ export function Today() {
         <section className="section">
           <div className="section-head">
             <h2>
-              <Term id="qada">Making up</Term>
+              <Term id="qada">{t('Making up')}</Term>
             </h2>
           </div>
           <QadaCard count={qada} />
@@ -376,7 +381,7 @@ export function Today() {
       ) : null}
 
       <p className="footnote">
-        Times calculated on this device with adhan · works without a signal
+        {t('Times calculated on this device with adhan · works without a signal')}
       </p>
     </div>
   );

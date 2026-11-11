@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { fmtHasanat, type DeedDef } from '../../domain/hasanat';
 import { buzz } from '../useCountUp';
 import { Icon } from './Icons';
+import { isArabic, t } from '../../i18n';
 
 /**
  * Full-screen dhikr counter: tap anywhere. Big target, haptic tick on every
@@ -75,18 +76,18 @@ export function TapCounter({
   // Portal to <body>: the screen's entrance animation would otherwise trap
   // position: fixed inside it.
   return createPortal(
-    <div className="tapper" role="dialog" aria-modal="true" aria-label={deed.title}>
+    <div className="tapper" role="dialog" aria-modal="true" aria-label={t(deed.title)}>
       <div className="tapper-top">
-        <button type="button" className="tapper-icon" onClick={onClose} aria-label="Close without saving">
+        <button type="button" className="tapper-icon" onClick={onClose} aria-label={t('Close without saving')}>
           <Icon name="close" size={20} />
         </button>
-        <span className="tapper-title">{deed.title}</span>
+        <span className="tapper-title">{t(deed.title)}</span>
         <button
           type="button"
           className="tapper-icon"
           onClick={() => setDone((value) => Math.max(0, value - 1))}
           disabled={done === 0}
-          aria-label="Undo one"
+          aria-label={t('Undo one')}
         >
           <Icon name="minus" size={20} />
         </button>
@@ -95,16 +96,14 @@ export function TapCounter({
       {finished ? (
         <div className="tapper-done">
           <div className="tapper-arabic">مَا شَاءَ ٱللَّٰهُ</div>
-          <p className="tapper-done-title">Complete</p>
-          <p className="tapper-done-sub">
-            ≈ +{fmtHasanat(estimate)} hasanat
-          </p>
+          <p className="tapper-done-title">{t('Complete')}</p>
+          <p className="tapper-done-sub">{t('≈ +{h} hasanat', { h: fmtHasanat(estimate) })}</p>
           <button type="button" className="btn btn-primary tapper-save" onClick={() => onSave(estimate, done, total)}>
-            Save
+            {t('Save')}
           </button>
         </div>
       ) : (
-        <button type="button" className="tapper-pad" onClick={tap} aria-label={`Count ${phase.label}. ${inPhase} of ${phase.count}`}>
+        <button type="button" className="tapper-pad" onClick={tap} aria-label={t('Count {what}. {n} of {total}', { what: isArabic() ? phase.arabic : phase.label, n: inPhase, total: phase.count })}>
           <svg className="tapper-ring" viewBox="0 0 260 260" aria-hidden="true">
             <circle cx="130" cy="130" r={r} className="tapper-track" />
             <circle
@@ -120,7 +119,7 @@ export function TapCounter({
           <span className="tapper-center">
             <span className="tapper-arabic">{phase.arabic}</span>
             <span className="tapper-count tnum">{inPhase}</span>
-            <span className="tapper-of tnum">of {phase.count}</span>
+            <span className="tapper-of tnum">{t('of {n}', { n: phase.count })}</span>
           </span>
         </button>
       )}
@@ -130,17 +129,20 @@ export function TapCounter({
           <div className="tapper-steps" aria-hidden="true">
             {phases.map((p, index) => (
               <span key={p.label} className={index < phaseIndex || finished ? 'is-done' : index === phaseIndex ? 'is-now' : ''}>
-                {p.label}
+                {isArabic() ? p.arabic : p.label}
               </span>
             ))}
           </div>
         ) : null}
         {!finished ? (
           <>
-            <p className="tapper-hint">Tap anywhere{done > 0 ? ` · ≈ +${fmtHasanat(earned)} so far` : ''}</p>
+            <p className="tapper-hint">
+              {t('Tap anywhere')}
+              {done > 0 ? ` · ${t('≈ +{h} so far', { h: fmtHasanat(earned) })}` : ''}
+            </p>
             {done > 0 ? (
               <button type="button" className="btn btn-ghost on-dark" onClick={() => onSave(earned, done, total)}>
-                Stop and save {done}
+                {t('Stop and save {n}', { n: done })}
               </button>
             ) : null}
           </>

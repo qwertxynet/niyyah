@@ -6,6 +6,7 @@ import {
   PrayerTimes,
   type CalculationParameters,
 } from 'adhan';
+import { isArabic, t } from '../i18n';
 import type { MethodKey, PrayerKey, Settings } from './types';
 
 export interface PrayerMeta {
@@ -14,12 +15,23 @@ export interface PrayerMeta {
   arabic: string;
 }
 
+/** `name` follows the interface language: "Fajr" in English, "الفجر" in Arabic. */
+function prayer(key: PrayerKey, english: string, arabic: string): PrayerMeta {
+  return {
+    key,
+    arabic,
+    get name() {
+      return isArabic() ? arabic : english;
+    },
+  };
+}
+
 export const PRAYERS: PrayerMeta[] = [
-  { key: 'fajr', name: 'Fajr', arabic: 'الفجر' },
-  { key: 'dhuhr', name: 'Dhuhr', arabic: 'الظهر' },
-  { key: 'asr', name: 'Asr', arabic: 'العصر' },
-  { key: 'maghrib', name: 'Maghrib', arabic: 'المغرب' },
-  { key: 'isha', name: 'Isha', arabic: 'العشاء' },
+  prayer('fajr', 'Fajr', 'الفجر'),
+  prayer('dhuhr', 'Dhuhr', 'الظهر'),
+  prayer('asr', 'Asr', 'العصر'),
+  prayer('maghrib', 'Maghrib', 'المغرب'),
+  prayer('isha', 'Isha', 'العشاء'),
 ];
 
 export interface MethodMeta {
@@ -59,7 +71,8 @@ const BUILDERS: Record<MethodKey, () => CalculationParameters> = {
 };
 
 export function methodLabel(id: MethodKey): string {
-  return METHODS.find((m) => m.id === id)?.label ?? id;
+  const label = METHODS.find((m) => m.id === id)?.label;
+  return label ? t(label) : id;
 }
 
 export function prayerMeta(key: PrayerKey): PrayerMeta {
@@ -207,7 +220,7 @@ export function prayerDay(day: Date, settings: Settings): PrayerDay {
   const slots = PRAYERS.map((meta, index) => {
     const start = starts[meta.key];
     const end = index < PRAYERS.length - 1 ? starts[PRAYERS[index + 1].key] : nextFajr;
-    return { ...meta, start, end };
+    return { key: meta.key, name: meta.name, arabic: meta.arabic, start, end };
   });
 
   return { day: midnight, key: dateKey(midnight), slots, degraded: times.invalid };
@@ -257,12 +270,12 @@ export function cycleAt(now: Date, settings: Settings): Cycle {
 export function fmtLeft(ms: number, coarse: boolean): string {
   if (!coarse) return formatOffset(ms);
   if (!Number.isFinite(ms)) return '—';
-  if (ms < 60_000) return 'under a minute';
+  if (ms < 60_000) return t('under a minute');
   const minutes = Math.ceil(ms / 60_000);
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  if (h > 0) return m > 0 ? `${h} h ${`${m}`.padStart(2, '0')} min` : `${h} h`;
-  return `${m} min`;
+  if (h > 0) return m > 0 ? t('{h} h {m} min', { h, m: `${m}`.padStart(2, '0') }) : t('{h} h', { h });
+  return t('{m} min', { m });
 }
 
 export function formatOffset(ms: number): string {
@@ -271,7 +284,7 @@ export function formatOffset(ms: number): string {
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
   const s = total % 60;
-  if (h > 0) return `${h}h ${`${m}`.padStart(2, '0')}m`;
-  if (m > 0) return `${m}m ${`${s}`.padStart(2, '0')}s`;
-  return `${s}s`;
+  if (h > 0) return t('{h}h {m}m', { h, m: `${m}`.padStart(2, '0') });
+  if (m > 0) return t('{m}m {s}s', { m, s: `${s}`.padStart(2, '0') });
+  return t('{s}s', { s });
 }

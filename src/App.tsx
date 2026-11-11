@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { setDisplayTimeZone } from './domain/format';
-import { setLanguage } from './i18n';
+import { setLanguage, t } from './i18n';
 import { buildReminderEvents } from './domain/reminders';
 import { syncSchedule, type Health } from './domain/notify';
 import { actions, useStore } from './domain/store';
@@ -124,16 +124,16 @@ export function App() {
       <div className="shell">
         <div className="brand">
           <span className="wordmark">
-            <Icon name="moon" size={17} /> Niyyah
+            <Icon name="moon" size={17} /> {t('Niyyah')}
           </span>
           <button
             type="button"
             className="placechip"
             onClick={() => setTab('settings')}
-            aria-label={`Location: ${settings.place?.label ?? 'not set'}. Open settings`}
+            aria-label={t('Location: {place}. Open settings', { place: settings.place?.label ?? t('not set') })}
           >
             <Icon name="pin" size={14} />
-            <span>{settings.place?.label ?? 'Set location'}</span>
+            <span>{settings.place?.label ?? t('Set location')}</span>
           </button>
         </div>
 
@@ -152,7 +152,7 @@ export function App() {
       {aboutOpen ? (
         <AboutYouOverlay
           settings={settings}
-          skipLabel="Not now"
+          skipLabel={t('Not now')}
           onSkip={() => {
             if (!settings.profile) actions.updateSettings({ profileAsked: true });
             setAboutOpen(false);
@@ -161,7 +161,7 @@ export function App() {
             actions.applyProfile(profile, patch);
             setAboutOpen(false);
             setTab('settings');
-            setToast({ id: Date.now(), message: 'Saved. Every change is listed under Comfort & support.' });
+            setToast({ id: Date.now(), message: t('Saved. Every change is listed under Comfort & support.') });
           }}
         />
       ) : null}
@@ -180,10 +180,10 @@ export function App() {
                 setToast(null);
               }}
             >
-              Undo
+              {t('Undo')}
             </button>
           ) : (
-            <button type="button" onClick={() => setToast(null)} aria-label="Dismiss">
+            <button type="button" onClick={() => setToast(null)} aria-label={t('Dismiss')}>
               <Icon name="close" size={15} />
             </button>
           )}

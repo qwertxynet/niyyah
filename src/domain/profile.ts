@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { AdaptKey, Applied, FaithKey, NeedKey, NeuroKey, Profile, Settings, ToneKey } from './types';
 
 /*
@@ -47,8 +48,8 @@ export function suggestedNeeds(neuro: NeuroKey[]): NeedKey[] {
 }
 
 export function neuroLabel(neuro: NeuroKey[]): string {
-  if (neuro.includes('autistic') && neuro.includes('adhd')) return 'AuDHD';
-  return neuro.map((key) => NEURO_OPTIONS.find((option) => option.id === key)?.label ?? key).join(', ');
+  if (neuro.includes('autistic') && neuro.includes('adhd')) return t('AuDHD');
+  return neuro.map((key) => t(NEURO_OPTIONS.find((option) => option.id === key)?.label ?? key)).join(t(', '));
 }
 
 /** Every adaptation, in the order it is listed to the user. */

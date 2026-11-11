@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './Icons';
+import { t } from '../../i18n';
 
 interface SheetProps {
   open: boolean;
@@ -50,7 +51,7 @@ export function Sheet({ open, onClose, title, children, labelledBy }: SheetProps
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="sheet-grab" aria-hidden="true" />
-        <button type="button" className="sheet-close" onClick={onClose} aria-label="Close" style={{ float: 'right' }}>
+        <button type="button" className="sheet-close" onClick={onClose} aria-label={t('Close')}>
           <Icon name="close" size={18} />
         </button>
         {children}

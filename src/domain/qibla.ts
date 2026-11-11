@@ -1,4 +1,5 @@
 import { Coordinates, Qibla } from 'adhan';
+import { isArabic } from '../i18n';
 
 /** The Kaaba, Masjid al-Haram. */
 export const KAABA = { lat: 21.4225, lng: 39.8262 };
@@ -26,13 +27,22 @@ const POINT_NAMES: Record<string, string> = {
   W: 'west',
 };
 
-/** "ESE" for 112°. */
+/** Eight Arabic directions, north first: the usual precision in Arabic. */
+const AR_POINTS = ['شمال', 'شمال شرق', 'شرق', 'جنوب شرق', 'جنوب', 'جنوب غرب', 'غرب', 'شمال غرب'];
+
+function arabicPoint(deg: number): string {
+  return AR_POINTS[Math.round(normalize(deg) / 45) % 8];
+}
+
+/** "ESE" for 112° ("جنوب شرق" in Arabic). */
 export function compassPoint(deg: number): string {
+  if (isArabic()) return arabicPoint(deg);
   return POINTS[Math.round(normalize(deg) / 22.5) % 16];
 }
 
 /** "east-southeast" for screen readers. */
 export function compassPointLong(deg: number): string {
+  if (isArabic()) return arabicPoint(deg);
   const point = compassPoint(deg);
   if (point.length === 1) return POINT_NAMES[point];
   if (point.length === 2) return `${POINT_NAMES[point[0]]}${POINT_NAMES[point[1]]}`;

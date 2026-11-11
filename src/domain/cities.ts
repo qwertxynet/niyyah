@@ -1,3 +1,5 @@
+import { language } from '../i18n';
+
 // Search runs entirely against the bundled cities.json — no network, ever.
 // Row shape: [name, ascii, country, lat, lng, population, aliases|0, timezone]
 
@@ -24,14 +26,22 @@ function fold(value: string): string {
     .toLowerCase();
 }
 
-const regionNames =
-  typeof Intl !== 'undefined' && 'DisplayNames' in Intl
-    ? new Intl.DisplayNames(['en'], { type: 'region' })
-    : null;
+const regionNames = new Map<string, Intl.DisplayNames | null>();
+
+/** Country names in the interface language ("United Kingdom" / "المملكة المتحدة"). */
+function namesFor(lang: string): Intl.DisplayNames | null {
+  if (!regionNames.has(lang)) {
+    regionNames.set(
+      lang,
+      typeof Intl !== 'undefined' && 'DisplayNames' in Intl ? new Intl.DisplayNames([lang], { type: 'region' }) : null,
+    );
+  }
+  return regionNames.get(lang) ?? null;
+}
 
 export function countryName(code: string): string {
   try {
-    return regionNames?.of(code) ?? code;
+    return namesFor(language())?.of(code) ?? code;
   } catch {
     return code;
   }

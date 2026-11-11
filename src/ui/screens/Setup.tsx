@@ -7,6 +7,8 @@ import { Segmented, Toggle } from '../components/Controls';
 import { Icon } from '../components/Icons';
 import { LocationPicker } from '../components/LocationPicker';
 import { AboutYou } from './AboutYou';
+import { t } from '../../i18n';
+import { LanguageSwitch } from '../components/LanguageSwitch';
 
 const HIGH_LATITUDES: { value: HighLatKey; label: string }[] = [
   { value: 'auto', label: 'Method default' },
@@ -42,7 +44,7 @@ export function Setup() {
     return (
       <AboutYou
         settings={draft}
-        skipLabel="Skip questions"
+        skipLabel={t('Skip questions')}
         onSkip={() => {
           patch({ profileAsked: true });
           setAboutDone(true);
@@ -59,22 +61,24 @@ export function Setup() {
     <div className="setup">
       <div className="setup-top">
         <span className="wordmark">
-          <Icon name="moon" size={17} /> Niyyah
+          <Icon name="moon" size={17} /> {t('Niyyah')}
         </span>
-        <div className="dots" aria-label={`Step ${step + 1} of 4`} role="status">
-          {[0, 1, 2, 3].map((index) => (
-            <i key={index} className={index === step ? 'is-active' : undefined} />
-          ))}
+        <div className="setup-top-end">
+          <LanguageSwitch onChange={(language) => patch({ language })} />
+          <div className="dots" aria-label={t('Step {n} of {total}', { n: step + 1, total: 4 })} role="status">
+            {[0, 1, 2, 3].map((index) => (
+              <i key={index} className={index === step ? 'is-active' : undefined} />
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="setup-body fade-in" key={step}>
         {step === 0 ? (
           <>
-            <h1>Where are you praying from?</h1>
+            <h1>{t('Where are you praying from?')}</h1>
             <p className="lede">
-              Niyyah calculates every time on your device. Your location never leaves it, and the app
-              works with no signal at all.
+              {t('Niyyah calculates every time on your device. Your location never leaves it, and the app works with no signal at all.')}
             </p>
             <LocationPicker value={draft.place} onChange={(place) => patch({ place })} />
           </>
@@ -82,10 +86,9 @@ export function Setup() {
 
         {step === 1 ? (
           <>
-            <h1>Which calculation method?</h1>
+            <h1>{t('Which calculation method?')}</h1>
             <p className="lede">
-              Schools differ by a degree or two, which can shift Fajr by a few minutes. Follow whatever
-              your local mosque uses — you can change this later.
+              {t('Schools differ by a degree or two, which can shift Fajr by a few minutes. Follow whatever your local mosque uses — you can change this later.')}
             </p>
             <div className="option-list">
               {METHODS.map((method) => (
@@ -97,8 +100,8 @@ export function Setup() {
                   onClick={() => patch({ method: method.id as MethodKey })}
                 >
                   <span className="option-text">
-                    <b>{method.label}</b>
-                    <span>{method.hint}</span>
+                    <b>{t(method.label)}</b>
+                    <span>{t(method.hint)}</span>
                   </span>
                   {draft.method === method.id ? (
                     <span className="option-mark">
@@ -113,25 +116,24 @@ export function Setup() {
 
         {step === 2 ? (
           <>
-            <h1>Asr and long summer days</h1>
+            <h1>{t('Asr and long summer days')}</h1>
             <p className="lede">
-              The madhab decides when Asr begins. The high-latitude rule only matters in places where
-              the sun barely sets.
+              {t('The madhab decides when Asr begins. The high-latitude rule only matters in places where the sun barely sets.')}
             </p>
             <div className="field">
-              <label>Asr madhab</label>
+              <label>{t('Asr madhab')}</label>
               <Segmented<MadhabKey>
                 value={draft.madhab}
                 onChange={(madhab) => patch({ madhab })}
-                label="Asr madhab"
+                label={t('Asr madhab')}
                 options={[
-                  { value: 'shafi', label: 'Shafi' },
-                  { value: 'hanafi', label: 'Hanafi' },
+                  { value: 'shafi', label: t('Shafi') },
+                  { value: 'hanafi', label: t('Hanafi') },
                 ]}
               />
             </div>
             <div className="field">
-              <label htmlFor="highlat">High latitude rule</label>
+              <label htmlFor="highlat">{t('High latitude rule')}</label>
               <select
                 id="highlat"
                 className="select"
@@ -140,35 +142,33 @@ export function Setup() {
               >
                 {HIGH_LATITUDES.map((rule) => (
                   <option key={rule.value} value={rule.value}>
-                    {rule.label}
+                    {t(rule.label)}
                   </option>
                 ))}
               </select>
             </div>
             <div className="note">
-              Not sure? Leave it on <b>middle of the night</b> — it works well in northern Europe,
-              Canada and the UK.
+              {t('Not sure? Leave it on middle of the night — it works well in northern Europe, Canada and the UK.')}
             </div>
           </>
         ) : null}
 
         {step === 3 ? (
           <>
-            <h1>A gentle nudge?</h1>
+            <h1>{t('A gentle nudge?')}</h1>
             <p className="lede">
-              Niyyah can alert you at the adhan and warn you before a window closes. Nothing noisy, and
-              you can turn it off any time.
+              {t('Niyyah can alert you at the adhan and warn you before a window closes. Nothing noisy, and you can turn it off any time.')}
             </p>
             <div className="card" style={{ display: 'grid', gap: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14 }}>
                 <div>
-                  <div className="setting-label">Remind me</div>
-                  <div className="setting-hint">Adhan and pre-alert notifications.</div>
+                  <div className="setting-label">{t('Remind me')}</div>
+                  <div className="setting-hint">{t('Adhan and pre-alert notifications.')}</div>
                 </div>
                 <Toggle
                   checked={draft.reminders}
                   onChange={(reminders) => patch({ reminders })}
-                  label="Remind me"
+                  label={t('Remind me')}
                 />
               </div>
               {draft.reminders ? (
@@ -186,7 +186,7 @@ export function Setup() {
                         marginBottom: 7,
                       }}
                     >
-                      Pre-alert
+                      {t('Pre-alert')}
                     </label>
                     <select
                       id="prealert"
@@ -194,28 +194,28 @@ export function Setup() {
                       value={String(draft.preAlert)}
                       onChange={(event) => patch({ preAlert: Number(event.target.value) })}
                     >
-                      <option value="0">Off — only at the adhan</option>
+                      <option value="0">{t('Off — only at the adhan')}</option>
                       {[5, 10, 15, 20, 30].map((minutes) => (
                         <option key={minutes} value={minutes}>
-                          {minutes} minutes before
+                          {t('{n} minutes before', { n: minutes })}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14 }}>
                     <div>
-                      <div className="setting-label">Sound</div>
-                      <div className="setting-hint">Silent nudges if this is off.</div>
+                      <div className="setting-label">{t('Sound')}</div>
+                      <div className="setting-hint">{t('Silent nudges if this is off.')}</div>
                     </div>
-                    <Toggle checked={draft.sound} onChange={(sound) => patch({ sound })} label="Sound" />
+                    <Toggle checked={draft.sound} onChange={(sound) => patch({ sound })} label={t('Sound')} />
                   </div>
                 </>
               ) : null}
             </div>
             <p className="setting-hint" style={{ marginTop: 14 }}>
               {draft.reminders
-                ? 'Your device will ask for notification permission next. Niyyah asks once.'
-                : 'You can switch reminders on later in Settings.'}
+                ? t('Your device will ask for notification permission next. Niyyah asks once.')
+                : t('You can switch reminders on later in Settings.')}
             </p>
           </>
         ) : null}
@@ -224,16 +224,16 @@ export function Setup() {
       <div className="setup-foot">
         {step > 0 ? (
           <button type="button" className="btn btn-quiet" onClick={() => setStep(step - 1)} disabled={busy}>
-            Back
+            {t('Back')}
           </button>
         ) : (
           <button type="button" className="btn btn-quiet" onClick={() => setAboutDone(false)} disabled={busy}>
-            Back
+            {t('Back')}
           </button>
         )}
         {step > 0 && step < 3 ? (
           <button type="button" className="btn btn-quiet" onClick={() => setStep(3)} disabled={busy}>
-            Skip
+            {t('Skip')}
           </button>
         ) : null}
         {step < 3 ? (
@@ -244,11 +244,11 @@ export function Setup() {
             disabled={!canContinue}
             onClick={() => setStep(step + 1)}
           >
-            Continue <Icon name="arrowRight" size={17} />
+            {t('Continue')} <Icon name="arrowRight" size={17} className="flip-rtl" />
           </button>
         ) : (
           <button type="button" className="btn btn-solid" style={{ flex: 1 }} onClick={finish} disabled={busy}>
-            {busy ? 'Setting up…' : 'Start'}
+            {busy ? t('Setting up…') : t('Start')}
           </button>
         )}
       </div>

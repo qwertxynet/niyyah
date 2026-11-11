@@ -7,6 +7,14 @@ import { useStore } from '../../domain/store';
 import type { LogStatus } from '../../domain/types';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
+import { isArabic, t } from '../../i18n';
+
+/** Arabic calendars abbreviate weekdays to one letter, Sunday first. */
+const AR_DAYS = ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'];
+
+function dayLetter(date: Date): string {
+  return isArabic() ? AR_DAYS[date.getDay()] : fmtWeekdayShort(date).slice(0, 2);
+}
 
 function cellClass(status: LogStatus | undefined, future: boolean): string {
   if (future) return 'cell is-future';
@@ -24,7 +32,7 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
 
   if (!settings.place) {
     return (
-      <EmptyState title="No location yet">Add a city in Settings to see your week.</EmptyState>
+      <EmptyState title={t('No location yet')}>{t('Add a city in Settings to see your week.')}</EmptyState>
     );
   }
 
@@ -51,31 +59,29 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
   return (
     <div className="fade-in">
       {embedded ? (
-        <p className="setting-hint week-note">A record, not a scoreboard. Tap any cell to correct it.</p>
+        <p className="setting-hint week-note">{t('A record, not a scoreboard. Tap any cell to correct it.')}</p>
       ) : (
         <header className="screen-head">
-          <h1>Your week</h1>
-          <p>A record, not a scoreboard. Tap any cell to correct it.</p>
+          <h1>{t('Your week')}</h1>
+          <p>{t('A record, not a scoreboard. Tap any cell to correct it.')}</p>
         </header>
       )}
 
       <div className="week-summary">
         <strong className="tnum">{done}</strong>
-        <span>
-          of {expected} prayers prayed this week
-        </span>
+        <span>{t('of {n} prayers prayed this week', { n: expected })}</span>
       </div>
       <div className="progress" aria-hidden="true">
         <i style={{ width: `${pct}%` }} />
       </div>
 
-      <div className="grid" role="grid" aria-label="Prayers over the last seven days">
+      <div className="grid" role="grid" aria-label={t('Prayers over the last seven days')}>
         <div className="grid-label" aria-hidden="true" />
         {days.map((day) => {
           const isToday = day.key === todayKey;
           return (
             <div key={`head-${day.key}`} className={`grid-day${isToday ? ' is-today' : ''}`}>
-              {fmtWeekdayShort(day.day).slice(0, 2)}
+              {dayLetter(day.day)}
               <em className="tnum">{fmtDayNumber(day.day)}</em>
             </div>
           );
@@ -83,7 +89,7 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
 
         {PRAYERS.map((prayer) => (
           <div key={prayer.key} style={{ display: 'contents' }}>
-            <div className="grid-label">{prayer.name.slice(0, 3)}</div>
+            <div className="grid-label">{isArabic() ? prayer.name : prayer.name.slice(0, 3)}</div>
             {days.map((day) => {
               const slot = day.slots.find((entry) => entry.key === prayer.key);
               const status = logs[day.key]?.[prayer.key]?.s;
@@ -95,7 +101,11 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
                   className={cellClass(status, future)}
                   disabled={future}
                   onClick={() => ui.openPrayer(day.key, prayer.key)}
-                  aria-label={`${prayer.name} on ${day.key}: ${future ? 'not yet' : statusText(status)}`}
+                  aria-label={t('{name} on {day}: {status}', {
+                    name: prayer.name,
+                    day: day.key,
+                    status: future ? t('not yet') : statusText(status),
+                  })}
                 >
                   {status === 'ontime' ? (
                     <Icon name="check" size={15} strokeWidth={2.6} />
@@ -116,24 +126,24 @@ export function Week({ embedded = false }: { embedded?: boolean }) {
       <div className="legend">
         <span>
           <i style={{ background: 'var(--green-700)' }} />
-          Prayed
+          {t('Prayed')}
         </span>
         <span>
           <i style={{ background: 'color-mix(in srgb, var(--gold) 45%, transparent)' }} />
-          Late
+          {t('Late')}
         </span>
         <span>
           <i style={{ background: 'var(--surface-3)' }} />
-          Not prayed
+          {t('Not prayed')}
         </span>
         <span>
           <i style={{ border: '1px dashed var(--line-strong)' }} />
-          Not logged
+          {t('Not logged')}
         </span>
       </div>
 
       <p className="footnote">
-        Days run from Fajr to Fajr, so a late Isha still belongs to the day it started.
+        {t('Days run from Fajr to Fajr, so a late Isha still belongs to the day it started.')}
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { Settings } from './types';
 
 /*
@@ -102,6 +103,6 @@ export type CopyKey = keyof typeof COPY;
 
 export function say(key: CopyKey, settings: Pick<Settings, 'tone' | 'literal'>, vars: Record<string, string | number> = {}): string {
   const voice: Voice = COPY[key];
-  const text = settings.literal ? voice.literal : voice[settings.tone] ?? voice.gentle;
+  const text = t(settings.literal ? voice.literal : voice[settings.tone] ?? voice.gentle);
   return text.replace(/\{(\w+)\}/g, (_, name: string) => String(vars[name] ?? ''));
 }

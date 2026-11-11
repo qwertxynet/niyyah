@@ -116,6 +116,13 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         String status;
     }
 
+    /** Labels in the app's language, sent with the schedule; English when missing. */
+    private static JSONObject labels = null;
+
+    private static String label(String key, String fallback) {
+        return labels != null ? labels.optString(key, fallback) : fallback;
+    }
+
     /** Draws one widget and returns the wall-clock time it next needs redrawing. */
     private static long render(Context context, AppWidgetManager manager, int widgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_prayer);
@@ -134,6 +141,7 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
                 JSONObject root = new JSONObject(json);
                 place = root.optString("place", "");
                 coarse = root.optBoolean("coarse", false);
+                labels = root.optJSONObject("labels");
                 JSONArray days = root.getJSONArray("days");
                 for (int d = 0; d < days.length() && next == null; d++) {
                     JSONArray slots = days.getJSONObject(d).getJSONArray("slots");
@@ -162,7 +170,8 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         views.setViewVisibility(R.id.w_content, View.VISIBLE);
         views.setViewVisibility(R.id.w_empty, View.GONE);
 
-        views.setTextViewText(R.id.w_label, place.isEmpty() ? "Now" : "Now · " + place);
+        String nowLabel = label("now", "Now");
+        views.setTextViewText(R.id.w_label, place.isEmpty() ? nowLabel : nowLabel + " · " + place);
         views.setTextViewText(R.id.w_name, current.name);
         views.setTextViewText(R.id.w_arabic, current.arabic);
 
@@ -182,13 +191,13 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         String format;
         if (logged && next != null) {
             target = next.start;
-            format = next.name + " in %s";
+            format = label("nextIn", "{name} in %s").replace("{name}", next.name);
             views.setTextViewText(R.id.w_status, statusLabel(current.status));
             views.setViewVisibility(R.id.w_status, View.VISIBLE);
             boundary = Math.min(boundary, next.start);
         } else {
             target = current.end;
-            format = "%s left";
+            format = label("left", "%s left");
             views.setViewVisibility(R.id.w_status, View.GONE);
             if (!amber) boundary = Math.min(boundary, current.end - AMBER_MS);
         }
@@ -243,12 +252,16 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
 
     /** "1 h 05 min", "12 min", "under a minute" — matches fmtLeft() in the app. */
     private static String coarseLeft(long ms) {
-        if (ms < 60_000L) return "under a minute";
+        if (ms < 60_000L) return label("under", "under a minute");
         long minutes = (ms + 59_999L) / 60_000L;
         long h = minutes / 60;
         long m = minutes % 60;
-        if (h > 0) return m > 0 ? String.format(java.util.Locale.US, "%d h %02d min", h, m) : h + " h";
-        return m + " min";
+        if (h > 0) {
+            return m > 0
+                ? String.format(java.util.Locale.US, label("hm", "%d h %02d min"), h, m)
+                : String.format(java.util.Locale.US, label("h", "%d h"), h);
+        }
+        return String.format(java.util.Locale.US, label("m", "%d min"), m);
     }
 
     private static void showEmpty(RemoteViews views, Context context) {
@@ -272,11 +285,11 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
     private static String statusLabel(String status) {
         switch (status) {
             case "ontime":
-                return "Prayed";
+                return label("ontime", "Prayed");
             case "late":
-                return "Prayed late";
+                return label("late", "Prayed late");
             case "missed":
-                return "Not today";
+                return label("missed", "Not today");
             default:
                 return "";
         }

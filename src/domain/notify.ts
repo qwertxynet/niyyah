@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { t } from '../i18n';
 import type { ReminderEvent } from './reminders';
 
 export type Platform = 'android' | 'windows' | 'web';
@@ -25,13 +26,13 @@ export const platformLabel =
 export function permissionLabel(state: PermissionState): string {
   switch (state) {
     case 'granted':
-      return 'Allowed';
+      return t('Allowed');
     case 'denied':
-      return 'Blocked';
+      return t('Blocked');
     case 'unsupported':
-      return 'Not available';
+      return t('Not available');
     default:
-      return 'Not asked yet';
+      return t('Not asked yet');
   }
 }
 
@@ -146,8 +147,8 @@ export async function syncSchedule(events: ReminderEvent[]): Promise<Health> {
 
       await LocalNotifications.createChannel({
         id: 'prayer',
-        name: 'Prayer times',
-        description: 'Adhan and pre-alerts',
+        name: t('Prayer times'),
+        description: t('Adhan and pre-alerts'),
         importance: 5,
         vibration: true,
       }).catch(() => undefined);
@@ -238,8 +239,8 @@ export async function sendTestNotification(): Promise<{ ok: boolean; message: st
         notifications: [
           {
             id: 9001,
-            title: 'Niyyah test',
-            body: 'This is what a prayer reminder will look like.',
+            title: t('Niyyah test'),
+            body: t('This is what a prayer reminder will look like.'),
             channelId: 'prayer',
             schedule: { at, allowWhileIdle: true },
           },
@@ -263,7 +264,7 @@ export async function sendTestNotification(): Promise<{ ok: boolean; message: st
   const permission = await ensurePermission();
   if (permission !== 'granted') return { ok: false, message: 'Your browser has notifications blocked for this site.' };
   try {
-    new Notification('Niyyah test', { body: 'This is what a prayer reminder will look like.' });
+    new Notification(t('Niyyah test'), { body: t('This is what a prayer reminder will look like.') });
     return { ok: true, message: 'Sent. Browser notifications only arrive while Niyyah is open.' };
   } catch {
     return { ok: false, message: 'The browser refused to show a notification.' };

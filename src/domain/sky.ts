@@ -183,8 +183,8 @@ export function dayArc(now: Date, settings: Settings, active: { day: Date; slots
     const to = isha.end.getTime();
     return {
       marks: [
-        { key: 'isha', name: 'Isha', f: 0 },
-        { key: 'fajr', name: 'Fajr', f: 1 },
+        { key: 'isha', name: isha.name, f: 0 },
+        { key: 'fajr', name: fajr.name, f: 1 },
       ],
       now: Math.min(1, Math.max(0, (ms - from) / Math.max(1, to - from))),
       night: true,

@@ -38,14 +38,26 @@ function fill(text: string, vars?: Vars): string {
   return text.replace(/\{(\w+)\}/g, (whole, key: string) => (key in vars ? String(vars[key]) : whole));
 }
 
+const ARABIC_LETTER = /[\u0600-\u06FF]/;
+
 export function t(en: string, vars?: Vars): string {
-  if (current === 'en') return fill(en, vars);
+  // Already Arabic (a name, or a string translated earlier): nothing to look up.
+  if (current === 'en' || ARABIC_LETTER.test(en)) return fill(en, vars);
   const ar = AR[en];
   if (ar === undefined && import.meta.env.DEV) {
     missing.add(en);
     (window as unknown as { __niyyahMissing?: string[] }).__niyyahMissing = [...missing];
   }
   return fill(ar ?? en, vars);
+}
+
+/**
+ * A word whose Arabic depends on where it is used: `tc('Light', 'theme')` looks
+ * up "Light#theme" first, so the light theme and a light mood can differ.
+ */
+export function tc(en: string, context: string): string {
+  if (current === 'ar' && AR[`${en}#${context}`] !== undefined) return AR[`${en}#${context}`];
+  return t(en);
 }
 
 /**

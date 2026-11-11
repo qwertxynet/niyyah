@@ -4,12 +4,15 @@ import { useStore } from '../../domain/store';
 import { buzz } from '../useCountUp';
 import { useHeading } from '../useHeading';
 import { EmptyState } from '../components/EmptyState';
+import { isArabic, t } from '../../i18n';
 
 const C = 160;
 /** Within this many degrees the phone counts as facing the Qibla. */
 const ALIGNED_DEG = 4;
 
 const fmtKm = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+/** Arabic compass letters: shamal, sharq, janub, gharb. */
+const CARDINAL_AR: Record<string, string> = { N: 'ش', E: 'ق', S: 'ج', W: 'غ' };
 
 function polar(r: number, deg: number): [number, number] {
   const rad = ((deg - 90) * Math.PI) / 180;
@@ -72,7 +75,7 @@ function DialFace() {
             className={label === 'N' ? 'qd-cardinal qd-north' : 'qd-cardinal'}
             transform={`rotate(${deg} ${x} ${y})`}
           >
-            {label}
+            {isArabic() ? CARDINAL_AR[label] : label}
           </text>
         );
       })}
@@ -123,7 +126,7 @@ export function Qibla() {
 
   if (!place) {
     return (
-      <EmptyState title="No location yet">Add a city in Settings to find the Qibla.</EmptyState>
+      <EmptyState title={t('No location yet')}>{t('Add a city in Settings to find the Qibla.')}</EmptyState>
     );
   }
 
@@ -133,31 +136,34 @@ export function Qibla() {
   let headline: string;
   let detail: string;
   if (aligned) {
-    headline = 'You are facing the Qibla';
-    detail = 'Hold steady — the Kaaba is straight ahead.';
+    headline = t('You are facing the Qibla');
+    detail = t('Hold steady — the Kaaba is straight ahead.');
   } else if (turn !== null) {
     const amount = Math.round(Math.abs(turn));
-    headline = `Turn ${turn > 0 ? 'right' : 'left'} ${amount}°`;
-    detail = 'Keep the phone flat and turn until the Kaaba reaches the top marker.';
+    headline = turn > 0 ? t('Turn right {n}°', { n: amount }) : t('Turn left {n}°', { n: amount });
+    detail = t('Keep the phone flat and turn until the Kaaba reaches the top marker.');
   } else if (state === 'needs-permission') {
-    headline = `${deg}° from north`;
-    detail = 'Allow motion access to turn the dial with your phone.';
+    headline = t('{n}° from north', { n: deg });
+    detail = t('Allow motion access to turn the dial with your phone.');
   } else if (state === 'denied') {
-    headline = `${deg}° from north`;
-    detail = 'Motion access was refused, so the dial stays fixed with north at the top.';
+    headline = t('{n}° from north', { n: deg });
+    detail = t('Motion access was refused, so the dial stays fixed with north at the top.');
   } else if (state === 'checking') {
-    headline = 'Finding north…';
-    detail = 'Lay your phone flat for a moment.';
+    headline = t('Finding north…');
+    detail = t('Lay your phone flat for a moment.');
   } else {
-    headline = `${deg}° from north`;
-    detail = `No compass on this device. With north at the top, face ${deg}° clockwise — ${compassPointLong(bearing)}.`;
+    headline = t('{n}° from north', { n: deg });
+    detail = t('No compass on this device. With north at the top, face {n}° clockwise — {point}.', {
+      n: deg,
+      point: compassPointLong(bearing),
+    });
   }
 
   return (
     <div className="qibla fade-in">
       <header className="screen-head">
-        <h1>Qibla</h1>
-        <p>Direction of the Kaaba from {city}</p>
+        <h1>{t('Qibla')}</h1>
+        <p>{t('Direction of the Kaaba from {city}', { city })}</p>
       </header>
 
       <section className={aligned ? 'compass is-aligned' : live ? 'compass is-live' : 'compass'}>
@@ -170,7 +176,7 @@ export function Qibla() {
             className="dial"
             viewBox="0 0 320 320"
             role="img"
-            aria-label={`Compass. The Qibla is ${deg} degrees from north, ${compassPointLong(bearing)}.`}
+            aria-label={t('Compass. The Qibla is {n} degrees from north, {point}.', { n: deg, point: compassPointLong(bearing) })}
           >
             <defs>
               <linearGradient id="qd-needle" x1="0" y1="1" x2="0" y2="0">
@@ -214,7 +220,7 @@ export function Qibla() {
           <p className="compass-detail">{detail}</p>
           {state === 'needs-permission' || state === 'denied' ? (
             <button type="button" className="compass-btn" onClick={request}>
-              Use compass
+              {t('Use compass')}
             </button>
           ) : null}
         </div>
@@ -222,26 +228,27 @@ export function Qibla() {
 
       <div className="qibla-stats">
         <div className="card qibla-stat">
-          <span className="qibla-stat-label">Bearing</span>
+          <span className="qibla-stat-label">{t('Bearing')}</span>
           <span className="qibla-stat-value tnum">
             {deg}° <small>{compassPoint(bearing)}</small>
           </span>
-          <span className="qibla-stat-sub">from true north</span>
+          <span className="qibla-stat-sub">{t('from true north')}</span>
         </div>
         <div className="card qibla-stat">
-          <span className="qibla-stat-label">Makkah</span>
+          <span className="qibla-stat-label">{t('Makkah')}</span>
           <span className="qibla-stat-value tnum">
-            {fmtKm.format(distance)} <small>km</small>
+            {fmtKm.format(distance)} <small>{t('km')}</small>
           </span>
-          <span className="qibla-stat-sub">great-circle distance</span>
+          <span className="qibla-stat-sub">{t('great-circle distance')}</span>
         </div>
       </div>
 
       <div className="card-soft qibla-tip">
         <p>
-          <strong>For a steady reading</strong> lay the phone flat, away from metal, magnets and speakers. If the dial
-          drifts, move the phone in a slow figure-8 to recalibrate. Phone compasses point to magnetic north, which can
-          differ from true north by a few degrees depending on where you are.
+          <strong>{t('For a steady reading')}</strong>{' '}
+          {t(
+            'lay the phone flat, away from metal, magnets and speakers. If the dial drifts, move the phone in a slow figure-8 to recalibrate. Phone compasses point to magnetic north, which can differ from true north by a few degrees depending on where you are.',
+          )}
         </p>
       </div>
     </div>

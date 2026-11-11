@@ -3,6 +3,7 @@ import { cityLabel, loadCities, searchCities, type City } from '../../domain/cit
 import { deviceTimeZone } from '../../domain/format';
 import type { Place } from '../../domain/types';
 import { Icon } from './Icons';
+import { t } from '../../i18n';
 
 export function LocationPicker({
   value,
@@ -48,7 +49,7 @@ export function LocationPicker({
         onChange({
           lat: Number(position.coords.latitude.toFixed(3)),
           lng: Number(position.coords.longitude.toFixed(3)),
-          label: 'Current location',
+          label: t('Current location'),
           source: 'gps',
           timezone: deviceTimeZone(),
         });
@@ -103,20 +104,20 @@ export function LocationPicker({
           className="input"
           type="search"
           inputMode="search"
-          placeholder="Search 3,000 cities…"
+          placeholder={t('Search 3,000 cities…')}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          aria-label="Search for your city"
+          aria-label={t('Search for your city')}
           autoComplete="off"
         />
         <button type="button" className="btn btn-quiet" onClick={useGps} disabled={busy} style={{ flex: 'none' }}>
           <Icon name="location" size={17} />
-          {busy ? 'Locating…' : 'GPS'}
+          {busy ? t('Locating…') : t('GPS')}
         </button>
       </div>
 
       {results.length > 0 ? (
-        <div className="search-results" role="listbox" aria-label="City results">
+        <div className="search-results" role="listbox" aria-label={t('City results')}>
           {results.map((city) => (
             <button
               key={`${city.name}-${city.country}-${city.lat}`}
@@ -144,13 +145,13 @@ export function LocationPicker({
 
       {query.trim().length >= 2 && results.length === 0 ? (
         <p className="setting-hint" style={{ marginTop: 10 }}>
-          Nothing matched “{query.trim()}”. Try a nearby larger city, or enter coordinates.
+          {t('Nothing matched “{query}”. Try a nearby larger city, or enter coordinates.', { query: query.trim() })}
         </p>
       ) : null}
 
       {error ? (
         <div className="note warn" style={{ marginTop: 12 }} role="status">
-          {error}
+          {t(error)}
         </div>
       ) : null}
 
@@ -162,14 +163,14 @@ export function LocationPicker({
         aria-expanded={manualOpen}
       >
         <Icon name="pin" size={15} />
-        {manualOpen ? 'Hide coordinates' : 'Enter coordinates instead'}
+        {manualOpen ? t('Hide coordinates') : t('Enter coordinates instead')}
       </button>
 
       {manualOpen ? (
         <div style={{ marginTop: 12 }}>
           <div style={{ display: 'flex', gap: 8 }}>
             <div className="field" style={{ flex: 1, marginBottom: 0 }}>
-              <label htmlFor="lat">Latitude</label>
+              <label htmlFor="lat">{t('Latitude')}</label>
               <input
                 id="lat"
                 className="input"
@@ -180,7 +181,7 @@ export function LocationPicker({
               />
             </div>
             <div className="field" style={{ flex: 1, marginBottom: 0 }}>
-              <label htmlFor="lng">Longitude</label>
+              <label htmlFor="lng">{t('Longitude')}</label>
               <input
                 id="lng"
                 className="input"
@@ -192,13 +193,13 @@ export function LocationPicker({
             </div>
           </div>
           <button type="button" className="btn btn-quiet btn-block" style={{ marginTop: 10 }} onClick={useCoordinates}>
-            Use these coordinates
+            {t('Use these coordinates')}
           </button>
         </div>
       ) : null}
 
       <p className="setting-hint" style={{ marginTop: 12 }}>
-        Search runs against a city list bundled inside Niyyah — no network, no account.
+        {t('Search runs against a city list bundled inside Niyyah — no network, no account.')}
       </p>
     </div>
   );

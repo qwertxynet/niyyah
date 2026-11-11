@@ -24,6 +24,7 @@ import { TapCounter } from '../components/TapCounter';
 import { buzz, useCountUp } from '../useCountUp';
 import { useNow } from '../useNow';
 import { useUi } from '../ui-context';
+import { t } from '../../i18n';
 
 const TIER_KEY = 'niyyah.hasanat.tier';
 
@@ -64,7 +65,7 @@ export function Hasanat() {
 
   if (!settings.place) {
     return (
-      <EmptyState title="No location yet">Add a city in Settings to start counting.</EmptyState>
+      <EmptyState title={t('No location yet')}>{t('Add a city in Settings to start counting.')}</EmptyState>
     );
   }
 
@@ -83,7 +84,7 @@ export function Hasanat() {
   function record(deed: DeedDef, label: string, hasanat: number) {
     const key = totals.todayKey;
     const id = actions.addDeed(key, { rule: deed.id, label, h: Math.round(hasanat) });
-    ui.toast(`${label} · ≈ +${fmtHasanat(hasanat)}`, () => actions.removeDeed(key, id));
+    ui.toast(`${t(label)} · ≈ +${fmtHasanat(hasanat)}`, () => actions.removeDeed(key, id));
   }
 
   function start(deed: DeedDef) {
@@ -91,7 +92,7 @@ export function Hasanat() {
     else if (deed.kind === 'juz' || deed.kind === 'range') setReading(deed);
     else {
       const estimate = deed.estimate(meta);
-      if (estimate !== null) record(deed, deed.title, estimate);
+      if (estimate !== null) record(deed, t(deed.title), estimate);
     }
   }
 
@@ -123,23 +124,24 @@ export function Hasanat() {
           <Icon name="star" size={18} />
         </span>
         <p>
-          Only Allah knows the reward of any deed. These numbers are an estimate from narrated hadith, meant as
-          encouragement, not a measure.
+          {t(
+            'Only Allah knows the reward of any deed. These numbers are an estimate from narrated hadith, meant as encouragement, not a measure.',
+          )}
         </p>
       </div>
 
-      <section className="tally" aria-label="Estimated hasanat">
-        <span className="tally-label">Today</span>
+      <section className="tally" aria-label={t('Estimated hasanat')}>
+        <span className="tally-label">{t('Today')}</span>
         <span className={today.rising ? 'tally-value tnum is-rising' : 'tally-value tnum'} aria-live="polite">
           <small>≈</small> {fmtHasanat(today.value)}
         </span>
         <div className="tally-row">
           <div>
-            <span className="tally-sub-label">This week</span>
+            <span className="tally-sub-label">{t('This week')}</span>
             <span className="tally-sub tnum">{fmtHasanat(totals.week)}</span>
           </div>
           <div>
-            <span className="tally-sub-label">All time</span>
+            <span className="tally-sub-label">{t('All time')}</span>
             <span className="tally-sub tnum">{fmtHasanat(totals.all)}</span>
           </div>
         </div>
@@ -147,8 +149,8 @@ export function Hasanat() {
 
       <section className="section">
         <div className="section-head">
-          <h2>From your prayers</h2>
-          <span className="meta">Recitation is optional</span>
+          <h2>{t('From your prayers')}</h2>
+          <span className="meta">{t('Recitation is optional')}</span>
         </div>
         <ul className="hp-list card">
           {day.slots.map((slot) => {
@@ -160,10 +162,16 @@ export function Hasanat() {
             return (
               <li key={slot.key} className="hp-row">
                 <span className="hp-name">
-                  {slot.name} <span className="arabic">{slot.arabic}</span>
+                  {slot.name} <span className="arabic ar-dup">{slot.arabic}</span>
                 </span>
                 <span className="hp-value tnum">
-                  {prayed ? `≈ ${fmtHasanat(value)}` : entry ? 'Not today' : started ? '' : fmtTime(slot.start, settings.timeFormat)}
+                  {prayed
+                    ? `≈ ${fmtHasanat(value)}`
+                    : entry
+                      ? t('Not today')
+                      : started
+                        ? ''
+                        : fmtTime(slot.start, settings.timeFormat)}
                 </span>
                 {prayed ? (
                   <button
@@ -171,11 +179,11 @@ export function Hasanat() {
                     className="hp-action"
                     onClick={() => ui.openRecitation(day.key, slot.key)}
                   >
-                    {extras ? 'Edit' : '+ Recitation'}
+                    {extras ? t('Edit') : t('+ Recitation')}
                   </button>
                 ) : started && !entry ? (
                   <button type="button" className="hp-action" onClick={() => ui.openPrayer(day.key, slot.key)}>
-                    Log
+                    {t('Log')}
                   </button>
                 ) : (
                   <span className="hp-action-spacer" />
@@ -188,17 +196,22 @@ export function Hasanat() {
 
       <section className="section">
         <div className="section-head">
-          <h2>Read the Qur’an</h2>
-          {readToday ? <span className="meta tnum">≈ +{fmtHasanat(readToday)} today</span> : null}
+          <h2>{t('Read the Qur’an')}</h2>
+          {readToday ? <span className="meta tnum">{t('≈ +{h} today', { h: fmtHasanat(readToday) })}</span> : null}
         </div>
         <div className="read-card card">
           <span className="read-card-ar arabic" aria-hidden="true">
             ٱقْرَأْ
           </span>
           <div className="read-card-main">
-            <b>{markSurah && mark ? `${surahTitle(markSurah)} · ayah ${mark.a}` : 'Arabic text, ayah by ayah'}</b>
+            <b>
+              {markSurah && mark
+                ? t('{surah} · ayah {n}', { surah: surahTitle(markSurah), n: mark.a })
+                : t('Arabic text, ayah by ayah')}
+            </b>
             <span>
-              {markSurah ? 'Where you left off. ' : ''}Tap the last ayah you read and its letters are counted here.
+              {markSurah ? `${t('Where you left off.')} ` : ''}
+              {t('Tap the last ayah you read and its letters are counted here.')}
             </span>
           </div>
           <div className="read-card-actions">
@@ -211,11 +224,11 @@ export function Hasanat() {
                   ui.openReader(mark.a < last ? { s: mark.s, from: mark.a + 1 } : { s: mark.s < 114 ? mark.s + 1 : 1, from: 1 });
                 }}
               >
-                Continue
+                {t('Continue')}
               </button>
             ) : null}
             <button type="button" className={markSurah ? 'btn btn-quiet' : 'btn btn-solid'} onClick={() => ui.openReader()}>
-              {markSurah ? 'All surahs' : 'Open the reader'}
+              {markSurah ? t('All surahs') : t('Open the reader')}
             </button>
           </div>
         </div>
@@ -223,10 +236,10 @@ export function Hasanat() {
 
       <section className="section">
         <div className="section-head">
-          <h2>Good deeds</h2>
-          <span className="meta">By the time you have</span>
+          <h2>{t('Good deeds')}</h2>
+          <span className="meta">{t('By the time you have')}</span>
         </div>
-        <div className="tier-tabs" role="tablist" aria-label="Time commitment">
+        <div className="tier-tabs" role="tablist" aria-label={t('Time commitment')}>
           {TIERS.map((entry) => (
             <button
               key={entry.id}
@@ -236,8 +249,8 @@ export function Hasanat() {
               className="tier-tab"
               onClick={() => chooseTier(entry.id)}
             >
-              <b>{entry.label}</b>
-              <span>{entry.hint}</span>
+              <b>{t(entry.label)}</b>
+              <span>{t(entry.hint)}</span>
             </button>
           ))}
         </div>
@@ -250,19 +263,24 @@ export function Hasanat() {
               <article key={deed.id} className="deed card">
                 <div className="deed-top">
                   <div className="deed-titles">
-                    <h3>{deed.title}</h3>
+                    <h3>{t(deed.title)}</h3>
                     <span className="deed-arabic arabic">{deed.arabic}</span>
                   </div>
                   <span className="deed-gain tnum">
-                    {deed.kind === 'range' ? 'by length' : estimate === null ? '…' : `≈ +${fmtHasanat(estimate)}`}
-                    {deed.kind === 'juz' ? <small> avg</small> : null}
+                    {deed.kind === 'range' ? t('by length') : estimate === null ? '…' : `≈ +${fmtHasanat(estimate)}`}
+                    {deed.kind === 'juz' ? <small> {t('avg')}</small> : null}
                   </span>
                 </div>
-                <p className="deed-virtue">{deed.virtue}</p>
+                <p className="deed-virtue">{t(deed.virtue)}</p>
                 <div className="deed-foot">
                   <span className="deed-time">
-                    <Icon name="clock" size={14} /> {deed.time}
-                    {times > 0 ? <span className="deed-done">{` · done${times > 1 ? ` ${times}×` : ''} today`}</span> : null}
+                    <Icon name="clock" size={14} /> {t(deed.time)}
+                    {times > 0 ? (
+                      <span className="deed-done">
+                        {' · '}
+                        {times > 1 ? t('done {n}× today', { n: times }) : t('done today')}
+                      </span>
+                    ) : null}
                   </span>
                   <span className="deed-btns">
                     {deed.range ? (
@@ -271,11 +289,11 @@ export function Hasanat() {
                         className="btn btn-quiet deed-btn"
                         onClick={() => ui.openReader({ s: deed.range?.s, from: deed.range?.from })}
                       >
-                        <Icon name="book" size={15} /> Read
+                        <Icon name="book" size={15} /> {t('Read')}
                       </button>
                     ) : null}
                     <button type="button" className="btn btn-solid deed-btn" onClick={() => start(deed)}>
-                      {deed.kind === 'count' ? 'Start' : deed.kind === 'once' ? 'I did this' : 'Choose'}
+                      {deed.kind === 'count' ? t('Start') : deed.kind === 'once' ? t('I did this') : t('Choose')}
                     </button>
                   </span>
                 </div>
@@ -286,7 +304,7 @@ export function Hasanat() {
       </section>
 
       <button type="button" className="explain-link" onClick={() => setExplain(true)}>
-        How is this estimated?
+        {t('How is this estimated?')}
       </button>
 
       {counting ? (
@@ -295,7 +313,8 @@ export function Hasanat() {
           estimate={counting.estimate(meta) ?? 0}
           onClose={() => setCounting(null)}
           onSave={(hasanat, done, total) => {
-            record(counting, done < total ? `${counting.title} (${done} of ${total})` : counting.title, hasanat);
+            const title = t(counting.title);
+            record(counting, done < total ? `${title} (${t('{n} of {total}', { n: done, total })})` : title, hasanat);
             setCounting(null);
           }}
         />

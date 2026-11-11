@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { fmtHasanat, rangeHasanat } from '../../domain/hasanat';
 import { dateKey, placeCivilDate } from '../../domain/prayer-times';
-import { useQuran, type QuranMeta, type Surah } from '../../domain/quran';
+import { surahName, useQuran, type QuranMeta, type Surah } from '../../domain/quran';
 import {
   arabicNumber,
   BASMALAH,
@@ -25,7 +25,7 @@ export interface ReaderTarget {
 const SIZES = [1, 2, 3, 4, 5];
 
 export function surahTitle(surah: Surah): string {
-  return isArabic() ? surah.ar : surah.name;
+  return surahName(surah);
 }
 
 /** The Qur'an, Arabic only: a surah list, then the text with "I read up to here" tracking. */
@@ -106,7 +106,7 @@ function SurahIndex({
     <>
       <div className="reader-top">
         <span className="reader-title">
-          {t('The Qur’an')} <span className="arabic">القرآن الكريم</span>
+          {t('The Qur’an')} {isArabic() ? null : <span className="arabic">القرآن الكريم</span>}
         </span>
         <CloseButton onClose={onClose} />
       </div>
@@ -294,7 +294,7 @@ function SurahView({
     if (to === null || estimate === null) return;
     const previous = currentState().reading;
     const key = dateKey(placeCivilDate(new Date(), settings));
-    const label = start === to ? `${surah.name} ${start}` : `${surah.name} ${start}–${to}`;
+    const label = start === to ? `${surahName(surah)} ${start}` : `${surahName(surah)} ${start}–${to}`;
     const id = actions.addDeed(key, { rule: 'reader', label, h: Math.round(estimate), q: { s: n, from: start, to } });
     actions.setReading({ s: n, a: to, at: Date.now() });
     const savedStart = start;
@@ -364,7 +364,7 @@ function SurahView({
         ) : (
           <div className={`mushaf size-${size}`} lang="ar" dir="rtl">
             <p className="mushaf-meta">
-              {surah.ar} · {plural(count, { one: '{n} ayah', other: '{n} ayahs' })}
+              {surah.ar} · <bdi>{plural(count, { one: '{n} ayah', other: '{n} ayahs' })}</bdi>
             </p>
             {load.text.basmalah ? <p className="mushaf-basmalah">{BASMALAH}</p> : null}
             <p className="mushaf-text">

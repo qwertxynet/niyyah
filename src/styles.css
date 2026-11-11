@@ -93,8 +93,8 @@
   --radius-sm: 13px;
   --shadow-1: 0 1px 2px rgba(21, 37, 31, 0.05), 0 10px 26px -18px rgba(21, 37, 31, 0.4);
   --shadow-2: 0 24px 60px -30px rgba(8, 32, 25, 0.6);
-  --font-ui: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-ui: 'Figtree', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Fraunces', 'Amiri', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
 
   /* One type scale (major third-ish). Use these, not ad-hoc sizes. */
   --fs-xs: 11.5px;
@@ -682,7 +682,7 @@ ul {
   gap: 10px;
   min-height: 62px;
   padding: 10px 4px 10px 15px;
-  text-align: left;
+  text-align: start;
   border-radius: var(--radius);
 }
 
@@ -729,7 +729,7 @@ ul {
   width: 58px;
   min-height: 62px;
   color: var(--ink-3);
-  border-left: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
   transition: background 0.16s ease, color 0.16s ease;
 }
 
@@ -1114,7 +1114,7 @@ ul {
 .setting-value {
   font-size: 13.5px;
   color: var(--ink-2);
-  text-align: right;
+  text-align: end;
   flex: none;
   max-width: 55%;
 }
@@ -1674,7 +1674,7 @@ ul {
 
 .hp-name .arabic {
   font-size: 15px;
-  margin-left: 4px;
+  margin-inline-start: 4px;
 }
 
 .hp-value {
@@ -1762,7 +1762,7 @@ ul {
 
 .deed-arabic {
   display: block;
-  text-align: left;
+  text-align: start;
   margin-top: 2px;
   font-size: 17px;
   line-height: 1.5;
@@ -1924,8 +1924,8 @@ ul {
 
 .rec-part {
   min-height: 42px;
-  padding-left: 10px;
-  border-left: 2px solid var(--gold-2);
+  padding-inline-start: 10px;
+  border-inline-start: 2px solid var(--gold-2);
 }
 
 .rec-part > span:first-child {
@@ -1955,7 +1955,7 @@ ul {
 .rec-link {
   min-height: 40px;
   padding: 0 8px;
-  margin-left: -8px;
+  margin-inline-start: -8px;
   font-size: 13.5px;
   font-weight: 600;
   color: var(--green-600);
@@ -2263,7 +2263,7 @@ ul {
   background: var(--surface);
   font-size: 14px;
   color: var(--ink-2);
-  text-align: left;
+  text-align: start;
 }
 
 .chip[aria-pressed='true'] {
@@ -2577,7 +2577,7 @@ ul {
   line-height: 1.8;
   color: var(--gold-ink);
   direction: rtl;
-  text-align: right;
+  text-align: end;
 }
 
 .guide-translit {
@@ -2640,7 +2640,7 @@ ul {
   border-radius: var(--radius);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--gold);
+  border-inline-start: 3px solid var(--gold);
   box-shadow: var(--shadow-1);
 }
 
@@ -2715,7 +2715,7 @@ ul {
 
 .composer-hint .arabic {
   font-size: 16px;
-  margin-right: 4px;
+  margin-inline-end: 4px;
 }
 
 .composer-prayer {
@@ -2896,7 +2896,7 @@ ul {
 
 .jentry-items {
   margin: 6px 0 0;
-  padding-left: 20px;
+  padding-inline-start: 20px;
   font-size: 15px;
 }
 
@@ -3120,7 +3120,7 @@ ul {
   border-radius: 15px;
   border: 1px solid var(--line);
   background: var(--surface);
-  text-align: left;
+  text-align: start;
   transition: border-color 0.16s ease, background 0.16s ease;
 }
 
@@ -3331,7 +3331,7 @@ ul {
   gap: 10px;
   width: 100%;
   padding: 12px 14px;
-  text-align: left;
+  text-align: start;
   border-bottom: 1px solid var(--line);
   min-height: 48px;
 }
@@ -3395,7 +3395,7 @@ ul {
   gap: 8px;
   max-height: 46vh;
   overflow-y: auto;
-  padding-right: 2px;
+  padding-inline-end: 2px;
 }
 
 .option {
@@ -3407,7 +3407,7 @@ ul {
   border-radius: 13px;
   border: 1px solid var(--line);
   background: var(--surface);
-  text-align: left;
+  text-align: start;
 }
 
 .option:hover {
@@ -3431,7 +3431,7 @@ ul {
 }
 
 .option-mark {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--green-600);
   flex: none;
 }
@@ -3579,7 +3579,7 @@ ul {
 /* A thin arch drawn behind each screen title. */
 .screen-head {
   position: relative;
-  padding-left: 2px;
+  padding-inline-start: 2px;
 }
 
 .screen-head::before {
@@ -3661,7 +3661,7 @@ ul {
   min-height: 56px;
   padding: 10px;
   border-radius: 13px;
-  text-align: left;
+  text-align: start;
 }
 
 .next-step:hover {
@@ -3735,7 +3735,7 @@ ul {
 
 .row {
   --row-accent: var(--gold);
-  border-left: 3px solid var(--row-accent);
+  border-inline-start: 3px solid var(--row-accent);
 }
 
 .row[data-prayer='fajr'] {
@@ -4450,4 +4450,87 @@ ul {
 
 .reading-open {
   margin-top: 8px;
+}
+
+
+/* ---------- Arabic and right-to-left ---------- */
+
+/* Letter-spacing breaks the joins between Arabic letters. */
+:root[lang='ar'] *,
+:root[lang='ar'] *::before,
+:root[lang='ar'] *::after {
+  letter-spacing: 0 !important;
+}
+
+/* Arabic interface text reads best a touch larger and with taller lines. */
+:root[lang='ar'] body {
+  font-size: 15.5px;
+}
+
+:root[lang='ar'] :is(h1, h2, h3, .dateline, .hero-name, .sheet-title, .guide-step, .comfort-title) {
+  line-height: 1.4;
+}
+
+:root[lang='ar'] .hero-name {
+  font-family: var(--font-arabic);
+  font-weight: 700;
+}
+
+/* The Arabic name next to an English one says the same thing twice in Arabic. */
+:root[lang='ar'] .ar-dup {
+  display: none;
+}
+
+/* Times, countdowns and numbers stay left-to-right inside Arabic sentences. */
+:root[dir='rtl'] .tnum {
+  unicode-bidi: plaintext;
+}
+
+[dir='rtl'] .toggle::after {
+  left: auto;
+  right: 3px;
+}
+
+[dir='rtl'] .toggle[aria-checked='true']::after {
+  transform: translateX(-19px);
+}
+
+[dir='rtl'] .screen-head::before {
+  left: auto;
+  right: -10px;
+}
+
+.sheet-close {
+  float: right;
+}
+
+[dir='rtl'] .sheet-close {
+  float: left;
+}
+
+[dir='rtl'] .toast {
+  padding: 10px 16px 10px 12px;
+}
+
+/* First-run language switch, labelled in the language it switches to. */
+.setup-top-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-switch {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.lang-switch[lang='ar'] {
+  font-family: 'IBM Plex Sans Arabic', var(--font-ui);
 }

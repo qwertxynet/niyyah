@@ -2,6 +2,7 @@ import { fmtTime } from '../../domain/format';
 import type { Slot } from '../../domain/prayer-times';
 import type { LogStatus, TimeFormat } from '../../domain/types';
 import { StatusMark, statusText } from './StatusMark';
+import { t } from '../../i18n';
 
 export function PrayerRow({
   slot,
@@ -32,14 +33,18 @@ export function PrayerRow({
         type="button"
         className="row-main"
         onClick={onOpen}
-        aria-label={`${slot.name}, ${fmtTime(slot.start, timeFormat)}, ${statusText(status)}. Open details`}
+        aria-label={t('{name}, {time}, {status}. Open details', {
+          name: slot.name,
+          time: fmtTime(slot.start, timeFormat),
+          status: statusText(status),
+        })}
       >
         <span className="row-time tnum">{fmtTime(slot.start, timeFormat)}</span>
         <span className="row-name">
           {slot.name}
-          <span className="arabic">{slot.arabic}</span>
+          <span className="arabic ar-dup">{slot.arabic}</span>
         </span>
-        {isCurrent ? <span className="row-tag">now</span> : <span aria-hidden="true" />}
+        {isCurrent ? <span className="row-tag">{t('now')}</span> : <span aria-hidden="true" />}
       </button>
 
       <button
@@ -49,10 +54,10 @@ export function PrayerRow({
         disabled={!started}
         aria-label={
           status
-            ? `${slot.name} is ${statusText(status).toLowerCase()}. Change it`
+            ? t('{name}: {status}. Change it', { name: slot.name, status: statusText(status) })
             : started
-              ? `Log ${slot.name} as prayed`
-              : `${slot.name} has not begun yet`
+              ? t('Log {name} as prayed', { name: slot.name })
+              : t('{name} has not begun yet', { name: slot.name })
         }
       >
         <StatusMark status={status} future={!started} />

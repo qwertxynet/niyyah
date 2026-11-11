@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { PrayerKey } from './types';
 
 /*
@@ -98,11 +99,13 @@ function dayNumber(dayKey: string): number {
 export function promptFor(kind: JournalKind, dayKey: string, shift = 0, prayerName?: string): string {
   const bank = PROMPTS[kind];
   const index = (((dayNumber(dayKey) + shift) % bank.length) + bank.length) % bank.length;
-  return bank[index].replace(/\{prayer\}/g, prayerName ?? 'your last prayer');
+  return t(bank[index]).replace(/\{prayer\}/g, prayerName ?? t('your last prayer'));
 }
 
+/** A kind's label and hint in the interface language. */
 export function kindMeta(kind: JournalKind) {
-  return KINDS.find((entry) => entry.id === kind) ?? KINDS[0];
+  const entry = KINDS.find((item) => item.id === kind) ?? KINDS[0];
+  return { ...entry, label: t(entry.label), hint: t(entry.hint) };
 }
 
 /** A short, flat summary of an entry for lists and screen readers. */
