@@ -14,14 +14,14 @@ import {
   addDays,
   cycleAt,
   dateKey,
-  fmtLeft,
   placeCivilDate,
   prayerDay,
   type Slot,
 } from '../../domain/prayer-times';
 import { actions, useStore } from '../../domain/store';
 import type { Logs, Persisted, PrayerKey, Settings } from '../../domain/types';
-import { useNow } from '../useNow';
+import { useMinuteClock } from '../useNow';
+import { Countdown } from '../components/Countdown';
 import { useUi } from '../ui-context';
 import { plural, t } from '../../i18n';
 import { celebrate } from '../celebrate';
@@ -93,8 +93,8 @@ function findCatchup(
 export function Today() {
   const state = useStore();
   const { settings, logs, qada, dismissed } = state;
-  // Minutes-only countdowns don't need a once-a-second redraw.
-  const now = useNow(settings.coarseTime ? 30_000 : 1000);
+  // The screen redraws once a minute; only <Countdown> ticks every second.
+  const [now, refresh] = useMinuteClock();
   const ui = useUi();
 
   if (!settings.place) {
@@ -225,9 +225,12 @@ export function Today() {
                 {current.name}
                 <span className="arabic ar-dup">{current.arabic}</span>
               </h2>
-              <span className={`countdown tnum${urgent ? ' is-urgent' : ''}`} role="timer" aria-live="off">
-                {fmtLeft(msLeft, settings.coarseTime)}
-              </span>
+              <Countdown
+                target={current.end}
+                coarse={settings.coarseTime}
+                className={`countdown tnum${urgent ? ' is-urgent' : ''}`}
+                onDone={refresh}
+              />
             </div>
             <p className="hero-sub">
               {say('heroDueSub', voice, { name: current.name, end: fmtTime(current.end, settings.timeFormat) })}
@@ -282,9 +285,7 @@ export function Today() {
                 {next.slot.name}
                 <span className="arabic ar-dup">{next.slot.arabic}</span>
               </h2>
-              <span className="countdown tnum" role="timer" aria-live="off">
-                {fmtLeft(next.at.getTime() - now.getTime(), settings.coarseTime)}
-              </span>
+              <Countdown target={next.at} coarse={settings.coarseTime} className="countdown tnum" onDone={refresh} />
             </div>
             <p className="hero-sub">
               {say('heroNextSub', voice, { name: next.slot.name, start: fmtTime(next.at, settings.timeFormat) })}
