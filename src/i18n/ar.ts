@@ -1019,6 +1019,13 @@ export const AR: Record<string, string> = {
   "Add this recitation to hasanat · ≈ +{h}": "أضف هذه القراءة إلى الحسنات · ≈ +{h}",
   "{n} ayah to practise today|{n} ayahs to practise today": "لا آيات للتمرين اليوم|آية واحدة للتمرين اليوم|آيتان للتمرين اليوم|{n} آيات للتمرين اليوم|{n} آية للتمرين اليوم|{n} آية للتمرين اليوم",
 
+  // ---- crash screen ----
+  "Something went wrong": "حدث خطأ ما",
+  "Reload Niyyah": "أعد تحميل نيّة",
+  "Copy details": "انسخ التفاصيل",
+  "Copied": "نُسخ",
+  "Your prayers, journal and settings are safe on this device. Reloading usually fixes it.": "صلواتك ويومياتك وإعداداتك محفوظة على هذا الجهاز. إعادة التحميل تحل المشكلة عادةً.",
+
   // ---- notifications ----
   "Prayer times": "مواقيت الصلاة",
   "Adhan and pre-alerts": "الأذان والتنبيهات المسبقة",

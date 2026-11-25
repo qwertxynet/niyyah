@@ -5241,3 +5241,18 @@ button.ayah-mark:focus-visible {
 :root[data-calm] .hz-word {
   background: transparent;
 }
+
+/* ---------- crash screen (src/ui/ErrorBoundary.tsx) ---------- */
+.crash {
+  display: grid;
+  min-height: 100vh;
+  align-content: center;
+}
+
+.crash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
